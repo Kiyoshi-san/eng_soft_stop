@@ -7,6 +7,10 @@
   height: 80px;
 }
 
+.logo_stop {
+  height: 80px;
+}
+
 .App-header {
   background-color: #222;
   height: fit-content;
