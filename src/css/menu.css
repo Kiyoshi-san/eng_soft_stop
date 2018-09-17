@@ -14,3 +14,8 @@
 .menu-wrapper {
     margin-left: auto;
 }
+
+.dd-wrapper {
+    background-color: #222222;
+    width: fit-content;
+}
