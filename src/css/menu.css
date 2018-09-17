@@ -1,0 +1,13 @@
+.menu-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.menu-list-item {
+    list-style: none;
+    border: solid #fff 1px;
+    height: 30px;
+    padding: 20px;
+    cursor: pointer;
+}
