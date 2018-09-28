@@ -1,7 +1,6 @@
 .menu-list {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
 }
 
 .menu-list-item {
@@ -10,4 +9,13 @@
     height: 30px;
     padding: 20px;
     cursor: pointer;
+}
+
+.menu-wrapper {
+    margin-left: auto;
+}
+
+.dd-wrapper {
+    background-color: #222222;
+    width: fit-content;
 }

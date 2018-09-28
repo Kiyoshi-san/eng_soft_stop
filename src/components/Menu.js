@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Dropdowndata from "./Dropdowndata";
 import "../css/menu.css";
 
-export default class Menu extends Component {
+class Menu extends Component {
     constructor(props) {
         super (props);
         this.state = {
@@ -55,3 +55,5 @@ export default class Menu extends Component {
         );
     }
 }
+
+export default Menu;
