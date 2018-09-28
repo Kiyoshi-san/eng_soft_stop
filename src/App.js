@@ -3,7 +3,12 @@ import './App.css';
 
 import Header from "./components/Header";
 
-class App extends Component {
+import TelaInicial from "./TelaInicial";
+export default TelaInicial;
+// export { default as TelaInicial } from "./TelaInicial";
+
+
+/* class App extends Component {
   render() {
     return (
       <div className="App">
@@ -13,4 +18,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App; */
