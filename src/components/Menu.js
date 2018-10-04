@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Navbar from 'react-bootstrap/lib/Navbar';
+
 import Dropdown from "./Dropdown";
 import "../css/menu.css";
 
@@ -69,18 +71,27 @@ export default class Menu extends Component {
     render () {
         const { listaMenu, listOpen } = this.state;
         return (
-            <div className="menu-wrapper">
-                <div className="menu-header">
-                    {<ul className="menu-list">
+            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar.Brand href="#home">Stop App</Navbar.Brand>
+                <Navbar.Toggle />
+                <Navbar.Collapse className="justify-content-end">
+                    <Navbar.Text>
                         {listaMenu.map((item) => (
-                            <li className="menu-list-item" key={item.id} onClick={() => this.toggleList(item.id) }>
-                                {item.title} 
-                                {item.id === 2 && <Dropdown list={item.itens} listOpen={listOpen} />}
-                            </li>
+                            {item.itens === null &&
+                            }
                         ))}
-                    </ul>}
-                </div>                
-            </div>
+                    </Navbar.Text>
+                </Navbar.Collapse>
+                
+            </Navbar>
+            {<ul className="menu-list">
+                {listaMenu.map((item) => (
+                    <li className="menu-list-item" key={item.id} onClick={() => this.toggleList(item.id) }>
+                        {item.title} 
+                        {item.id === 2 && <Dropdown list={item.itens} listOpen={listOpen} />}
+                    </li>
+                ))}
+            </ul>}
         );
     }
 }
