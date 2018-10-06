@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Nav from 'react-bootstrap/lib/Nav';
 import Navbar from 'react-bootstrap/lib/Navbar';
-import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 
-import "../css/menu.css";
+import "../../css/menu.css";
 
 export default class Menu extends Component {
     constructor() {
@@ -19,9 +18,9 @@ export default class Menu extends Component {
                 <Nav className="mr-auto">
                 </Nav>
                 <Nav className="menu-itens">
-                <Nav.Link href="#">Home</Nav.Link>
+                <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link eventKey={2} href="#">Loja</Nav.Link>
-                <Nav.Link eventKey={3} href="#">Perfil</Nav.Link>
+                <Nav.Link eventKey={3} href="/login">Login</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
             </Navbar>

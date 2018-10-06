@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './App.css';
+import '../css/App.css';
 
-import Menu from "./components/Menu";
-import Home from "./components/Home";
+import Menu from "./shared/Menu";
+import AppRoutes from "./App.Routes";
 
 class App extends Component {
   render() {
@@ -11,7 +11,7 @@ class App extends Component {
         <header className="App-header">
           <Menu />
         </header>
-        <Home />
+        <AppRoutes />
       </div>
     );
   }
