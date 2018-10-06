@@ -1,14 +1,7 @@
-.menu-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    padding: 20px;
+.menu {
+    padding: 20px 40px;
 }
 
-.menu-list-item {
-    list-style: none;
-    border: solid #fff 1px;
-    width: 90px;
-    cursor: pointer;
-    text-align: center;
+.menu-itens {
+    padding: 0 10px;
 }

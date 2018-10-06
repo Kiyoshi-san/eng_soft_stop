@@ -12,7 +12,6 @@ export default class Home extends Component {
     render() {
         return (
             <div>
-                <Button variant="primary">Primary</Button>
             </div>
         )
     }
