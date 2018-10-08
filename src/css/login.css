@@ -1,0 +1,12 @@
+.login-body {
+    height: 100%;
+    margin: 0
+}
+
+.login-card {
+    width: 325px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
