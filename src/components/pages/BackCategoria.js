@@ -1,3 +1,5 @@
+"use strict"
+
 import React, { Component } from 'react';
 import '../../css/backoffice.css';
 import axios from "axios";
@@ -14,7 +16,8 @@ export default class BackPalavra extends Component {
             palavra: "",
             listaPalavras: [],
             addPalavra: null,
-            componentePalavra: []
+            componentePalavra: [],
+            success: 0
         };
     }
     
@@ -58,9 +61,17 @@ export default class BackPalavra extends Component {
             axios
             .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { "name":valor })
             .then(res => {
-                console.log(res);
-                console.log(res.data);
-                alert("Cadastrado com sucesso")
+                this.palavrasList();
+                this.setState({
+                    success: 1
+                })
+                return this.state.success;
+            })
+            .catch(res => {
+                this.setState({
+                    success: 0
+                })
+                return this.state.success;
             })
         }
     }
@@ -74,20 +85,25 @@ export default class BackPalavra extends Component {
         console.log(this.state);
         
         let cadastroCategoria = document.getElementsByName("name");
-        cadastroCategoria.forEach(a => this.enviarCadastro(a)) 
+        cadastroCategoria.forEach(a => this.enviarCadastro(a));
+        alert("Cadastrado com sucesso");
+        // this.state.success ? alert("Cadastrado com sucesso") : null;
+        // window.location.reload();
     }
 
     excluir = e => {
         console.log(e.target.value)
         let excluir_id = e.target.value;
-        axios
-        .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, {data:{ "category_id":excluir_id }})
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-                this.categoryList();
-                alert("Excluido com sucesso")
-            }) 
+        if(window.confirm("Deseja realmente excluir a categoria?")){
+            axios
+            .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, {data:{ "category_id":excluir_id }})
+                .then(res => {
+                    console.log(res);
+                    console.log(res.data);
+                    this.categoryList();
+                    alert("Excluido com sucesso")
+                })            
+        }
     }
 
     addComponentePalavra = (res) => {
