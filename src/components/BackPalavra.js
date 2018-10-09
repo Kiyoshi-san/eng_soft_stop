@@ -83,10 +83,13 @@ export default class BackPalavra extends Component {
         // const cadastroResposta = new FormData(this.form);
         
         let cadastroResposta = document.getElementsByName("description");
+        let selectCategoria = document.getElementsByName("categoria");
         cadastroResposta.forEach(a => this.enviarCadastro(a));
         alert("Cadastrado com sucesso");
         // this.state.success ? alert("Cadastrado com sucesso") : null;
         // window.location.reload();
+        selectCategoria.value = "";
+        cadastroResposta.forEach((a) => a.value = "");
     }
 
     excluir = e => {
