@@ -168,7 +168,7 @@ export default class BackPalavra extends Component {
                     </form>
                 </div>
                 <div className="col-xs-12 col-md-4">
-                    <table class="table">
+                    {/* <table class="table">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Respostas</th>
@@ -185,7 +185,7 @@ export default class BackPalavra extends Component {
                                 )
                             }) }
                         </tbody>
-                    </table>
+                    </table> */}
                 </div>
             {/* </div> */}
             </Row>
