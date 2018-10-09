@@ -89,6 +89,7 @@ export default class BackPalavra extends Component {
         alert("Cadastrado com sucesso");
         // this.state.success ? alert("Cadastrado com sucesso") : null;
         // window.location.reload();
+        cadastroCategoria.forEach((a) => a.value = "");
     }
 
     excluir = e => {
@@ -102,7 +103,7 @@ export default class BackPalavra extends Component {
                     console.log(res.data);
                     this.categoryList();
                     alert("Excluido com sucesso")
-                })            
+                })
         }
     }
 
