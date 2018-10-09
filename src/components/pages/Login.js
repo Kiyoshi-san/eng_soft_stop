@@ -14,7 +14,7 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div className="login-body">
+            <div className="d-flex login-body">
                 <Card className="login-card">
                 <Card.Body>
                     <Card.Title>Login do Usuário</Card.Title>
@@ -34,6 +34,15 @@ export default class Login extends Component {
                         <Form.Check type="checkbox" label="Mantenha-me logado" />
                     </Form.Group>
                     <Button variant="primary">Login</Button>
+                </Card.Body>
+                </Card>
+                <Card bg="primary" text="white" className="login-card">
+                <Card.Body>
+                    <Card.Title>Em Breve</Card.Title>
+                    <Card.Text>
+                        Em breve estaremos disponibilizando o cadastro a todos usuários,
+                        por enquanto estamos preparando a melhor experiência pra você ;)
+                    </Card.Text>
                 </Card.Body>
                 </Card>
             </div>
