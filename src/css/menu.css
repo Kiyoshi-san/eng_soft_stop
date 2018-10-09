@@ -5,3 +5,29 @@
 .menu-itens {
     padding: 0 10px;
 }
+
+.logo_stop {
+    height: 80px;
+}
+
+.menu-list {
+    display: flex;
+    flex-direction: row;
+}
+
+.menu-list-item {
+    list-style: none;
+    border: solid #fff 1px;
+    height: 30px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.menu-wrapper {
+    margin-left: auto;
+}
+
+.dd-wrapper {
+    background-color: #222222;
+    width: fit-content;
+}
