@@ -172,6 +172,7 @@ export default class BackPalavra extends Component {
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Respostas</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
