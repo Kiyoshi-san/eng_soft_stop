@@ -56,21 +56,20 @@ export default class BackPalavra extends Component {
 
     enviarCadastro = cadastroResposta => {
         let valor = cadastroResposta.value;
-        if (valor.trim) {
+        if (valor.trim()) {
             axios
             .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
             .then(res => {
                 this.palavrasList();
+                if(this.state.success == 0) {
+                    alert("Cadastrado com sucesso");
+                }
                 this.setState ({
                     success: 1
                 })
-                return this.state.success;
             })
             .catch(res => {
-                this.setState ({
-                    success: 0
-                })
-                return this.state.success;
+                
             })
         }
     }
@@ -85,11 +84,10 @@ export default class BackPalavra extends Component {
         let cadastroResposta = document.getElementsByName("description");
         let selectCategoria = document.getElementsByName("categoria");
         cadastroResposta.forEach(a => this.enviarCadastro(a));
-        alert("Cadastrado com sucesso");
         // this.state.success ? alert("Cadastrado com sucesso") : null;
         // window.location.reload();
-        selectCategoria.value = "";
-        cadastroResposta.forEach((a) => a.value = "");
+        // selectCategoria.value = "";
+        // cadastroResposta.forEach((a) => a.value = "");
     }
 
     excluir = e => {
