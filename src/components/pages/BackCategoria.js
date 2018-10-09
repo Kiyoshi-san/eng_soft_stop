@@ -63,14 +63,16 @@ export default class BackPalavra extends Component {
             .then(res => {
                 this.palavrasList();
                 if (this.state.success == 0) {
-                    alert("Cadastrado com sucesso");
+                    // alert("Cadastrado com sucesso");
                 }
                 this.setState({
                     success: 1
                 })
             })
             .catch(res => {
-
+                this.setState({
+                    success: 0
+                })
             })
         }
     }
@@ -85,9 +87,10 @@ export default class BackPalavra extends Component {
         
         let cadastroCategoria = document.getElementsByName("name");
         cadastroCategoria.forEach(a => this.enviarCadastro(a));
+        alert("Cadastrado com sucesso");
         // this.state.success ? alert("Cadastrado com sucesso") : null;
         // window.location.reload();
-        // cadastroCategoria.forEach((a) => a.value = "");
+        cadastroCategoria.forEach((a) => a.value = "");
     }
 
     excluir = e => {

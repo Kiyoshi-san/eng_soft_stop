@@ -62,14 +62,16 @@ export default class BackPalavra extends Component {
             .then(res => {
                 this.palavrasList();
                 if(this.state.success == 0) {
-                    alert("Cadastrado com sucesso");
+                    // alert("Cadastrado com sucesso");
                 }
                 this.setState ({
                     success: 1
                 })
             })
             .catch(res => {
-                
+                this.setState ({
+                    success: 0
+                })
             })
         }
     }
@@ -84,10 +86,11 @@ export default class BackPalavra extends Component {
         let cadastroResposta = document.getElementsByName("description");
         let selectCategoria = document.getElementsByName("categoria");
         cadastroResposta.forEach(a => this.enviarCadastro(a));
+        alert("Cadastrado com sucesso");
         // this.state.success ? alert("Cadastrado com sucesso") : null;
         // window.location.reload();
-        // selectCategoria.value = "";
-        // cadastroResposta.forEach((a) => a.value = "");
+        selectCategoria.value = 0;
+        cadastroResposta.forEach((a) => a.value = "");
     }
 
     excluir = e => {
@@ -167,7 +170,7 @@ export default class BackPalavra extends Component {
                         </label> */}
                         <label className="inputBkofc">
                             Categoria: <select name="categoria" className="form-control selectClass" onChange={ this.handleChange }>
-                                <option selected value="">Selecione</option>
+                                <option selected value={0}>Selecione</option>
                                 { this.state.categorias.map(res => <option value={ res.category_id }>{ res.name }</option>) }
                             </select>
                         </label>
