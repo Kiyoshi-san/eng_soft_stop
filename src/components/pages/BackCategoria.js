@@ -1,3 +1,5 @@
+"use strict"
+
 import React, { Component } from 'react';
 import '../../css/backoffice.css';
 import axios from "axios";
@@ -14,13 +16,29 @@ export default class BackPalavra extends Component {
             palavra: "",
             listaPalavras: [],
             addPalavra: null,
-            componentePalavra: []
+            componentePalavra: [],
+            success: 0
         };
     }
     
     idx = 0;
     
-    componentDidMount() {
+    categoryList() {
+        console.log("categorylist")
+        axios
+        .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+        .then(res => {
+            // console.log(res.data.content)
+            
+            this.setState({ 
+                categorias: res.data.content
+            })
+        })
+    }
+    
+    palavrasList() {
+        console.log("palavraslist")
+        // Carregando a lista de palavras ja cadastradas
         axios
             .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
             .then(res => {
@@ -30,61 +48,62 @@ export default class BackPalavra extends Component {
                     categorias: res.data.content
                 })
             })
-            
-            /* this.setState({ 
-                categorias: [{
-                    id: 1,
-                    categoria: "Carro"
-                }, {
-                    id: 2,
-                    categoria: "Cor"
-                }, {
-                    id: 3,
-                    categoria: "CEP"
-                }, {
-                    id: 4,
-                    categoria: "Marca"
-                }]
-            }) */
-
-
-            // Carregando a lista de palavras ja cadastradas
-            axios
-                .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
-                .then(res => {
-                    // console.log(res.data.content)
-                    
-                    this.setState({ 
-                        categorias: res.data.content
-                    })
-                })
-        }
-        
-        handleChange = e => {
-            this.setState({ 
-                categ_val: e.target.value,
-                palavra: e.target.value
-            });
-        }
-        
-        /* Enviando dados para salvar */
-        handleSubmit = e => {
-        e.preventDefault();
-
-        const cadastroCategoria = {
-            categ_val: this.state.categ_val,
-            palavras: this.state.palavra
-        }
-
-        axios
-            .post('https://jsonplaceholder.typicode.com/users', { cadastroCategoria })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            }) 
-            
     }
 
+    componentDidMount() {
+        this.categoryList();
+        this.palavrasList();            
+    }
+
+    enviarCadastro = cadastroCategoria => {
+        let valor = cadastroCategoria.value;
+        if(valor.trim()) {
+            axios
+            .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { "name":valor })
+            .then(res => {
+                this.palavrasList();
+                if (this.state.success == 0) {
+                    alert("Cadastrado com sucesso");
+                }
+                this.setState({
+                    success: 1
+                })
+            })
+            .catch(res => {
+
+            })
+        }
+    }
+
+    /* Enviando dados para salvar */
+    handleSubmit = e => {
+        e.preventDefault();
+        
+        // const cadastroCategoria = new FormData(e.target);
+        // const cadastroCategoria = new FormData(this.form);
+        console.log(this.state);
+        
+        let cadastroCategoria = document.getElementsByName("name");
+        cadastroCategoria.forEach(a => this.enviarCadastro(a));
+        // this.state.success ? alert("Cadastrado com sucesso") : null;
+        // window.location.reload();
+        // cadastroCategoria.forEach((a) => a.value = "");
+    }
+
+    excluir = e => {
+        console.log(e.target.value)
+        let excluir_id = e.target.value;
+        if(window.confirm("Deseja realmente excluir a categoria?")){
+            axios
+            .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, {data:{ "category_id":excluir_id }})
+                .then(res => {
+                    console.log(res);
+                    console.log(res.data);
+                    this.categoryList();
+                    alert("Excluido com sucesso")
+                })
+        }
+    }
 
     addComponentePalavra = (res) => {
         //create a unike key for each new componentePalavra item
@@ -124,6 +143,7 @@ export default class BackPalavra extends Component {
             <Row className="backContainer">
             {/* <div className="row bck--container"> */}
                 <MenuBackoffice />
+                <h1 class="bkfcTitulo">Categorias</h1>
                 <div className="col-xs-12 col-md-8">
                     <form className="container" autoComplete="off" onSubmit={ this.handleSubmit}>
                         <div className="container botoes">
@@ -133,20 +153,20 @@ export default class BackPalavra extends Component {
                                 <button className="btn btn-danger botao" type="button" onClick={this.deleteComponentePalavra}>Remover palavra</button> : ""}
                                 {console.log(this.state.componentePalavra)}
 
-                            <button className="btn btn-success botao" type="submit">Enviar</button>
+                            <button className="btn btn-success botao"/*  type="submit" */>Enviar</button>
                         </div>
 
                         {/* <label className="inputBkofc">
                             Categoria: <input type="text" name="categoria" onChange={this.handleChange }/>
                         </label> */}
                         <label className="inputBkofc">
-                        Categoria: <input type="text" name="palavra" className="form-control" onChange={this.handleChange }/>
+                        Categoria: <input type="text" name="name" className="form-control" onChange={this.handleChange }/>
                         </label>
 
                         { Object.keys(this.state.componentePalavra).map(function(key) {
                             return (
                                 <label className="inputBkofc">
-                                    Categoria: <input type="text" name="palavra" className="form-control" onChange={this.handleChange }/>
+                                    Categoria: <input type="text" name="name" className="form-control" onChange={this.handleChange }/>
                                     {/* <button type="button" data-idx={ Object.keys(this.state.componentePalavra).length - 1 } onClick={ this.deleteComponentePalavra }>X</button> */}
                                 </label>
                             )
@@ -159,6 +179,7 @@ export default class BackPalavra extends Component {
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Categorias</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -166,6 +187,7 @@ export default class BackPalavra extends Component {
                                 return (
                                     <tr>
                                         <td>{res.name}</td>
+                                        <td><button className="btn-danger" value={res.category_id} onClick={this.excluir}>-</button></td>
                                     </tr>
                                 )
                             }) }

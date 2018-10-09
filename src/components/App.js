@@ -8,7 +8,7 @@ import { faPaste } from '@fortawesome/free-solid-svg-icons'
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 
 
-import Menu from "./shared/Menu";
+// import Menu from "./shared/Menu";
 import AppRoutes from "./App.Routes";
 
 library.add(faStroopwafel)
@@ -20,7 +20,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <Menu />
+          {/* <Menu /> */}
         </header>
         <AppRoutes />
       </div>
