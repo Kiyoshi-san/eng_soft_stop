@@ -70,17 +70,20 @@ export default class BackPalavra extends Component {
         /* Enviando dados para salvar */
         handleSubmit = e => {
         e.preventDefault();
-
+        
+        const data = new FormData(e.target);
+        
+        console.log(data)
         const cadastroCategoria = {
             categ_val: this.state.categ_val,
             palavras: this.state.palavra
         }
 
         axios
-            .post('https://jsonplaceholder.typicode.com/users', { cadastroCategoria })
+            .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { cadastroCategoria })
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                /* console.log(res);
+                console.log(res.data); */
             }) 
             
     }
@@ -124,6 +127,7 @@ export default class BackPalavra extends Component {
             <Row className="backContainer">
             {/* <div className="row bck--container"> */}
                 <MenuBackoffice />
+                <h1 class="bkfcTitulo">Categorias</h1>
                 <div className="col-xs-12 col-md-8">
                     <form className="container" autoComplete="off" onSubmit={ this.handleSubmit}>
                         <div className="container botoes">
@@ -140,13 +144,13 @@ export default class BackPalavra extends Component {
                             Categoria: <input type="text" name="categoria" onChange={this.handleChange }/>
                         </label> */}
                         <label className="inputBkofc">
-                        Categoria: <input type="text" name="palavra" className="form-control" onChange={this.handleChange }/>
+                        Categoria: <input type="text" name="name" className="form-control" onChange={this.handleChange }/>
                         </label>
 
                         { Object.keys(this.state.componentePalavra).map(function(key) {
                             return (
                                 <label className="inputBkofc">
-                                    Categoria: <input type="text" name="palavra" className="form-control" onChange={this.handleChange }/>
+                                    Categoria: <input type="text" name="name" className="form-control" onChange={this.handleChange }/>
                                     {/* <button type="button" data-idx={ Object.keys(this.state.componentePalavra).length - 1 } onClick={ this.deleteComponentePalavra }>X</button> */}
                                 </label>
                             )
