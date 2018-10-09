@@ -4,3 +4,27 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+.botao {
+    margin-right: 20px;
+}
+
+.botoes {
+    margin-top: 15px; 
+    margin-bottom: 15px;
+    margin-left: auto;
+    width: fit-content;
+}
+
+.bck--container {
+    position: relative;
+    display: block;
+}
+
+.logo_stop_menu_bkfc {
+    height: 50px;
+}
+
+.backContainer {
+    margin: 10px;
+}
