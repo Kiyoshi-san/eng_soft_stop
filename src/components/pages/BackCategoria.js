@@ -54,13 +54,15 @@ export default class BackPalavra extends Component {
 
     enviarCadastro = cadastroCategoria => {
         let valor = cadastroCategoria.value;
-        axios
-        .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { "name":valor })
+        if(valor.trim) {
+            axios
+            .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { "name":valor })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
                 alert("Cadastrado com sucesso")
-            }) 
+            })
+        }
     }
 
     /* Enviando dados para salvar */
