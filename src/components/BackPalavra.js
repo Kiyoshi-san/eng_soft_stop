@@ -89,7 +89,7 @@ export default class BackPalavra extends Component {
         alert("Cadastrado com sucesso");
         // this.state.success ? alert("Cadastrado com sucesso") : null;
         // window.location.reload();
-        selectCategoria.value = 0;
+        selectCategoria[0].value = 0;
         cadastroResposta.forEach((a) => a.value = "");
     }
 
