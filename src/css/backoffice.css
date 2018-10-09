@@ -30,8 +30,8 @@
 }
 
 .bkfcTitulo {
-    
-    margin: 15px 60px;
+    margin: 25px 60px;
+    padding-bottom: 10px;
     width: 100%;
-
+    border-bottom: 1px solid rgba(106, 106, 107, 0.5);
 }
