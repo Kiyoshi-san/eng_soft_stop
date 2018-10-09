@@ -122,6 +122,7 @@ export default class BackPalavra extends Component {
         return (
             <Row className="backContainer">
             {/* <div className="row bck--container"> */}
+                <h1 class="bkfcTitulo">Respostas</h1>
                 <div className="col-xs-12 col-md-8">
                     <form className="container" autoComplete="off" onSubmit={ this.handleSubmit}>
                         <div className="container botoes">
