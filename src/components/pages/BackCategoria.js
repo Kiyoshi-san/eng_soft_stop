@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import '../../css/backoffice.css';
 import axios from "axios";
-import MenuBackoffice from "../MenuBackoffice";
 
 import {Row} from 'react-bootstrap';
 
@@ -145,7 +144,6 @@ export default class BackPalavra extends Component {
         return (
             <Row className="backContainer">
             {/* <div className="row bck--container"> */}
-                <MenuBackoffice />
                 <h1 class="bkfcTitulo">Categorias</h1>
                 <div className="col-xs-12 col-md-8">
                     <form className="container" autoComplete="off" onSubmit={ this.handleSubmit}>

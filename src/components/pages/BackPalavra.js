@@ -1,7 +1,7 @@
 "use strict"
 
 import React, { Component } from 'react';
-import '../css/backoffice.css';
+import '../../css/backoffice.css';
 import axios from "axios";
 
 import {Row} from 'react-bootstrap';

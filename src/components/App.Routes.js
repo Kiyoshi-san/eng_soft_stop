@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Login from './pages/Login';
+import LoginBack from './pages/LoginBack';
 import Home from './pages/Home';
-import Backoffice from './pages/Backoffice.js';
+import BackPalavra from './pages/BackPalavra.js';
 import BackCategoria from './pages/BackCategoria';
 
 export default class AppRoutes extends Component {
@@ -19,7 +20,8 @@ export default class AppRoutes extends Component {
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <Route path='/login' component={Login}/>
-                    <Route path='/backoffice' component={Backoffice}/>
+                    <Route path='/login-back' component={LoginBack}/>
+                    <Route path='/backoffice' component={BackPalavra}/>
                     <Route path='/backoffice-categorias' component={BackCategoria}/>
                 </Switch>
             </main>

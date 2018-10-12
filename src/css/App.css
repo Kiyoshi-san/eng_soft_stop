@@ -1,14 +1,2 @@
 .App {
 }
-
-.App-header {
-  background-color: #222;
-  height: fit-content;
-  color: white;
-  flex-direction: row;
-}
-
-.App-title {
-  font-size: 1.5em;
-  padding: 40px;
-}

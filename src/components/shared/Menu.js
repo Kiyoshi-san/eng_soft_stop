@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import Nav from 'react-bootstrap/lib/Nav';
-import Navbar from 'react-bootstrap/lib/Navbar';
+import { Route } from 'react-router-dom';
 
-import logo from '../../images/stop_logo.png';
+import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+
+// Be sure to include styles at some point, probably during your bootstraping
+// import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import "../../css/react-sidenav.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import logo from '../../images/stop_logo_v2.png';
 
 import "../../css/menu.css";
 
@@ -13,22 +19,54 @@ export default class Menu extends Component {
 
     render () {
         return (
-            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" className="menu">
-                {/* <Navbar.Brand href="/">Stop App</Navbar.Brand> */}
-                <Navbar.Brand href="/">
-                    <img src={logo} className="logo_stop" alt="logo" />
-                </Navbar.Brand>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="mr-auto">
-                    </Nav>
-                    <Nav className="menu-itens">
-                        <Nav.Link href="/">Home</Nav.Link>
-                        <Nav.Link eventKey={2} href="#">Loja</Nav.Link>
-                        <Nav.Link eventKey={3} href="/login">Login</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
+            <Route render={({ location, history }) => (
+                <React.Fragment>
+                    <SideNav
+                        onSelect={(selected) => {
+                            const to = '/' + selected;
+                            if (location.pathname !== to) {
+                                history.push(to);
+                            }
+                        }}
+                    >
+                        <SideNav.Toggle />
+                        <SideNav.Nav defaultSelected="backoffice"><img src={logo} className="logo_stop_menu_bkfc" alt="logo" />
+                            {/* <a href="/backoffice"> */}
+                                <NavItem eventKey="backoffice">
+                                        <NavIcon>
+                                            <FontAwesomeIcon icon="paste" />
+                                            {/* <i className="fas fa-paste" style={{ fontSize: '1.75em' }} /> */}
+                                        </NavIcon>
+                                        <NavText>
+                                            Respostas
+                                        </NavText>
+                                </NavItem>
+                            {/* </a> */}
+                            {/* <a href="/backoffice"> */}
+                                <NavItem eventKey="backoffice-categorias">
+                                    <NavIcon href="/">
+                                        <FontAwesomeIcon icon="clipboard-list" />
+                                    </NavIcon>
+                                    <NavText href="/">
+                                        Categorias
+                                    </NavText>
+                                    {/* <NavItem eventKey="charts/linechart">
+                                        <NavText>
+                                            Line Chart
+                                    </NavText>
+                                    </NavItem>
+                                    <NavItem eventKey="charts/barchart">
+                                        <NavText>
+                                            Bar Chart
+                                    </NavText>
+                                    </NavItem> */}
+                                </NavItem>
+                            {/* </a> */}
+                        </SideNav.Nav>
+                    </SideNav>
+                </React.Fragment>
+            )}
+            />
         );
     }
 }
