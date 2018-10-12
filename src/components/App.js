@@ -6,7 +6,6 @@ import { faStroopwafel } from '@fortawesome/free-solid-svg-icons'
 import { faPaste } from '@fortawesome/free-solid-svg-icons'
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 
-
 import Menu from "./shared/Menu";
 import AppRoutes from "./App.Routes";
 

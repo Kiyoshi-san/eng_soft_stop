@@ -7,7 +7,24 @@
 }
 
 .logo_stop {
-    height: 80px;
+    height: 63px;
+    margin: 0;
+    -webkit-transition: height 0.5s;
+    -moz-transition: height 0.5s;
+    -o-transition: height 0.5s;
+    -ms-transition: height 0.5s;
+    transition: height 0.5s;
+    -webkit-transition: margin 0.15s;
+    -moz-transition: margin 0.15s;
+    -o-transition: margin 0.15s;
+    -ms-transition: margin 0.15s;
+    transition: margin 0.15s;
+}
+
+
+.sidenav---expanded---1KdUL .logo_stop {
+    height: 100px;
+    margin: 0 60px;
 }
 
 .menu-list {

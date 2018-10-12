@@ -13,6 +13,14 @@ import logo from '../../images/stop_logo_v2.png';
 import "../../css/menu.css";
 
 export default class Menu extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            itens: [
+            ],
+        }
+    }
+
     render () {
         return (
             <Route render={({ location, history }) => (
@@ -26,7 +34,7 @@ export default class Menu extends Component {
                         }}
                     >
                         <SideNav.Toggle />
-                        <SideNav.Nav defaultSelected="backoffice"><img src={logo} className="logo_stop_menu_bkfc" alt="logo" />
+                        <SideNav.Nav defaultSelected="backoffice"><img src={logo} className="logo_stop" alt="stop" />
                             {/* <a href="/backoffice"> */}
                                 <NavItem eventKey="backoffice">
                                         <NavIcon>
@@ -39,7 +47,7 @@ export default class Menu extends Component {
                                 </NavItem>
                             {/* </a> */}
                             {/* <a href="/backoffice"> */}
-                                <NavItem eventKey="backoffice-categorias">
+                                <NavItem eventKey="backoffice-categorias" {...this.state}>
                                     <NavIcon href="/">
                                         <FontAwesomeIcon icon="clipboard-list" />
                                     </NavIcon>

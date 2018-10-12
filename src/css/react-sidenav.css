@@ -5,6 +5,7 @@
     bottom: 0;
     left: 0;
     z-index: 1006;
+    height: 100%;
     min-width: 64px;
     /* background: #db3d44; */
     background: #343a40;

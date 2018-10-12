@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from "axios";
+import Alert from 'react-bootstrap/lib/Alert';
 import Button from 'react-bootstrap/lib/Button';
 import Card from 'react-bootstrap/lib/Card';
 import Form from 'react-bootstrap/lib/Form';
@@ -10,9 +12,11 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            message: "",
+            dirty: false,
             sucsses: false,
-            email: "",
-            password:    ""
+            userName: "",
+            userPassword: ""
         };
     }
 
@@ -20,16 +24,38 @@ export default class Login extends Component {
         this.setState({
           [event.target.id]: event.target.value
         });
-      }
+    }
 
-    loginValidate = () => {
-        if (this.state.email === "vitao" && this.state.password === "vitao") {
-            this.setState({sucsses: true});
+    handleSubmit = (event) => {
+        const body = {
+            user_name: this.state.userName,
+            user_password: this.state.userPassword
         }
+
+        this.validateLogin(body, (error) => {
+            this.setState({
+                sucsses: false,
+                message: `Não foi possível efetuar o login pelo seguinte erro: ${error}`
+            });
+        });
+    }
+
+    validateLogin = (body, errorCallback) => {
+        axios.post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/auth/login`, body)
+            .then(res => {
+                if (res.data.code === 200) {
+                    this.setState({
+                        sucsses: true,
+                    });
+                } else {
+                    errorCallback("Credenciais inválidas");
+                }
+            })
+            .catch(error => errorCallback(error));
     }
 
     render() {
-        const { sucsses } = this.state;
+        const { sucsses, message, dirty } = this.state;
 
         if (sucsses) {
             return <Redirect to='/home'/>;
@@ -37,26 +63,27 @@ export default class Login extends Component {
 
         return (
             <div className="d-flex login-body">
+                {dirty && !sucsses && <Alert dismissible variant="danger">
+                    <Alert.Heading>Ops houve um erro!</Alert.Heading>
+                    <p>
+                        {message}.
+                    </p>
+                </Alert>}
                 <Card className="login-card">
                 <Card.Body>
                     <Card.Title>Login do Usuário</Card.Title>
-                    <form onSubmit={this.loginValidate}>
-                        <Form.Group controlId="formBasicEmail">
+                    <form onSubmit={this.handleSubmit}>
+                        <Form.Group controlId="userName">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="email" value={this.state.email}
-                                onChange={this.handleChange} />
+                            <Form.Control type="email" placeholder="email" onChange={this.handleChange} />
                             <Form.Text className="text-muted">
                             Use aqui seu email e senha cadastrados.
                             </Form.Text>
                         </Form.Group>
 
-                        <Form.Group controlId="formBasicPassword">
+                        <Form.Group controlId="userPassword">
                             <Form.Label>Senha</Form.Label>
-                            <Form.Control type="password" placeholder="senha" value={this.state.password}
-                                onChange={this.handleChange} />
-                        </Form.Group>
-                        <Form.Group id="formBasicChecbox">
-                            <Form.Check type="checkbox" label="Mantenha-me logado" />
+                            <Form.Control type="password" placeholder="senha" onChange={this.handleChange} />
                         </Form.Group>
                         <Button variant="primary" type="submit">Login</Button>
                     </form>
