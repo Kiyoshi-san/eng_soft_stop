@@ -1,5 +1,3 @@
-"use strict"
-
 import React, { Component } from 'react';
 import '../../css/backoffice.css';
 import axios from "axios";
@@ -61,7 +59,7 @@ export default class BackPalavra extends Component {
             .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { "name":valor })
             .then(res => {
                 this.palavrasList();
-                if (this.state.success == 0) {
+                if (this.state.success === 0) {
                     // alert("Cadastrado com sucesso");
                 }
                 this.setState({
@@ -108,11 +106,8 @@ export default class BackPalavra extends Component {
     }
 
     addComponentePalavra = (res) => {
-        //create a unike key for each new componentePalavra item
-        var timestamp = (new Date()).getTime();
 
         // update the state object
-        // this.state.componentePalavra['componentePalavra-' + timestamp] = res;
         this.state.componentePalavra[this.idx] = res;
         this.idx++;
         

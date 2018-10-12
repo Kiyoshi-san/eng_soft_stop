@@ -13,10 +13,6 @@ import logo from '../../images/stop_logo_v2.png';
 import "../../css/menu.css";
 
 export default class Menu extends Component {
-    constructor() {
-        super ();
-    }
-
     render () {
         return (
             <Route render={({ location, history }) => (
