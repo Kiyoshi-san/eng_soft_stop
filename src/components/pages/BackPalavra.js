@@ -51,7 +51,7 @@ export default class BackPalavra extends Component {
 
     componentDidMount() {
         this.categoryList();
-        this.palavrasList();            
+        this.palavrasList();
     }
 
     enviarCadastro = cadastroResposta => {
@@ -111,9 +111,31 @@ export default class BackPalavra extends Component {
         }
     }
 
+    loadingTableAnswer = () => {
+        axios
+        // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+        .get('https://es3-stop-prod.herokuapp.com/answers?category=' + this.state.category_id)
+        .then(res => {
+            console.log("res")
+            console.log(res.data.content)
+            console.log("res")
+                this.setState({
+                    listaPalavras: res.data.content
+                })
+            })
+        .catch(res => {
+            console.log("erro")
+            console.log(res)
+            console.log("erro")
+        })
+    }
+
     handleChange = e => {
+        console.log(e.target.value)
         this.setState({ 
             category_id: e.target.value
+        }, () => {
+            this.loadingTableAnswer();
         });
     }
 
@@ -180,9 +202,9 @@ export default class BackPalavra extends Component {
                                 { this.state.categorias.map(res => <option value={ res.category_id }>{ res.name }</option>) }
                             </select>
                         </label>
-                        <label className="inputBkofc">
-                            Palavra: <input type="text" name="description" className="form-control" /* onChange={this.handleChange } *//>
-                        </label>
+                        {/* <label className="inputBkofc">
+                            Palavra: <input type="text" name="description" className="form-control" onChange={this.handleChange }/>
+                        </label> */}
 
                         { Object.keys(this.state.componentePalavra).map(function(key) {
                             return (
@@ -208,10 +230,10 @@ export default class BackPalavra extends Component {
                                 <th scope="col"><input></input></th>
                                 <th scope="col"></th>
                             </tr>
-                            { this.state.categorias.map(res => {
+                            {this.state.listaPalavras.map(res => {
                                 return (
                                     <tr>
-                                        <td>{res.name}</td>
+                                        <td>{res.description}</td>
                                         <td><button className="btn-danger" value={res.category_id} onClick={this.excluir}>-</button></td>
                                     </tr>
                                 )
