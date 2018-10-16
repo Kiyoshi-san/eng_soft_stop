@@ -22,11 +22,14 @@ export default class Login extends Component {
 
     handleChange = (event) => {
         this.setState({
-          [event.target.id]: event.target.value
+          [event.target.id]: event.target.value,
+          dirty: true
         });
     }
 
     handleSubmit = (event) => {
+        event.preventDefault();
+
         const body = {
             user_name: this.state.userName,
             user_password: this.state.userPassword
@@ -35,20 +38,23 @@ export default class Login extends Component {
         this.validateLogin(body, (error) => {
             this.setState({
                 sucsses: false,
-                message: `Não foi possível efetuar o login pelo seguinte erro: ${error}`
+                message: `Não foi possível efetuar o login pelo seguinte erro:
+                    ${error.response.data.messages[0]}`,
+                userName: "",
+                userPassword: ""
             });
         });
     }
 
     validateLogin = (body, errorCallback) => {
-        axios.post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/auth/login`, body)
+        axios.post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/auth/login/2`, body)
             .then(res => {
                 if (res.data.code === 200) {
                     this.setState({
                         sucsses: true,
                     });
                 } else {
-                    errorCallback("Credenciais inválidas");
+                    errorCallback("Usuário ou senha inexistente.");
                 }
             })
             .catch(error => errorCallback(error));
@@ -63,7 +69,7 @@ export default class Login extends Component {
 
         return (
             <div className="d-flex login-body">
-                {dirty && !sucsses && <Alert dismissible variant="danger">
+                {dirty && !sucsses && message !== "" && <Alert dismissible variant="danger" className="login-alert">
                     <Alert.Heading>Ops houve um erro!</Alert.Heading>
                     <p>
                         {message}.
@@ -75,7 +81,8 @@ export default class Login extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <Form.Group controlId="userName">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="email" onChange={this.handleChange} />
+                            <Form.Control type="email" placeholder="email" value={this.state.userName}
+                                onChange={this.handleChange} />
                             <Form.Text className="text-muted">
                             Use aqui seu email e senha cadastrados.
                             </Form.Text>
@@ -83,7 +90,8 @@ export default class Login extends Component {
 
                         <Form.Group controlId="userPassword">
                             <Form.Label>Senha</Form.Label>
-                            <Form.Control type="password" placeholder="senha" onChange={this.handleChange} />
+                            <Form.Control type="password" placeholder="senha" value={this.state.userPassword}
+                                onChange={this.handleChange} />
                         </Form.Group>
                         <Button variant="primary" type="submit">Login</Button>
                     </form>
