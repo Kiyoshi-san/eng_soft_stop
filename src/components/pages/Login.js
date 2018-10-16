@@ -6,7 +6,10 @@ import Card from 'react-bootstrap/lib/Card';
 import Form from 'react-bootstrap/lib/Form';
 import { Redirect } from 'react-router';
 
+import StorageKey from '../../storage/StorageKey';
 import "../../css/login.css";
+
+const loginLevel = 2;
 
 export default class Login extends Component {
     constructor(props) {
@@ -47,12 +50,17 @@ export default class Login extends Component {
     }
 
     validateLogin = (body, errorCallback) => {
-        axios.post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/auth/login/2`, body)
+        axios.post(`https://es3-stop-prod.herokuapp.com/auth/login/${loginLevel}`, body)
             .then(res => {
-                if (res.data.code === 200) {
+                if (res.data.status_code === 200) {
                     this.setState({
                         sucsses: true,
                     });
+                    localStorage.setItem(StorageKey.AUTENTICACAO, JSON.stringify({
+                        type: loginLevel,
+                        userId: res.data.content.user_id,
+                        userName: res.data.content.user_name
+                    }));
                 } else {
                     errorCallback("Usuário ou senha inexistente.");
                 }
@@ -81,7 +89,7 @@ export default class Login extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <Form.Group controlId="userName">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="email" value={this.state.userName}
+                            <Form.Control type="text" placeholder="usuário" value={this.state.userName}
                                 onChange={this.handleChange} />
                             <Form.Text className="text-muted">
                             Use aqui seu email e senha cadastrados.
@@ -107,7 +115,6 @@ export default class Login extends Component {
                 </Card.Body>
                 </Card>
             </div>
-
         );
     }
 }
