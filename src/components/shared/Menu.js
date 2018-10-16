@@ -47,24 +47,25 @@ export default class Menu extends Component {
                                 </NavItem>
                             {/* </a> */}
                             {/* <a href="/backoffice"> */}
-                                <NavItem eventKey="backoffice-categorias" {...this.state}>
+                                {/* <NavItem eventKey="backoffice-categorias" {...this.state}>
                                     <NavIcon href="/">
                                         <FontAwesomeIcon icon="clipboard-list" />
                                     </NavIcon>
                                     <NavText href="/">
                                         Categorias
                                     </NavText>
-                                    {/* <NavItem eventKey="charts/linechart">
-                                        <NavText>
-                                            Line Chart
-                                    </NavText>
-                                    </NavItem>
-                                    <NavItem eventKey="charts/barchart">
-                                        <NavText>
-                                            Bar Chart
-                                    </NavText>
-                                    </NavItem> */}
-                                </NavItem>
+                                    {// <NavItem eventKey="charts/linechart">
+                                    //     <NavText>
+                                    //         Line Chart
+                                    // </NavText>
+                                    // </NavItem>
+                                    // <NavItem eventKey="charts/barchart">
+                                    //     <NavText>
+                                    //         Bar Chart
+                                    // </NavText>
+                                    // </NavItem>
+                                    }
+                                </NavItem> */}
                             {/* </a> */}
                         </SideNav.Nav>
                     </SideNav>

@@ -23,7 +23,8 @@ export default class BackPalavra extends Component {
     categoryList() {
         console.log("categorylist")
         axios
-        .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+        // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+        .get('https://es3-stop-prod.herokuapp.com/categories')
         .then(res => {
             // console.log(res.data.content)
             
@@ -37,7 +38,8 @@ export default class BackPalavra extends Component {
         console.log("palavraslist")
         // Carregando a lista de palavras ja cadastradas
         axios
-            .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+            // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+            .get('https://es3-stop-prod.herokuapp.com/categories')
             .then(res => {
                 // console.log(res.data.content)
                 
@@ -56,7 +58,8 @@ export default class BackPalavra extends Component {
         let valor = cadastroResposta.value;
         if (valor.trim()) {
             axios
-            .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
+                // .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
+                .post('https://es3-stop-prod.herokuapp.com/answer', { "category_id": this.state.category_id, "description": valor })
             .then(res => {
                 this.palavrasList();
                 if(this.state.success === 0) {
@@ -97,7 +100,8 @@ export default class BackPalavra extends Component {
         
         if (window.confirm("Deseja realmente excluir a categoria?")) {
             axios
-                .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
+                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
+                .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": excluir_id } })
                 .then(res => {
                     console.log(res);
                     console.log(res.data);
@@ -144,11 +148,17 @@ export default class BackPalavra extends Component {
         console.log(array_del)
     }
 
+    handleSwitch(elem, state) {
+        console.log('handleSwitch. elem:', elem);
+        console.log('name:', elem.props.name);
+        console.log('new state:', state);
+    }
+
     render() {
         return (
             <Row className="backContainer">
             {/* <div className="row bck--container"> */}
-                <h1 class="bkfcTitulo">Respostas</h1>
+                <h1 class="bkfcTitulo">Cadastro</h1>
                 <div className="col-xs-12 col-md-8">
                     <form className="container" autoComplete="off" onSubmit={ this.handleSubmit}>
                         <div className="container botoes">
@@ -186,7 +196,7 @@ export default class BackPalavra extends Component {
                     </form>
                 </div>
                 <div className="col-xs-12 col-md-4">
-                    {/* <table class="table">
+                    <table class="table">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Respostas</th>
@@ -194,6 +204,10 @@ export default class BackPalavra extends Component {
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <th scope="col"><input></input></th>
+                                <th scope="col"></th>
+                            </tr>
                             { this.state.categorias.map(res => {
                                 return (
                                     <tr>
@@ -203,7 +217,7 @@ export default class BackPalavra extends Component {
                                 )
                             }) }
                         </tbody>
-                    </table> */}
+                    </table>
                 </div>
             {/* </div> */}
             </Row>
