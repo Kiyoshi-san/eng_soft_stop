@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import LoginBack from './pages/LoginBack';
 import Home from './pages/Home';
 import BackPalavra from './pages/BackPalavra.js';
-import BackCategoria from './pages/BackCategoria';
+// import BackCategoria from './pages/BackCategoria';
 
 export default class AppRoutes extends Component {
     constructor(props) {
@@ -16,7 +16,7 @@ export default class AppRoutes extends Component {
 
     render() {
         return (
-            <main>
+            <main className="mainContainer">
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <Route path='/login' component={Login}/>
