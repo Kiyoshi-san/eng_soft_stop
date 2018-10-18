@@ -134,31 +134,41 @@ export default class BackPalavra extends Component {
     }
 
     excluirCategoria = e => {
-        console.log(e.target.value)
+        e.preventDefault();
+        
         let excluir_id = e.target.value;
         
         if (window.confirm("Deseja realmente excluir a categoria?")) {
             axios
-                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
-                .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": excluir_id } })
+                .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
+                // .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": excluir_id } })
                 .then(res => {
                     this.categoryList();
                     alert("Excluido com sucesso")
+                })
+                .catch(res => {
+                    alert("Erro")
+                    alert(res)
                 })
         }
     }
 
     excluirResposta = e => {
+        e.preventDefault();
         
         let excluir_id = e.target.value;
         
         if (window.confirm("Deseja realmente excluir a resposta?")) {
             axios
-                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
-                .delete('https://es3-stop-prod.herokuapp.com/answers', { data: { "answer_id": excluir_id } })
+                .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answers`, { data: { "answer_id": excluir_id } })
+                // .delete('https://es3-stop-prod.herokuapp.com/answers', { data: { "answer_id": excluir_id } })
                 .then(res => {
                     this.categoryList();
                     alert("Excluido com sucesso")
+                })
+                .catch(res => {
+                    alert("Erro")
+                    alert(res)
                 })
         }
     }
