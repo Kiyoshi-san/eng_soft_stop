@@ -10,8 +10,6 @@
 }
 
 .botoes {
-    margin-top: 15px; 
-    margin-bottom: 15px;
     margin-left: auto;
     width: fit-content;
 }
@@ -32,10 +30,14 @@
     border-bottom: 1px solid rgba(106, 106, 107, 0.5);
 }
 
-.sidenav---collapsed---LQDEv .sidenav---expanded---1KdUL {
+.sidenav---sidenav---_2tBP {
     position: fixed !important;
 }
 
 .selectClass {
-    width: 220px;
+    width: 227px !important;
+}
+
+.addResposta {
+    width: 200px;
 }
