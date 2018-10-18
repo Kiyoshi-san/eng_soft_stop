@@ -80,18 +80,28 @@ export default class BackPalavra extends Component {
     /* Enviando dados para salvar */
     handleSubmit = e => {
         e.preventDefault();
-        
+        alert("")
         // const cadastroResposta = new FormData(e.target);
         // const cadastroResposta = new FormData(this.form);
         
-        let cadastroResposta = document.getElementsByName("description");
-        let selectCategoria = document.getElementsByName("categoria");
-        cadastroResposta.forEach(a => this.enviarCadastro(a));
-        alert("Cadastrado com sucesso");
+        let cadastroResposta = document.getElementsByName("description")[0].value;
+        let selectCategoria = Number(document.getElementsByName("categoria")[0].value);
+        
+        if (!cadastroResposta.trim()) {
+            alert("Por favor preencha uma resposta válida");
+            return;
+        }
+        
+        if (!selectCategoria) {
+            alert("Por favor selecione uma categoria");
+            return;
+        }
         // this.state.success ? alert("Cadastrado com sucesso") : null;
         // window.location.reload();
-        selectCategoria[0].value = 0;
-        cadastroResposta.forEach((a) => a.value = "");
+        selectCategoria = 0;
+        // cadastroResposta.forEach((a) => a.value = "");
+        this.enviarCadastro(cadastroResposta);
+        cadastroResposta = "";
     }
 
     excluir = e => {
@@ -182,15 +192,15 @@ export default class BackPalavra extends Component {
             {/* <div className="row bck--container"> */}
                 <h1 class="bkfcTitulo">Cadastro</h1>
                 <div className="col-xs-12 col-md-8">
-                    <form className="container" autoComplete="off" onSubmit={ this.handleSubmit}>
+                    <form className="container" autoComplete="off"/*  onSubmit={ this.handleSubmit} */>
                         <div className="container botoes">
-                            <button className="btn btn-primary botao" onClick={this.addComponentePalavra} type="button">Add mais Respostas</button>
+                            {/* <button className="btn btn-primary botao" onClick={this.addComponentePalavra} type="button">Add mais Respostas</button> */}
 
                             {this.state.componentePalavra.length ?
                                 <button className="btn btn-danger botao" type="button" onClick={this.deleteComponentePalavra}>Remover palavra</button> : ""}
                                 {console.log(this.state.componentePalavra)}
 
-                            <button className="btn btn-success botao"/*  type="submit" */>Enviar</button>
+                            {/* <button className="btn btn-success botao">Enviar</button> */}
                         </div>
 
                         {/* <label className="inputBkofc">
@@ -227,8 +237,8 @@ export default class BackPalavra extends Component {
                         </thead>
                         <tbody>
                             <tr>
-                                <th scope="col"><input></input></th>
-                                <th scope="col"></th>
+                                <th scope="col"><input type="text" name="description" place className="form-control" onChange={this.handleChange} /></th>
+                                <th scope="col"><button className="btn btn-success botao" onClick={this.handleSubmit}/*  type="submit" */>Enviar</button></th>
                             </tr>
                             {this.state.listaPalavras.map(res => {
                                 return (
