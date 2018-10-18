@@ -23,7 +23,8 @@ export default class BackPalavra extends Component {
     categoryList() {
         console.log("categorylist")
         axios
-        .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+        // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+        .get('https://es3-stop-prod.herokuapp.com/categories')
         .then(res => {
             // console.log(res.data.content)
             
@@ -37,7 +38,8 @@ export default class BackPalavra extends Component {
         console.log("palavraslist")
         // Carregando a lista de palavras ja cadastradas
         axios
-            .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+            // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+            .get('https://es3-stop-prod.herokuapp.com/categories')
             .then(res => {
                 // console.log(res.data.content)
                 
@@ -49,14 +51,15 @@ export default class BackPalavra extends Component {
 
     componentDidMount() {
         this.categoryList();
-        this.palavrasList();            
+        this.palavrasList();
     }
 
     enviarCadastro = cadastroResposta => {
         let valor = cadastroResposta.value;
         if (valor.trim()) {
             axios
-            .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
+                // .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
+                .post('https://es3-stop-prod.herokuapp.com/answer', { "category_id": this.state.category_id, "description": valor })
             .then(res => {
                 this.palavrasList();
                 if(this.state.success === 0) {
@@ -77,18 +80,28 @@ export default class BackPalavra extends Component {
     /* Enviando dados para salvar */
     handleSubmit = e => {
         e.preventDefault();
-        
+        alert("")
         // const cadastroResposta = new FormData(e.target);
         // const cadastroResposta = new FormData(this.form);
         
-        let cadastroResposta = document.getElementsByName("description");
-        let selectCategoria = document.getElementsByName("categoria");
-        cadastroResposta.forEach(a => this.enviarCadastro(a));
-        alert("Cadastrado com sucesso");
+        let cadastroResposta = document.getElementsByName("description")[0].value;
+        let selectCategoria = Number(document.getElementsByName("categoria")[0].value);
+        
+        if (!cadastroResposta.trim()) {
+            alert("Por favor preencha uma resposta válida");
+            return;
+        }
+        
+        if (!selectCategoria) {
+            alert("Por favor selecione uma categoria");
+            return;
+        }
         // this.state.success ? alert("Cadastrado com sucesso") : null;
         // window.location.reload();
-        selectCategoria[0].value = 0;
-        cadastroResposta.forEach((a) => a.value = "");
+        selectCategoria = 0;
+        // cadastroResposta.forEach((a) => a.value = "");
+        this.enviarCadastro(cadastroResposta);
+        cadastroResposta = "";
     }
 
     excluir = e => {
@@ -97,7 +110,8 @@ export default class BackPalavra extends Component {
         
         if (window.confirm("Deseja realmente excluir a categoria?")) {
             axios
-                .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
+                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
+                .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": excluir_id } })
                 .then(res => {
                     console.log(res);
                     console.log(res.data);
@@ -107,9 +121,31 @@ export default class BackPalavra extends Component {
         }
     }
 
+    loadingTableAnswer = () => {
+        axios
+        // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
+        .get('https://es3-stop-prod.herokuapp.com/answers?category=' + this.state.category_id)
+        .then(res => {
+            console.log("res")
+            console.log(res.data.content)
+            console.log("res")
+                this.setState({
+                    listaPalavras: res.data.content
+                })
+            })
+        .catch(res => {
+            console.log("erro")
+            console.log(res)
+            console.log("erro")
+        })
+    }
+
     handleChange = e => {
+        console.log(e.target.value)
         this.setState({ 
             category_id: e.target.value
+        }, () => {
+            this.loadingTableAnswer();
         });
     }
 
@@ -144,21 +180,27 @@ export default class BackPalavra extends Component {
         console.log(array_del)
     }
 
+    handleSwitch(elem, state) {
+        console.log('handleSwitch. elem:', elem);
+        console.log('name:', elem.props.name);
+        console.log('new state:', state);
+    }
+
     render() {
         return (
             <Row className="backContainer">
             {/* <div className="row bck--container"> */}
-                <h1 class="bkfcTitulo">Respostas</h1>
+                <h1 class="bkfcTitulo">Cadastro</h1>
                 <div className="col-xs-12 col-md-8">
-                    <form className="container" autoComplete="off" onSubmit={ this.handleSubmit}>
+                    <form className="container" autoComplete="off"/*  onSubmit={ this.handleSubmit} */>
                         <div className="container botoes">
-                            <button className="btn btn-primary botao" onClick={this.addComponentePalavra} type="button">Add mais Respostas</button>
+                            {/* <button className="btn btn-primary botao" onClick={this.addComponentePalavra} type="button">Add mais Respostas</button> */}
 
                             {this.state.componentePalavra.length ?
                                 <button className="btn btn-danger botao" type="button" onClick={this.deleteComponentePalavra}>Remover palavra</button> : ""}
                                 {console.log(this.state.componentePalavra)}
 
-                            <button className="btn btn-success botao"/*  type="submit" */>Enviar</button>
+                            {/* <button className="btn btn-success botao">Enviar</button> */}
                         </div>
 
                         {/* <label className="inputBkofc">
@@ -170,9 +212,9 @@ export default class BackPalavra extends Component {
                                 { this.state.categorias.map(res => <option value={ res.category_id }>{ res.name }</option>) }
                             </select>
                         </label>
-                        <label className="inputBkofc">
-                            Palavra: <input type="text" name="description" className="form-control" /* onChange={this.handleChange } *//>
-                        </label>
+                        {/* <label className="inputBkofc">
+                            Palavra: <input type="text" name="description" className="form-control" onChange={this.handleChange }/>
+                        </label> */}
 
                         { Object.keys(this.state.componentePalavra).map(function(key) {
                             return (
@@ -186,7 +228,7 @@ export default class BackPalavra extends Component {
                     </form>
                 </div>
                 <div className="col-xs-12 col-md-4">
-                    {/* <table class="table">
+                    <table class="table">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Respostas</th>
@@ -194,16 +236,20 @@ export default class BackPalavra extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            { this.state.categorias.map(res => {
+                            <tr>
+                                <th scope="col"><input type="text" name="description" place className="form-control" onChange={this.handleChange} /></th>
+                                <th scope="col"><button className="btn btn-success botao" onClick={this.handleSubmit}/*  type="submit" */>Enviar</button></th>
+                            </tr>
+                            {this.state.listaPalavras.map(res => {
                                 return (
                                     <tr>
-                                        <td>{res.name}</td>
+                                        <td>{res.description}</td>
                                         <td><button className="btn-danger" value={res.category_id} onClick={this.excluir}>-</button></td>
                                     </tr>
                                 )
                             }) }
                         </tbody>
-                    </table> */}
+                    </table>
                 </div>
             {/* </div> */}
             </Row>
