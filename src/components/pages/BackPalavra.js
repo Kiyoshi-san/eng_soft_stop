@@ -21,13 +21,10 @@ export default class BackPalavra extends Component {
     idx = 0;
     
     categoryList() {
-        console.log("categorylist")
         axios
         // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
         .get('https://es3-stop-prod.herokuapp.com/categories')
         .then(res => {
-            // console.log(res.data.content)
-            
             this.setState({ 
                 categorias: res.data.content
             })
@@ -43,8 +40,8 @@ export default class BackPalavra extends Component {
                 })
             })
         .catch(res => {
-            console.log("erro")
-            console.log(res)
+            // console.log("erro")
+            // console.log(res)
         })
     }
     
@@ -177,8 +174,9 @@ export default class BackPalavra extends Component {
         // e.preventDefault();
         
         // let click_categ_id = e.target.value;
-        console.log(click_categ_id)
+        
         document.getElementsByName("categoria")[0].value = click_categ_id
+        this.handleChangeClickCategTable(click_categ_id)
 
     }
 
@@ -202,9 +200,19 @@ export default class BackPalavra extends Component {
     }
 
     handleChange = e => {
-        console.log(e.target.value)
+        let idcategory = e.target.value
         this.setState({ 
-            category_id: e.target.value
+            category_id: idcategory
+        }, () => {
+            this.loadingTableAnswer();
+        });
+    }
+
+    handleChangeClickCategTable = e => {
+        let idcategory = e
+
+        this.setState({ 
+            category_id: idcategory
         }, () => {
             this.loadingTableAnswer();
         });
@@ -238,13 +246,12 @@ export default class BackPalavra extends Component {
         this.setState({
             componentePalavra: array_del
         })
-        console.log(array_del)
     }
 
     handleSwitch(elem, state) {
-        console.log('handleSwitch. elem:', elem);
-        console.log('name:', elem.props.name);
-        console.log('new state:', state);
+        // console.log('handleSwitch. elem:', elem);
+        // console.log('name:', elem.props.name);
+        // console.log('new state:', state);
     }
 
     render() {
@@ -262,7 +269,7 @@ export default class BackPalavra extends Component {
 
                                     {this.state.componentePalavra.length ?
                                         <button className="btn btn-danger botao" type="button" onClick={this.deleteComponentePalavra}>Remover palavra</button> : ""}
-                                        {console.log(this.state.componentePalavra)}
+                                        {/* console.log(this.state.componentePalavra) */}
 
                                     {/* <button className="btn btn-success botao">Enviar</button> */}
                                 </div>
