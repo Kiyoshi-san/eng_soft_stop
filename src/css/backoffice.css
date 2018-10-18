@@ -35,5 +35,9 @@
 }
 
 .selectClass {
-    width: 220px;
+    width: 227px !important;
+}
+
+.addResposta {
+    width: 200px;
 }
