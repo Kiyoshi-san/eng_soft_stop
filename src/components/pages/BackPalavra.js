@@ -133,7 +133,7 @@ export default class BackPalavra extends Component {
         this.enviarCadastroCategoria(cadastroCategoria);
     }
 
-    excluir = e => {
+    excluirCategoria = e => {
         console.log(e.target.value)
         let excluir_id = e.target.value;
         
@@ -142,8 +142,21 @@ export default class BackPalavra extends Component {
                 // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
                 .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": excluir_id } })
                 .then(res => {
-                    console.log(res);
-                    console.log(res.data);
+                    this.categoryList();
+                    alert("Excluido com sucesso")
+                })
+        }
+    }
+
+    excluirResposta = e => {
+        
+        let excluir_id = e.target.value;
+        
+        if (window.confirm("Deseja realmente excluir a resposta?")) {
+            axios
+                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
+                .delete('https://es3-stop-prod.herokuapp.com/answers', { data: { "answer_id": excluir_id } })
+                .then(res => {
                     this.categoryList();
                     alert("Excluido com sucesso")
                 })
@@ -255,7 +268,7 @@ export default class BackPalavra extends Component {
                                             return (
                                                 <tr>
                                                     <td>{res.name}</td>
-                                                    <td><button className="btn-danger" value={res.category_id} onClick={this.excluir}>-</button></td>
+                                                    <td><button className="btn-danger" value={res.category_id} onClick={this.excluirCategoria}>-</button></td>
                                                 </tr>
                                             )
                                         }) }
@@ -300,7 +313,7 @@ export default class BackPalavra extends Component {
                                             return (
                                                 <tr>
                                                     <td>{res.description}</td>
-                                                    <td><button className="btn-danger" value={res.category_id} onClick={this.excluir}>-</button></td>
+                                                    <td><button className="btn-danger" value={res.answer_id} onClick={this.excluirResposta}>-</button></td>
                                                 </tr>
                                             )
                                         }) }
