@@ -172,6 +172,16 @@ export default class BackPalavra extends Component {
         }
     }
 
+    // clickCategoria = e => {
+    clickCategoria(click_categ_id) {
+        // e.preventDefault();
+        
+        // let click_categ_id = e.target.value;
+        console.log(click_categ_id)
+        document.getElementsByName("categoria")[0].value = click_categ_id
+
+    }
+
     loadingTableAnswer = () => {
         axios
         // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
@@ -276,8 +286,9 @@ export default class BackPalavra extends Component {
                                         { this.state.categorias.map(res => {
                                             return (
                                                 <tr>
-                                                    <td>{res.name}</td>
-                                                    <td><button className="btn-danger" value={res.category_id} onClick={this.excluirCategoria}>-</button></td>
+                                                    {/* <td value={res.category_id} onClick={this.clickCategoria}>{res.name}</td> */}
+                                                    <td onClick={ () => this.clickCategoria(res.category_id) }>{res.name}</td>
+                                                    <td><button className="btn-danger" value={res.category_id} onClick={this.excluirCategoria}>X</button></td>
                                                 </tr>
                                             )
                                         }) }
@@ -322,7 +333,7 @@ export default class BackPalavra extends Component {
                                             return (
                                                 <tr>
                                                     <td>{res.description}</td>
-                                                    <td><button className="btn-danger" value={res.answer_id} onClick={this.excluirResposta}>-</button></td>
+                                                    <td><button className="btn-danger" value={res.answer_id} onClick={this.excluirResposta}>X</button></td>
                                                 </tr>
                                             )
                                         }) }
