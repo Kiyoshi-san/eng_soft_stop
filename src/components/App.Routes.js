@@ -22,7 +22,7 @@ export default class AppRoutes extends Component {
                     <Route path='/login' component={Login}/>
                     <Route path='/login-back' component={LoginBack}/>
                     <Route path='/backoffice' component={BackPalavra}/>
-                    <Route path='/backoffice-categorias' component={BackCategoria}/>
+                    {/* <Route path='/backoffice-categorias' component={BackCategoria}/> */}
                 </Switch>
             </main>
         );
