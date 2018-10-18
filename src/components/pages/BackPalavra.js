@@ -55,24 +55,18 @@ export default class BackPalavra extends Component {
     }
 
     enviarCadastroResposta = cadastroResposta => {
-        let valor = cadastroResposta.value;
+        let valor = cadastroResposta;
         if (valor.trim()) {
             axios
                 // .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
                 .post('https://es3-stop-prod.herokuapp.com/answer', { "category_id": this.state.category_id, "description": valor })
             .then(res => {
+                alert("Cadastrado com sucesso");
+                document.getElementsByName("description")[0].value = "";
                 this.palavrasList();
-                if(this.state.success === 0) {
-                    // alert("Cadastrado com sucesso");
-                }
-                this.setState ({
-                    success: 1
-                })
             })
             .catch(res => {
-                this.setState ({
-                    success: 0
-                })
+                alert("Algo deu errado")
             })
         }
     }
@@ -299,8 +293,8 @@ export default class BackPalavra extends Component {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th scope="col"><input type="text" name="description" placeHolder="Adicionar uma Resposta" className="form-control" onChange={this.handleChange} /></th>
-                                            <th scope="col"><button className="btn btn-success botao" onClick={this.handleSubmitResposta}/*  type="submit" */>Enviar</button></th>
+                                            <th scope="col col-xs-8"><input type="text" name="description" placeHolder="Adicionar uma Resposta" className="form-control"/*  onChange={this.handleChange} */ /></th>
+                                            <th scope="col col-xs-4"><button className="btn btn-success botao" onClick={this.handleSubmitResposta}/*  type="submit" */>Enviar</button></th>
                                         </tr>
                                         {this.state.listaPalavras.map(res => {
                                             return (
