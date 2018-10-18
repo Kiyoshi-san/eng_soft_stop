@@ -35,20 +35,19 @@ export default class BackPalavra extends Component {
     }
     
     palavrasList() {
-        console.log("palavraslist")
-        // Carregando a lista de palavras ja cadastradas
         axios
-            // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
-            .get('https://es3-stop-prod.herokuapp.com/categories')
-            .then(res => {
-                // console.log(res.data.content)
-                
-                this.setState({ 
-                    categorias: res.data.content
+        .get('https://es3-stop-prod.herokuapp.com/answers?category=' + this.state.category_id)
+        .then(res => {
+                this.setState({
+                    listaPalavras: res.data.content
                 })
             })
+        .catch(res => {
+            console.log("erro")
+            console.log(res)
+        })
     }
-
+    
     componentDidMount() {
         this.categoryList();
         this.palavrasList();
@@ -140,8 +139,8 @@ export default class BackPalavra extends Component {
         
         if (window.confirm("Deseja realmente excluir a categoria?")) {
             axios
-                .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
-                // .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": excluir_id } })
+                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
+                .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": excluir_id } })
                 .then(res => {
                     this.categoryList();
                     alert("Excluido com sucesso")
@@ -160,10 +159,10 @@ export default class BackPalavra extends Component {
         
         if (window.confirm("Deseja realmente excluir a resposta?")) {
             axios
-                .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answers`, { data: { "answer_id": excluir_id } })
-                // .delete('https://es3-stop-prod.herokuapp.com/answers', { data: { "answer_id": excluir_id } })
+                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { data: { "answer_id": excluir_id } })
+                .delete('https://es3-stop-prod.herokuapp.com/answer', { data: { "answer_id": excluir_id } })
                 .then(res => {
-                    this.categoryList();
+                    this.palavrasList();
                     alert("Excluido com sucesso")
                 })
                 .catch(res => {
