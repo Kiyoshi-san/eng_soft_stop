@@ -261,7 +261,7 @@ export default class BackPalavra extends Component {
                                     Categoria: <input type="text" name="categoria" onChange={this.handleChange }/>
                                 </label> */}
 
-                                <table className="table table__categ">
+                                <table className="table">
                                     <thead className="thead-dark">
                                         <tr>
                                             <th scope="col">Categorias</th>
@@ -315,8 +315,8 @@ export default class BackPalavra extends Component {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th scope="col col-xs-8"><input type="text" name="description" placeHolder="Adicionar uma Resposta" className="form-control"/*  onChange={this.handleChange} */ /></th>
-                                            <th scope="col col-xs-4"><button className="btn btn-success botao" onClick={this.handleSubmitResposta}/*  type="submit" */>Enviar</button></th>
+                                            <th scope="col"><input type="text" name="description" id="description" placeHolder="Adicionar uma Resposta" className="form-control addResposta"/*  onChange={this.handleChange} */ /></th>
+                                            <th scope="col"><button className="btn btn-success botao" onClick={this.handleSubmitResposta}/*  type="submit" */>Enviar</button></th>
                                         </tr>
                                         {this.state.listaPalavras.map(res => {
                                             return (
