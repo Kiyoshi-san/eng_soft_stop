@@ -17,9 +17,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header>
+        {/* <header> */}
             <Menu />
-        </header>
+        {/* </header> */}
         <AppRoutes />
       </div>
     );

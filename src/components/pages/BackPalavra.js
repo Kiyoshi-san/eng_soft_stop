@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../../css/backoffice.css';
 import axios from "axios";
 
-import {Row} from 'react-bootstrap';
+import { Row, Alert, Button } from 'react-bootstrap';
 
 export default class BackPalavra extends Component {
     constructor(props) {
@@ -14,20 +14,18 @@ export default class BackPalavra extends Component {
             listaPalavras: [],
             addPalavra: null,
             componentePalavra: [],
-            success: 0
+            success: 0,
+            show: true
         };
     }
     
     idx = 0;
     
     categoryList() {
-        console.log("categorylist")
         axios
         // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
         .get('https://es3-stop-prod.herokuapp.com/categories')
         .then(res => {
-            // console.log(res.data.content)
-            
             this.setState({ 
                 categorias: res.data.content
             })
@@ -43,8 +41,8 @@ export default class BackPalavra extends Component {
                 })
             })
         .catch(res => {
-            console.log("erro")
-            console.log(res)
+            // console.log("erro")
+            // console.log(res)
         })
     }
     
@@ -60,7 +58,8 @@ export default class BackPalavra extends Component {
                 // .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
                 .post('https://es3-stop-prod.herokuapp.com/answer', { "category_id": this.state.category_id, "description": valor })
             .then(res => {
-                alert("Cadastrado com sucesso");
+                // alert("Cadastrado com sucesso");
+                this.setState({ show: true });
                 document.getElementsByName("description")[0].value = "";
                 this.palavrasList();
             })
@@ -172,6 +171,17 @@ export default class BackPalavra extends Component {
         }
     }
 
+    // clickCategoria = e => {
+    clickCategoria(click_categ_id) {
+        // e.preventDefault();
+        
+        // let click_categ_id = e.target.value;
+        
+        document.getElementsByName("categoria")[0].value = click_categ_id
+        this.handleChangeClickCategTable(click_categ_id)
+
+    }
+
     loadingTableAnswer = () => {
         axios
         // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
@@ -192,9 +202,19 @@ export default class BackPalavra extends Component {
     }
 
     handleChange = e => {
-        console.log(e.target.value)
+        let idcategory = e.target.value
         this.setState({ 
-            category_id: e.target.value
+            category_id: idcategory
+        }, () => {
+            this.loadingTableAnswer();
+        });
+    }
+
+    handleChangeClickCategTable = e => {
+        let idcategory = e
+
+        this.setState({ 
+            category_id: idcategory
         }, () => {
             this.loadingTableAnswer();
         });
@@ -228,13 +248,12 @@ export default class BackPalavra extends Component {
         this.setState({
             componentePalavra: array_del
         })
-        console.log(array_del)
     }
 
     handleSwitch(elem, state) {
-        console.log('handleSwitch. elem:', elem);
-        console.log('name:', elem.props.name);
-        console.log('new state:', state);
+        // console.log('handleSwitch. elem:', elem);
+        // console.log('name:', elem.props.name);
+        // console.log('new state:', state);
     }
 
     render() {
@@ -252,7 +271,7 @@ export default class BackPalavra extends Component {
 
                                     {this.state.componentePalavra.length ?
                                         <button className="btn btn-danger botao" type="button" onClick={this.deleteComponentePalavra}>Remover palavra</button> : ""}
-                                        {console.log(this.state.componentePalavra)}
+                                        {/* console.log(this.state.componentePalavra) */}
 
                                     {/* <button className="btn btn-success botao">Enviar</button> */}
                                 </div>
@@ -276,8 +295,9 @@ export default class BackPalavra extends Component {
                                         { this.state.categorias.map(res => {
                                             return (
                                                 <tr>
-                                                    <td>{res.name}</td>
-                                                    <td><button className="btn-danger" value={res.category_id} onClick={this.excluirCategoria}>-</button></td>
+                                                    {/* <td value={res.category_id} onClick={this.clickCategoria}>{res.name}</td> */}
+                                                    <td onClick={ () => this.clickCategoria(res.category_id) }>{res.name}</td>
+                                                    <td><button className="btn-danger" value={res.category_id} onClick={this.excluirCategoria}>X</button></td>
                                                 </tr>
                                             )
                                         }) }
@@ -298,6 +318,25 @@ export default class BackPalavra extends Component {
                             }.bind(this)) }
 
                             {/* Respostas */}
+                            { 
+                                () => { if(this.state.show) {
+                                    alert("haha")
+                                    return (
+                                    <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
+                                        <h4>Oh snap! You got an error!</h4>
+                                        <p>
+                                            Change this and that and try again. Duis mollis, est non commodo
+                                            luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+                                            Cras mattis consectetur purus sit amet fermentum.
+                                        </p>
+                                        <p>
+                                            <Button bsStyle="danger">Take this action</Button>
+                                            <span> or </span>
+                                            <Button onClick={this.handleDismiss}>Hide Alert</Button>
+                                        </p>
+                                    </Alert>)
+                                } } 
+                            }
                             <div className="col-xs-12 col-sm-6">
                                 <table class="table">
                                     <thead class="thead-dark">
@@ -322,7 +361,7 @@ export default class BackPalavra extends Component {
                                             return (
                                                 <tr>
                                                     <td>{res.description}</td>
-                                                    <td><button className="btn-danger" value={res.answer_id} onClick={this.excluirResposta}>-</button></td>
+                                                    <td><button className="btn-danger" value={res.answer_id} onClick={this.excluirResposta}>X</button></td>
                                                 </tr>
                                             )
                                         }) }

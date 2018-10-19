@@ -16,7 +16,7 @@ export default class AppRoutes extends Component {
 
     render() {
         return (
-            <main>
+            <main className="mainContainer">
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <Route path='/login' component={Login}/>
