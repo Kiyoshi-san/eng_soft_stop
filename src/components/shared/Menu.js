@@ -97,8 +97,8 @@ export default class Menu extends Component {
                         <SideNav.Toggle />
                         <SideNav.Nav defaultSelected="backoffice">
                             <img src={logo} className="logo_stop" alt="stop" />
-                            {itens.map((item) => 
-                                <NavItem eventKey={item.link}>
+                            {itens.map((item, index) => 
+                                <NavItem key={index} eventKey={item.link}>
                                     <NavIcon>
                                         <FontAwesomeIcon icon={item.icon} />
                                     </NavIcon>

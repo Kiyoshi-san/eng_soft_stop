@@ -10,6 +10,7 @@ export default class Logout extends Component {
     }
 
     render() {
+        window.location.reload();
         return <Redirect to='/home'/>;
     }
 }

@@ -72,6 +72,7 @@ export default class Login extends Component {
         const { sucsses, message, dirty } = this.state;
 
         if (sucsses) {
+            window.location.reload();
             return <Redirect to='/home'/>;
         }
 

@@ -6,7 +6,6 @@ import Logout from './pages/Logout';
 import LoginBack from './pages/LoginBack';
 import Home from './pages/Home';
 import BackPalavra from './pages/BackPalavra.js';
-import BackCategoria from './pages/BackCategoria';
 
 export default class AppRoutes extends Component {
     constructor(props) {
@@ -24,7 +23,6 @@ export default class AppRoutes extends Component {
                     <Route path='/logout' component={Logout}/>
                     <Route path='/login-back' component={LoginBack}/>
                     <Route path='/backoffice' component={BackPalavra}/>
-                    {/* <Route path='/backoffice-categorias' component={BackCategoria}/> */}
                 </Switch>
             </main>
         );
