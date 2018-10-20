@@ -1,13 +1,16 @@
-const userInterface = (state = [], action) => {
+import initialState from './initialState';
+import * as actionTypes from '../actions/actionTypes';
+
+const userInterface = (state = initialState.loading, action) => {
     switch (action.type) {
-        case 'LOADING_TRUE':
+        case actionTypes.LOADING_TRUE:
           return [
             ...state,
             {
               loading: true
             }
           ]
-        case 'LOADING_FALSE':
+        case actionTypes.LOADING_FALSE:
           return [
             ...state,
             {

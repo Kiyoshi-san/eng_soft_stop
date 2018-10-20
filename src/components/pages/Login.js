@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import { Container, Row, Col, Input, Button } from 'mdbreact';
 import { Redirect } from 'react-router';
 
 import StorageKey from '../../util/StorageKey';
@@ -69,12 +70,28 @@ export default class Login extends Component {
 
         if (sucsses) {
             window.location.reload();
-            return <Redirect to='/home'/>;
+            return <Redirect to='/'/>;
         }
 
         return (
-            <div>
-            </div>
+            <Container>
+                <Row>
+                    <Col md="6">
+                        <form onSubmit={this.handleSubmit}>
+                            <p className="h5 text-center mb-4">Login do usuário</p>
+                            <div className="grey-text">
+                                <Input id="userName" label="Usuário" icon="user" value={this.state.userName} 
+                                    group type="text" onChange={this.handleChange} />
+                                <Input id="userPassword" label="Senha" icon="lock" value={this.state.userPassword}
+                                    group type="password" onChange={this.handleChange} />
+                            </div>
+                            <div className="text-center">
+                                <Button type="submit">Entrar</Button>
+                            </div>
+                        </form>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
