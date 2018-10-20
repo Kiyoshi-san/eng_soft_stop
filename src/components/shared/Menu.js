@@ -1,77 +1,45 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 
-import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
-
-// Be sure to include styles at some point, probably during your bootstraping
-// import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import "../../css/react-sidenav.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import StorageKey from '../../util/StorageKey';
+import Constants from '../../util/Constants';
 import logo from '../../images/stop_logo_v2.png';
-
 import "../../css/menu.css";
 
 export default class Menu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            itens: [
-            ],
+            itens: this.buildMenu()
         }
     }
 
+    buildMenu = () => {
+        let user = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO));
+        let itens = [];
+
+        if (user) {
+            if (user.type === 1) {
+                itens = Constants.SU_LINKS;
+            } else if (user.type === 2) {
+                itens = Constants.LOGED_LINKS;
+            } else {
+                itens = Constants.PUBLIC_LINKS;
+            }
+        } else {
+            itens = Constants.PUBLIC_LINKS;
+        }
+
+        return itens;
+    }
+
     render () {
+        const { itens } = this.state;
+
         return (
-            <Route render={({ location, history }) => (
-                <React.Fragment>
-                    <SideNav
-                        onSelect={(selected) => {
-                            const to = '/' + selected;
-                            if (location.pathname !== to) {
-                                history.push(to);
-                            }
-                        }}
-                    >
-                        <SideNav.Toggle />
-                        <SideNav.Nav defaultSelected="backoffice"><img src={logo} className="logo_stop" alt="stop" />
-                            {/* <a href="/backoffice"> */}
-                                <NavItem eventKey="backoffice">
-                                        <NavIcon>
-                                            <FontAwesomeIcon icon="paste" />
-                                            {/* <i className="fas fa-paste" style={{ fontSize: '1.75em' }} /> */}
-                                        </NavIcon>
-                                        <NavText>
-                                            Respostas
-                                        </NavText>
-                                </NavItem>
-                            {/* </a> */}
-                            {/* <a href="/backoffice"> */}
-                                {/* <NavItem eventKey="backoffice-categorias" {...this.state}>
-                                    <NavIcon href="/">
-                                        <FontAwesomeIcon icon="clipboard-list" />
-                                    </NavIcon>
-                                    <NavText href="/">
-                                        Categorias
-                                    </NavText>
-                                    {// <NavItem eventKey="charts/linechart">
-                                    //     <NavText>
-                                    //         Line Chart
-                                    // </NavText>
-                                    // </NavItem>
-                                    // <NavItem eventKey="charts/barchart">
-                                    //     <NavText>
-                                    //         Bar Chart
-                                    // </NavText>
-                                    // </NavItem>
-                                    }
-                                </NavItem> */}
-                            {/* </a> */}
-                        </SideNav.Nav>
-                    </SideNav>
-                </React.Fragment>
-            )}
-            />
+            <div>
+
+            </div>
         );
     }
 }
