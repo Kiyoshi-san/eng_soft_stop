@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import axios from "axios";
-import Alert from 'react-bootstrap/lib/Alert';
-import Button from 'react-bootstrap/lib/Button';
-import Card from 'react-bootstrap/lib/Card';
-import Form from 'react-bootstrap/lib/Form';
 import { Redirect } from 'react-router';
 
-import StorageKey from '../../storage/StorageKey';
+import StorageKey from '../../util/StorageKey';
 import "../../css/login.css";
 
 const loginLevel = 2;
@@ -77,44 +73,7 @@ export default class Login extends Component {
         }
 
         return (
-            <div className="d-flex login-body">
-                {dirty && !sucsses && message !== "" && <Alert dismissible variant="danger" className="login-alert">
-                    <Alert.Heading>Ops houve um erro!</Alert.Heading>
-                    <p>
-                        {message}.
-                    </p>
-                </Alert>}
-                <Card className="login-card">
-                <Card.Body>
-                    <Card.Title>Login do Usuário</Card.Title>
-                    <form onSubmit={this.handleSubmit}>
-                        <Form.Group controlId="userName">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="text" placeholder="usuário" value={this.state.userName}
-                                onChange={this.handleChange} />
-                            <Form.Text className="text-muted">
-                            Use aqui seu email e senha cadastrados.
-                            </Form.Text>
-                        </Form.Group>
-
-                        <Form.Group controlId="userPassword">
-                            <Form.Label>Senha</Form.Label>
-                            <Form.Control type="password" placeholder="senha" value={this.state.userPassword}
-                                onChange={this.handleChange} />
-                        </Form.Group>
-                        <Button variant="primary" type="submit">Login</Button>
-                    </form>
-                </Card.Body>
-                </Card>
-                <Card bg="primary" text="white" className="login-card">
-                <Card.Body>
-                    <Card.Title>Em Breve</Card.Title>
-                    <Card.Text>
-                        Em breve estaremos disponibilizando o cadastro a todos usuários,
-                        por enquanto estamos preparando a melhor experiência pra você ;)
-                    </Card.Text>
-                </Card.Body>
-                </Card>
+            <div>
             </div>
         );
     }

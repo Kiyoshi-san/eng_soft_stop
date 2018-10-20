@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 
-import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-import StorageKey from '../../storage/StorageKey';
+import StorageKey from '../../util/StorageKey';
+import Constants from '../../util/Constants';
 import logo from '../../images/stop_logo_v2.png';
-import "../../css/react-sidenav.css";
 import "../../css/menu.css";
 
 export default class Menu extends Component {
@@ -23,58 +20,14 @@ export default class Menu extends Component {
 
         if (user) {
             if (user.type === 1) {
-                itens = [
-                    {
-                        name: "Cadastro",
-                        link: "backoffice",
-                        icon: "paste"
-                    },
-                    {
-                        name: "Perfil",
-                        link: "user",
-                        icon: "user"
-                    },
-                    {
-                        name: "Sair",
-                        link: "logout",
-                        icon: "logout"
-                    }
-                ];
+                itens = Constants.SU_LINKS;
             } else if (user.type === 2) {
-                itens = [
-                    {
-                        name: "Jogar",
-                        link: "game",
-                        icon: "game"
-                    },
-                    {
-                        name: "Perfil",
-                        link: "user",
-                        icon: "user"
-                    },
-                    {
-                        name: "Sair",
-                        link: "logout",
-                        icon: "logout"
-                    }
-                ];
+                itens = Constants.LOGED_LINKS;
             } else {
-                itens = [
-                    {
-                        name: "Login",
-                        link: "login",
-                        icon: "login"
-                    }
-                ];
+                itens = Constants.PUBLIC_LINKS;
             }
         } else {
-            itens = [
-                {
-                    name: "Login",
-                    link: "login",
-                    icon: "login"
-                }
-            ];
+            itens = Constants.PUBLIC_LINKS;
         }
 
         return itens;
@@ -84,34 +37,9 @@ export default class Menu extends Component {
         const { itens } = this.state;
 
         return (
-            <Route render={({ location, history }) => (
-                <React.Fragment>
-                    <SideNav
-                        onSelect={(selected) => {
-                            const to = '/' + selected;
-                            if (location.pathname !== to) {
-                                history.push(to);
-                            }
-                        }}
-                    >
-                        <SideNav.Toggle />
-                        <SideNav.Nav defaultSelected="backoffice">
-                            <img src={logo} className="logo_stop" alt="stop" />
-                            {itens.map((item, index) => 
-                                <NavItem key={index} eventKey={item.link}>
-                                    <NavIcon>
-                                        <FontAwesomeIcon icon={item.icon} />
-                                    </NavIcon>
-                                    <NavText>
-                                        {item.name}
-                                    </NavText>
-                                </NavItem>
-                            )}
-                        </SideNav.Nav>
-                    </SideNav>
-                </React.Fragment>
-            )}
-            />
+            <div>
+
+            </div>
         );
     }
 }

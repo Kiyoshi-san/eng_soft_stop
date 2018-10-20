@@ -2,4 +2,4 @@ const StorageKey = {
     AUTENTICACAO: 'AUTENTICACAO'
 }
 
-export default StorageKey
+export default StorageKey;

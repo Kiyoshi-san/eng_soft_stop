@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 
-import StorageKey from '../../storage/StorageKey';
+import StorageKey from '../../util/StorageKey';
 
 export default class Logout extends Component {
     constructor() {
