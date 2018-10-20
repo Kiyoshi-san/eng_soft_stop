@@ -10,7 +10,6 @@ const combinedReducers = combineReducers({
 export default function configureStore() {
      return createStore(
         combinedReducers,
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
         applyMiddleware(thunk)
     );
 }
