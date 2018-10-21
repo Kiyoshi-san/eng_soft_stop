@@ -8,6 +8,9 @@ import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { faStoreAlt } from '@fortawesome/free-solid-svg-icons'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 
+import StorageKey from '../../util/StorageKey';
+import Constants from '../../util/Constants';
+
 export default class MenuTop extends React.Component {
     constructor(props) {
         super(props);
@@ -15,9 +18,31 @@ export default class MenuTop extends React.Component {
             collapse: false,
             isWideEnough: false,
         };
-    this.onClick = this.onClick.bind(this);
+        this.onClick = this.onClick.bind(this);
+        this.state = {
+            itens: this.buildMenu()
+        }        
     }
 
+    buildMenu = () => {
+        let user = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO));
+        let itens = [];
+
+        if (user) {
+            if (user.type === 1) {
+                itens = Constants.SU_LINKS;
+            } else if (user.type === 2) {
+                itens = Constants.LOGED_LINKS;
+            } else {
+                itens = Constants.PUBLIC_LINKS;
+            }
+        } else {
+            itens = Constants.PUBLIC_LINKS;
+        }
+
+        return itens;
+    }
+    
     onClick(){
         this.setState({
             collapse: !this.state.collapse,
@@ -25,7 +50,11 @@ export default class MenuTop extends React.Component {
     }
 
     render() {
+        console.log(Constants.SU_LINKS)
+        console.log(Constants.LOGED_LINKS)
+        console.log(Constants.PUBLIC_LINKS)
         let { tela } = this.props;
+        const { itens } = this.state;
         let menuBackoffice = (<Router>
             <Navbar color="elegant-color" dark expand="md" scrolling>
                 <NavbarBrand href="/">
@@ -39,7 +68,7 @@ export default class MenuTop extends React.Component {
                         </NavItem>
                         <NavItem>
                             <Dropdown>
-                                <DropdownToggle nav caret><FontAwesomeIcon icon={faUser} /></DropdownToggle>
+                                <DropdownToggle nav caret><FontAwesomeIcon icon={faUser} />{}</DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem href="/conta">bbb</DropdownItem>
                                     <DropdownItem href="/itens">cc</DropdownItem>
@@ -81,7 +110,17 @@ export default class MenuTop extends React.Component {
             </Navbar>
         </Router>)
         return (
-            "/"+tela == window.location.pathname ? menuBackoffice : menuGeral
+            <div>
+            {() => {
+                if(window.location.pathname == "/backoffice"){             
+                    menuBackoffice
+                } else if(window.location.pathname !== "/login"){
+                    menuGeral
+                } else {
+                    menuGeral                    
+                }
+            }}
+            </div>
         );
     }
 }
