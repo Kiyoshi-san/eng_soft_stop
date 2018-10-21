@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'mdbreact';
+import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Input } from 'mdbreact';
 import { BrowserRouter as Router } from 'react-router-dom';
+import logo from '../../images/stop_logo_v2.png';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
 
 export default class MenuTop extends React.Component {
     constructor(props) {
@@ -20,39 +24,27 @@ export default class MenuTop extends React.Component {
     render() {
         return (
             <Router>
-                <Navbar color="indigo" dark expand="md" scrolling>
+                <Navbar color="elegant-color" dark expand="md" scrolling>
                     <NavbarBrand href="/">
-                        <strong>Navbar</strong>
+                        <img src={logo} className="logo_stop" alt="stop" />
                     </NavbarBrand>
                     { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
                     <Collapse isOpen = { this.state.collapse } navbar>
-                        <NavbarNav left>
+                        <NavbarNav right>
                           <NavItem active>
-                              <NavLink to="#">Home</NavLink>
+                              <NavLink to="/">Home</NavLink>
                           </NavItem>
                           <NavItem>
-                              <NavLink to="#">Features</NavLink>
-                          </NavItem>
-                          <NavItem>
-                              <NavLink to="#">Pricing</NavLink>
+                              <NavLink to="/loja">Loja</NavLink>
                           </NavItem>
                           <NavItem>
                             <Dropdown>
-                                <DropdownToggle nav caret>Dropdown</DropdownToggle>
+                                <DropdownToggle nav caret><FontAwesomeIcon icon={faUser} /> Perfil</DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem href="#">Action</DropdownItem>
-                                    <DropdownItem href="#">Another Action</DropdownItem>
-                                    <DropdownItem href="#">Something else here</DropdownItem>
-                                    <DropdownItem href="#">Something else here</DropdownItem>
+                                    <DropdownItem href="/conta">Conta</DropdownItem>
+                                    <DropdownItem href="/itens">Itens</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                          </NavItem>
-                        </NavbarNav>
-                        <NavbarNav right>
-                          <NavItem>
-                            <form className="form-inline md-form mt-0">
-                              <input className="form-control mr-sm-2 mb-0 text-white" type="text" placeholder="Search" aria-label="Search"/>
-                            </form>
                           </NavItem>
                         </NavbarNav>
                     </Collapse>
