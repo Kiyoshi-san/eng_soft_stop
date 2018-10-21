@@ -1,376 +1,393 @@
 import React, { Component } from 'react';
 import '../../css/backoffice.css';
 import axios from "axios";
+import { Input, Button, Table, TableBody, TableHead  } from 'mdbreact';
+import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
+import { ToastContainer, toast } from "mdbreact";
+import swal from 'sweetalert'
 
 export default class BackPalavra extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            categorias: [],
-            categ_val: "",
-            palavra: "",
+            listaCategorias: [],
             listaPalavras: [],
-            addPalavra: null,
-            componentePalavra: [],
-            success: 0,
-            show: true
+            descricaoCategoria: '',
+            descricaoResposta: '',
+            show: true,
+            modalRespostas: false,
+            modoCrudCategoria: 1 //inserção
         };
     }
     
     idx = 0;
-    
+
+
+    // *********************** INÍCIO - CATEGORIAS ***********************
+
+
+    /* Lista as categorias existentes */
     categoryList() {
+        
         axios
-        // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
         .get('https://es3-stop-prod.herokuapp.com/categories')
         .then(res => {
             this.setState({ 
-                categorias: res.data.content
+                listaCategorias: res.data.content
             })
         })
-    }
-    
-    palavrasList() {
-        axios
-        .get('https://es3-stop-prod.herokuapp.com/answers?category=' + this.state.category_id)
-        .then(res => {
-                this.setState({
-                    listaPalavras: res.data.content
-                })
-            })
         .catch(res => {
-            // console.log("erro")
-            // console.log(res)
-        })
-    }
-    
-    componentDidMount() {
-        this.categoryList();
-        this.palavrasList();
+            toast.error('Erro ao listar as categorias. Erro: ' + res.response.data.messages);
+        });
     }
 
-    enviarCadastroResposta = cadastroResposta => {
-        let valor = cadastroResposta;
-        if (valor.trim()) {
+
+    /* Realiza a inserção da categoria */
+    enviarCadastroCategoria(){
+
+        let descricao = this.state.descricaoCategoria;
+                
+        if (!descricao.trim()) {
+            toast.warn("Informe uma descrição válida para a categoria.");
+            return;
+        }
+            
+        axios
+        .post('https://es3-stop-prod.herokuapp.com/category', { "name": descricao })
+        .then(res => {
+            toast.success("Categoria cadastrada com sucesso.");
+
+            this.categoryList();
+            this.setState({
+                descricaoCategoria: ''
+            });
+        })
+        .catch(res => {
+            toast.error("Erro ao cadastrar a categoria. Erro: " + res.response.data.messages);
+        });
+    }
+    
+
+    /* Entrar em modo de atualização da categoria */
+    modoAtualizacaoCategoria(categoria_id, categoria_nome) {
+
+        window.scrollTo(0, 0);
+        this.setState({ 
+            modoCrudCategoria: 2, //Atualização
+            descricaoCategoria: categoria_nome,
+            category_id: categoria_id
+        });
+
+    }
+
+    /* Realiza a atualização da categoria */
+    enviarAtualizacaoCategoria(){
+
+        let id = this.state.category_id;
+        let descricao = this.state.descricaoCategoria;
+                
+        if (!descricao.trim()) {
+            toast.warn("Informe uma descrição válida para a categoria.");
+            return;
+        }
+            
+         axios
+         .put('https://es3-stop-prod.herokuapp.com/category/' + id, { "name": descricao } )
+         .then(res => {
+            toast.success("Categoria atualizada com sucesso.");
+
+             this.categoryList();
+             this.modoInsercaoCategoria();
+         })
+         .catch(res => {
+            toast.error("Erro ao atualizar a categoria. Erro: " + res.response.data.messages);
+         });
+    }
+
+    /* Cancela a atualização da categoria*/
+    modoInsercaoCategoria(){
+        this.setState({ 
+            modoCrudCategoria: 1, //Inserção
+            descricaoCategoria: '',
+            category_id: 0
+        });
+    }
+
+
+    /* Abre o modal para adicionar respostas na categoria*/
+    clickAdicionarRespostas(categoria_id, categoria_name){
+
+        this.setState({
+            category_id: categoria_id,
+            category_name: categoria_name
+        }, () => {
+            this.toggleModalRespostas();
+            this.respostasList();
+        });
+        
+    }
+
+
+    /* Exclusão de categoria */
+    excluirCategoria(categoria_id) {
+
+        swal({
+          title: "Tem certeza?",
+          text: "- As respostas desta categoria também serão removidas.",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+          buttons: ["Cancelar", "OK"],
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+
             axios
-                // .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
-                .post('https://es3-stop-prod.herokuapp.com/answer', { "category_id": this.state.category_id, "description": valor })
+            .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": categoria_id } })
             .then(res => {
-                // alert("Cadastrado com sucesso");
-                this.setState({ show: true });
-                document.getElementsByName("description")[0].value = "";
-                this.palavrasList();
+                toast.success("Categoria excluída com sucesso.");
+    
+                this.categoryList();
+                this.modoInsercaoCategoria();
             })
             .catch(res => {
-                alert("Algo deu errado")
-            })
-        }
+                toast.error("Erro ao excluir a categoria. Erro: " + res.response.data.messages);
+            });
+
+          }
+        });
     }
 
-    enviarCadastroCategoria = cadastroCategoria => {
-        let valor = cadastroCategoria;
-        if (valor.trim()) {
+
+    // *********************** FIM - CATEGORIAS **************************
+    
+
+
+    // *********************** INÍCIO - RESPOSTAS ***********************
+
+
+    /* Lista as Respostas existentes de uma determinada categoria */
+    respostasList() {
+
+        this.setState({
+            listaPalavras: []
+        }, () => {
             axios
-                // .post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { "category_id":this.state.category_id, "description":valor })
-                .post('https://es3-stop-prod.herokuapp.com/category', { "name":valor })
-                .then(res => {
-                    alert("Cadastrado com sucesso");
-                    document.getElementsByName("categoriaName")[0].value = "";
-                    this.categoryList();
+            .get('https://es3-stop-prod.herokuapp.com/answers?category=' + this.state.category_id)
+            .then(res => {
+                    this.setState({
+                        listaPalavras: res.data.content
+                    })
                 })
-                .catch(res => {
-                    alert("Algo deu errado")
-                })
-        }
+            .catch(res => {
+                toast.error("Erro ao listar as respostas. Erro: " + res.response.data.messages);
+            });
+        });        
     }
 
-    /* Enviando Resposta para salvar */
-    handleSubmitResposta = e => {
-        e.preventDefault();
-        
-        // const cadastroResposta = new FormData(e.target);
-        // const cadastroResposta = new FormData(this.form);
-        
-        let cadastroResposta = document.getElementsByName("description")[0].value;
-        let selectCategoria = Number(document.getElementsByName("categoria")[0].value);
-        
-        if (!cadastroResposta.trim()) {
-            alert("Por favor preencha uma resposta válida");
+
+    /* Controla visibilidade do modal de respostas */
+    toggleModalRespostas = () => {
+        this.setState({
+            modalRespostas: !this.state.modalRespostas
+        });
+    }
+
+
+    /* Cadastra uma nova resposta para uma determinada categoria */
+    enviarCadastroResposta() {
+
+        let descricao = this.state.descricaoResposta;
+
+        if (!descricao.trim()) {
+            toast.warn("Informe uma descrição válida para a resposta.");
             return;
         }
-        
-        if (!selectCategoria) {
-            alert("Por favor selecione uma categoria");
-            return;
-        }
-        // this.state.success ? alert("Cadastrado com sucesso") : null;
-        // window.location.reload();
-        selectCategoria = 0;
-        // cadastroResposta.forEach((a) => a.value = "");
-        this.enviarCadastroResposta(cadastroResposta);
-        cadastroResposta = "";
-    }
 
-    /* Enviando Categoria para salvar */
-    handleSubmitCategoria = e => {
-        e.preventDefault();
-        
-        // const cadastroResposta = new FormData(e.target);
-        // const cadastroResposta = new FormData(this.form);
-        
-        let cadastroCategoria = document.getElementsByName("categoriaName")[0].value;
-                
-        if (!cadastroCategoria.trim()) {
-            alert("Por favor preencha uma categoria válida");
-            return;
-        }
-        
-        // cadastroResposta.forEach((a) => a.value = "");
-        this.enviarCadastroCategoria(cadastroCategoria);
-    }
+        let categoriaId = this.state.category_id;
 
-    excluirCategoria = e => {
-        e.preventDefault();
-        
-        let excluir_id = e.target.value;
-        
-        if (window.confirm("Deseja realmente excluir a categoria?")) {
-            axios
-                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/category`, { data: { "category_id": excluir_id } })
-                .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": excluir_id } })
-                .then(res => {
-                    this.categoryList();
-                    alert("Excluido com sucesso")
-                })
-                .catch(res => {
-                    alert("Erro")
-                    alert(res)
-                })
-        }
-    }
-
-    excluirResposta = e => {
-        e.preventDefault();
-        
-        let excluir_id = e.target.value;
-        
-        if (window.confirm("Deseja realmente excluir a resposta?")) {
-            axios
-                // .delete(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/answer`, { data: { "answer_id": excluir_id } })
-                .delete('https://es3-stop-prod.herokuapp.com/answer', { data: { "answer_id": excluir_id } })
-                .then(res => {
-                    this.palavrasList();
-                    alert("Excluido com sucesso")
-                })
-                .catch(res => {
-                    alert("Erro")
-                    alert(res)
-                })
-        }
-    }
-
-    // clickCategoria = e => {
-    clickCategoria(click_categ_id) {
-        // e.preventDefault();
-        
-        // let click_categ_id = e.target.value;
-        
-        document.getElementsByName("categoria")[0].value = click_categ_id
-        this.handleChangeClickCategTable(click_categ_id)
-
-    }
-
-    loadingTableAnswer = () => {
         axios
-        // .get(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/categories`)
-        .get('https://es3-stop-prod.herokuapp.com/answers?category=' + this.state.category_id)
+        .post('https://es3-stop-prod.herokuapp.com/answer', { "category_id": categoriaId, "description": descricao })
         .then(res => {
-            console.log("res")
-            console.log(res.data.content)
-            console.log("res")
-                this.setState({
-                    listaPalavras: res.data.content
-                })
-            })
+
+            toast.success("Resposta cadastrada com sucesso.");
+
+            this.respostasList();
+            this.setState({
+                descricaoResposta: ''
+            });
+        })
         .catch(res => {
-            console.log("erro")
-            console.log(res)
-            console.log("erro")
+            toast.error("Erro ao cadastrar a resposta. Erro: " + res.response.data.messages);
         })
     }
 
-    handleChange = e => {
-        let idcategory = e.target.value
-        this.setState({ 
-            category_id: idcategory
-        }, () => {
-            this.loadingTableAnswer();
-        });
-    }
 
-    handleChangeClickCategTable = e => {
-        let idcategory = e
+    /* Exclusão de resposta */
+    excluirResposta(answer_id){
 
-        this.setState({ 
-            category_id: idcategory
-        }, () => {
-            this.loadingTableAnswer();
-        });
-    }
-
-    addComponentePalavra = (res) => {
-        //create a unike key for each new componentePalavra item
-
-        // update the state object
-        this.state.componentePalavra[this.idx] = res;
-        this.idx++;
-        
-        // set the state
-        this.setState({ 
-            componentePalavra: this.state.componentePalavra
-        });
-
-    }
-
-    deleteComponentePalavra = (e) => {
-        let array_del = this.state.componentePalavra;
-        
-        /* let idx = e.target.getAttribute("data-idx")
-        console.log(idx)
-        array_del.splice(idx, 1);
-        this.setState({
-            componentePalavra: array_del
-        }) */        
-
-        array_del.pop();
-        this.setState({
-            componentePalavra: array_del
+        swal({
+          title: "Tem certeza?",
+          text: "- A resposta será removida da categoria.",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+          buttons: ["Cancelar", "OK"],
         })
+        .then((willDelete) => {
+          if (willDelete) {
+  
+            axios
+            .delete('https://es3-stop-prod.herokuapp.com/answer', { data: { "answer_id": answer_id } })
+            .then(res => {
+                this.respostasList();
+                toast.success("Resposta excluída com sucesso.");
+            })
+            .catch(res => {
+                toast.error("Erro ao excluir a resposta. Erro: " + res.response.data.messages);
+            });
+  
+          }
+        });
     }
 
-    handleSwitch(elem, state) {
-        // console.log('handleSwitch. elem:', elem);
-        // console.log('name:', elem.props.name);
-        // console.log('new state:', state);
+
+    // *********************** FIM - RESPOSTAS **************************
+
+    
+    /* Executa ao carregar o componente */
+    componentDidMount() {        
+        this.categoryList();
     }
 
+
+    /* Faz o controle de alteração do state em elementos two-way data binding */
+    handleChange = (event) => {
+        this.setState({
+          [event.target.id]: event.target.value,
+          dirty: true
+        });
+    }
+
+
+    //Renderização da tela
     render() {
         return (
             <div className="backContainer">
-            {/* <div className="row bck--container"> */}
-                <h1 class="bkfcTitulo">Cadastro</h1>
-                <div className="col-xs-12 col-sm-12">
-                    <form className="container" autoComplete="off"/*  onSubmit={ this.handleSubmit} */>
-                        {/* Categorias */}
-                        <div className="backContainer row">
-                            <div className="col-xs-12 col-sm-6">
-                                <div className="container botoes">
-                                    {/* <button className="btn btn-primary botao" onClick={this.addComponentePalavra} type="button">Add mais Respostas</button> */}
+            
+            {/* ALERTAS */}
+            <ToastContainer 
+                newestOnTop={true}/>
+            
+                {/* Título da página */}
+                <blockquote className="blockquote bq-purple">                        
+                    <p className="bq-title purple-text"><i className="fa fa-graduation-cap" aria-hidden="true"/> Categorias</p>
+                </blockquote>
 
-                                    {this.state.componentePalavra.length ?
-                                        <button className="btn btn-danger botao" type="button" onClick={this.deleteComponentePalavra}>Remover palavra</button> : ""}
-                                        {/* console.log(this.state.componentePalavra) */}
+                {/* Lista de Categorias */}
+                <div className="backContainer row">
+                    <div className="col">
 
-                                    {/* <button className="btn btn-success botao">Enviar</button> */}
-                                </div>
-
-                                {/* <label className="inputBkofc">
-                                    Categoria: <input type="text" name="categoria" onChange={this.handleChange }/>
-                                </label> */}
-
-                                <table className="table">
-                                    <thead className="thead-dark">
-                                        <tr>
-                                            <th scope="col">Categorias</th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="col"><input type="text" name="categoriaName" placeHolder="Adicionar uma Categoria" className="form-control" onChange={this.handleChange} /></th>
-                                            <th scope="col"><button className="btn btn-success botao" onClick={this.handleSubmitCategoria}/*  type="submit" */>Enviar</button></th>
-                                        </tr>
-                                        { this.state.categorias.map(res => {
-                                            return (
-                                                <tr>
-                                                    {/* <td value={res.category_id} onClick={this.clickCategoria}>{res.name}</td> */}
-                                                    <td onClick={ () => this.clickCategoria(res.category_id) }>{res.name}</td>
-                                                    <td><button className="btn-danger" value={res.category_id} onClick={this.excluirCategoria}>X</button></td>
-                                                </tr>
-                                            )
-                                        }) }
-                                    </tbody>
-                                </table>
+                        {/* Formulário de Cadastro - CATEGORIAS */}
+                        <div className="row">
+                            <div className="col-md-4 align-self-center">
+                                <Input type="text" id="descricaoCategoria" placeHolder="Digite a descrição para inserir uma nova categoria" className="form-control" value={this.state.descricaoCategoria} onChange={this.handleChange}
+                                    onKeyPress={ (event) => event.key === "Enter" ? (this.state.modoCrudCategoria === 1 ? this.enviarCadastroCategoria() : this.enviarAtualizacaoCategoria()) : '' }/>
                             </div>
-                            {/* <label className="inputBkofc">
-                                Palavra: <input type="text" name="description" className="form-control" onChange={this.handleChange }/>
-                            </label> */}
-
-                            { Object.keys(this.state.componentePalavra).map(function(key) {
-                                return (
-                                    <label className="inputBkofc">
-                                        Palavra: <input type="text" name="description" className="form-control" /* onChange={this.handleChange } *//>
-                                        {/* <button type="button" data-idx={ Object.keys(this.state.componentePalavra).length - 1 } onClick={ this.deleteComponentePalavra }>X</button> */}
-                                    </label>
-                                )
-                            }.bind(this)) }
-
-                            {/* Respostas */}
-                            { 
-                                // () => { if(this.state.show) {
-                                //     alert("haha")
-                                //     return (
-                                //     // <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
-                                //     //     <h4>Oh snap! You got an error!</h4>
-                                //     //     <p>
-                                //     //         Change this and that and try again. Duis mollis, est non commodo
-                                //     //         luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
-                                //     //         Cras mattis consectetur purus sit amet fermentum.
-                                //     //     </p>
-                                //     //     <p>
-                                //     //         <Button bsStyle="danger">Take this action</Button>
-                                //     //         <span> or </span>
-                                //     //         <Button onClick={this.handleDismiss}>Hide Alert</Button>
-                                //     //     </p>
-                                //     // </Alert>
-                                //     )
-                                // } } 
-                            }
-                            <div className="col-xs-12 col-sm-6">
-                                <table class="table">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th scope="col">Respostas</th>
-                                            <th scope="col">
-                                                <label className="inputBkofc">
-                                                    <select name="categoria" className="form-control selectClass" onChange={ this.handleChange }>
-                                                        <option selected value={0}>Selecione uma Categoria</option>
-                                                        { this.state.categorias.map(res => <option value={ res.category_id }>{ res.name }</option>) }
-                                                    </select>
-                                                </label>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="col"><input type="text" name="description" id="description" placeHolder="Adicionar uma Resposta" className="form-control addResposta"/*  onChange={this.handleChange} */ /></th>
-                                            <th scope="col"><button className="btn btn-success botao" onClick={this.handleSubmitResposta}/*  type="submit" */>Enviar</button></th>
-                                        </tr>
-                                        {this.state.listaPalavras.map(res => {
-                                            return (
-                                                <tr>
-                                                    <td>{res.description}</td>
-                                                    <td><button className="btn-danger" value={res.answer_id} onClick={this.excluirResposta}>X</button></td>
-                                                </tr>
-                                            )
-                                        }) }
-                                    </tbody>
-                                </table>
+                            <div className="col-md-2 align-self-center">
+                                {/* Botão de Cadastrar */}
+                                { this.state.modoCrudCategoria === 1 && <Button color="purple" onClick={() => this.enviarCadastroCategoria()} title="Cadastrar nova categoria">Cadastrar&nbsp;&nbsp; <i className="fa fa-plus" arria-hidden="true"/></Button> }
+                                {/* Botão de Atualizar */}
+                                { this.state.modoCrudCategoria === 2 && <Button color="light-blue" onClick={() => this.enviarAtualizacaoCategoria()} title="Atualizar categoria">Atualizar&nbsp;&nbsp; <i className="fa fa-refresh" arria-hidden="true"/></Button> }
+                                {/* Botão de Cancelar Atualização */}
+                                { this.state.modoCrudCategoria === 2 && <Button color="elegant" onClick={() => this.modoInsercaoCategoria()} title="Cancelar atualização da categoria">Cancelar&nbsp;&nbsp; <i className="fa fa-times" arria-hidden="true"/></Button> }
+                            </div>
+                            <div className="col-md-6 align-self-center">
+                                &nbsp;
                             </div>
                         </div>
-                    </form>
+
+                        <br />
+
+                        {/* Lista - CATEGORIAS */}
+                        <div className="row">
+                            <div className="col">
+                                <Table responsive hover>
+                                    <caption>{this.state.listaCategorias.length === 0 ? 'Nenhuma categoria encontrada' : this.state.listaCategorias.length + ' categorias encontradas'} </caption>
+                                    <TableHead color="purple-color">
+                                        <tr>
+                                            <th width="90%">DESCRIÇÃO</th>
+                                            <th width="5%" className="text-center"></th>
+                                            <th width="5%" className="text-center"></th>
+                                        </tr>
+                                    </TableHead>
+                                    <TableBody>
+                                        { this.state.listaCategorias.map(res => {
+                                            return (
+                                                <tr className="clickable">
+                                                    <td onClick={ () => this.modoAtualizacaoCategoria(res.category_id, res.name) }>{res.name}</td>                                                    
+                                                    <td className="text-center"><Button size="sm" color="purple" onClick={ () => this.clickAdicionarRespostas(res.category_id, res.name) } title="Cadastrar respostas para a categoria"><i className="fa fa-commenting" arria-hidden="true" /> Respostas</Button></td>
+                                                    <td className="text-center"><Button size="sm" color="danger" onClick={ () => this.excluirCategoria(res.category_id) } title="Excluir categoria"><i className="fa fa-times" arria-hidden="true" /> Excluir</Button></td>
+                                                </tr>
+                                            )
+                                        }) }
+                                    </TableBody>
+                                </Table>
+                            </div>                            
+                        </div>
+
+                        {/* Modal - RESPOSTAS */}
+                        <Container>
+                            <Modal isOpen={this.state.modalRespostas} toggle={this.toggleModalRespostas} size="lg">
+                            <ModalHeader toggle={this.toggleModalRespostas} className="purple-color"><b>Respostas</b><h6>{this.state.category_name}</h6></ModalHeader>
+                            <ModalBody>
+
+                                {/* Formulário de Cadastro - RESPOSTAS */}
+                                <div className="row">
+                                    <div className="col-md-8 align-self-center">
+                                        <Input type="text" id="descricaoResposta" placeHolder="Digite uma nova resposta para esta categoria" className="form-control" value={this.state.descricaoResposta} onChange={this.handleChange} onKeyPress={(event) => event.key === "Enter" ? this.enviarCadastroResposta() : ''}/>
+                                    </div>
+                                    <div className="col-md-4 align-self-center">
+                                        <Button color="purple" onClick={() => this.enviarCadastroResposta()} title="Cadastrar nova resposta">Cadastrar&nbsp;&nbsp; <i className="fa fa-plus" arria-hidden="true"/></Button>
+                                    </div>
+                                </div>  
+
+                                <br /> 
+
+                                {/* Lista - RESPOSTAS */}
+                                <div className="row">
+                                    <div className="col">
+                                        <Table small responsive hover>
+                                            <caption>{this.state.listaPalavras.length === 0 ? 'Nenhuma resposta encontrada' : this.state.listaPalavras.length + ' respostas encontradas'} </caption>
+                                            <TableHead color="purple-color">
+                                                <tr>
+                                                    <th width="95%">DESCRIÇÃO</th>
+                                                    <th width="5%" className="text-center"></th>
+                                                </tr>
+                                            </TableHead>
+                                            <TableBody>
+                                                {this.state.listaPalavras.map(res => {
+                                                    return (
+                                                        <tr>
+                                                            <td>{res.description}</td>                                                            
+                                                            <td className="text-center"><Button size="sm" color="danger" onClick={ () => this.excluirResposta(res.answer_id) } title="Excluir resposta"><i className="fa fa-times" arria-hidden="true" /></Button></td>
+                                                        </tr>
+                                                    )
+                                                }) }
+                                            </TableBody>
+                                        </Table>
+                                    </div>                            
+                                </div>
+
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="purple" onClick={this.toggleModalRespostas}>Fechar</Button>
+                            </ModalFooter>
+                            </Modal>
+                        </Container>
+
+                    </div>
                 </div>
-            {/* </div> */}
             </div>
         )
     }
