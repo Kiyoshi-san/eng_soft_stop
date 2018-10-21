@@ -96,3 +96,13 @@ tr.clickable {
 .table-sm td, .table-sm th{
     padding-left: .75rem !important;
 }
+
+.dash-padding
+{
+    padding: 1rem !important;
+}
+
+.purple-gradient
+{
+    background: linear-gradient(40deg, #8c81c0, #5648a1) !important;
+}
