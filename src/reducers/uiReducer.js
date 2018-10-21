@@ -1,22 +1,20 @@
 import initialState from './initialState';
 import * as actionTypes from '../actions/actionTypes';
 
-const userInterface = (state = initialState.loading, action) => {
+const userInterface = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.LOADING_TRUE:
-          return [
-            ...state,
-            {
-              loading: true
+          return Object.assign({}, state, {
+              loading: true,
+              message: action.message
             }
-          ]
+          )
         case actionTypes.LOADING_FALSE:
-          return [
-            ...state,
-            {
-              loading: false
+          return Object.assign({}, state, {
+              loading: false,
+              message: ""
             }
-          ]
+      )
         default:
           return state
     }

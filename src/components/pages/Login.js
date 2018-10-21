@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import axios from "axios";
 import { Container, Row, Col, Input, Button } from 'mdbreact';
 import { Redirect } from 'react-router';
 
 import StorageKey from '../../util/StorageKey';
+import * as uiActions from '../../actions/uiActions';
 import "../../css/login.css";
 
 const loginLevel = 2;
 
-export default class Login extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,6 +34,8 @@ export default class Login extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
+        this.props.uiActions.loading("Efetuando login...");
+
         const body = {
             user_name: this.state.userName,
             user_password: this.state.userPassword
@@ -44,6 +50,8 @@ export default class Login extends Component {
                 userPassword: ""
             });
         });
+
+        this.props.uiActions.stopLoading();
     }
 
     validateLogin = (body, errorCallback) => {
@@ -95,3 +103,18 @@ export default class Login extends Component {
         );
     }
 }
+
+Login.propTypes = {
+    uiActions: PropTypes.object
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(Login);

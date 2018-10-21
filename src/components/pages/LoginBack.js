@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import axios from "axios";
+import { Input, Button } from 'mdbreact';
 import { Redirect } from 'react-router';
 
 import StorageKey from '../../util/StorageKey';
+import * as uiActions from '../../actions/uiActions';
 import "../../css/login.css";
 import "../../css/login-back.css";
 
+import logo from '../../images/stop_logo_v2.png';
+
 const loginLevel = 1;
 
-export default class LoginBack extends Component {
+class LoginBack extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,6 +37,8 @@ export default class LoginBack extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
+        this.props.uiActions.loading("Efetuando login...");
+
         const body = {
             user_name: this.state.userName,
             user_password: this.state.userPassword
@@ -44,6 +53,8 @@ export default class LoginBack extends Component {
                 userPassword: ""
             });
         });
+
+        this.props.uiActions.stopLoading();
     }
 
     validateLogin = (body, errorCallback) => {
@@ -66,15 +77,39 @@ export default class LoginBack extends Component {
     }
 
     render() {
-        const { sucsses, message, dirty } = this.state;
+        const { sucsses } = this.state;
 
         if (sucsses) {
-            return <Redirect to='/home'/>;
+            return <Redirect to='/'/>;
         }
 
         return (
             <div>
+                <form onSubmit={this.handleSubmit}>
+                    <img src={logo} className="logo_stop" alt="stop" />
+                    <div className="grey-text">
+                        <Input id="userName" label="Usuário" icon="user" value={this.state.userName} 
+                            group type="text" onChange={this.handleChange} />
+                        <Input id="userPassword" label="Senha" icon="lock" value={this.state.userPassword}
+                            group type="password" onChange={this.handleChange} />
+                    </div>
+                    <div className="text-center">
+                        <Button type="submit">Entrar</Button>
+                    </div>
+                </form>
             </div>
         );
     }
 }
+
+LoginBack.propTypes = {
+    uiActions: PropTypes.object,
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+}
+
+export default connect(null, mapDispatchToProps)(LoginBack);
