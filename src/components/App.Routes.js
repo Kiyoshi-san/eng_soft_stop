@@ -13,7 +13,7 @@ import LoginBack from './pages/LoginBack';
 import NotFound from './pages/NotFound';
 import * as uiActions from '../actions/uiActions';
 
-import logo from '../images/stop_logo_v2.png';
+import logo from '../images/Diamond_512.gif';
 
 class AppRoutes extends Component {
     render() {
