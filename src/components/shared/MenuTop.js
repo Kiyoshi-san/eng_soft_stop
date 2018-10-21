@@ -23,23 +23,51 @@ export default class MenuTop extends React.Component {
             collapse: !this.state.collapse,
         });
     }
+
     render() {
-        return (
-            <Router>
-                <Navbar color="elegant-color" dark expand="md" scrolling>
-                    <NavbarBrand href="/">
-                        <img src={logo} className="logo_stop" alt="stop" />
-                    </NavbarBrand>
-                    { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
-                    <Collapse isOpen = { this.state.collapse } navbar>
-                        <NavbarNav right>
-                          <NavItem active>
-                              <NavLink to="/"><FontAwesomeIcon icon={faHome} /> Home</NavLink>
-                          </NavItem>
-                          <NavItem>
-                              <NavLink to="/loja"><FontAwesomeIcon icon={faStoreAlt} /> Loja</NavLink>
-                          </NavItem>
-                          <NavItem>
+        let { tela } = this.props;
+        let menuBackoffice = (<Router>
+            <Navbar color="elegant-color" dark expand="md" scrolling>
+                <NavbarBrand href="/">
+                    <img src={logo} className="logo_stop" alt="stop" />
+                </NavbarBrand>
+                { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
+                <Collapse isOpen = { this.state.collapse } navbar>
+                    <NavbarNav right>
+                        <NavItem>
+                            <input className="form-control mr-sm-2 mb-0 text-white" type="text" placeholder="Search" aria-label="Search"/>
+                        </NavItem>
+                        <NavItem>
+                            <Dropdown>
+                                <DropdownToggle nav caret><FontAwesomeIcon icon={faUser} /></DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem href="/conta">bbb</DropdownItem>
+                                    <DropdownItem href="/itens">cc</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </NavItem>
+                    </NavbarNav>
+                </Collapse>
+            </Navbar>
+        </Router>)
+        
+        let menuGeral = (<Router>
+            <Navbar color="elegant-color" dark expand="md" scrolling>
+
+                <NavbarBrand href="/">
+                    <img src={logo} className="logo_stop" alt="stop" />
+                </NavbarBrand>
+                { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
+                <Collapse isOpen = { this.state.collapse } navbar>
+                    <NavbarNav right>
+
+                        <NavItem active>
+                            <NavLink to="/"><FontAwesomeIcon icon={faHome} /> Home</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink to="/loja"><FontAwesomeIcon icon={faStoreAlt} /> Loja</NavLink>
+                        </NavItem>
+                        <NavItem>
                             <Dropdown>
                                 <DropdownToggle nav caret><FontAwesomeIcon icon={faUser} /> Perfil</DropdownToggle>
                                 <DropdownMenu>
@@ -47,11 +75,13 @@ export default class MenuTop extends React.Component {
                                     <DropdownItem href="/itens">Itens</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                          </NavItem>
-                        </NavbarNav>
-                    </Collapse>
-                </Navbar>
-            </Router>
+                        </NavItem>
+                    </NavbarNav>
+                </Collapse>
+            </Navbar>
+        </Router>)
+        return (
+            "/"+tela == window.location.pathname ? menuBackoffice : menuGeral
         );
     }
 }

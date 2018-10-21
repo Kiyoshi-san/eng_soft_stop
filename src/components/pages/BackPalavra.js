@@ -4,7 +4,8 @@ import axios from "axios";
 import { Input, Button, Table, TableBody, TableHead  } from 'mdbreact';
 import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
 import { ToastContainer, toast } from "mdbreact";
-import swal from 'sweetalert'
+import swal from 'sweetalert';
+import MenuTop from "../shared/MenuTop";
 
 export default class BackPalavra extends Component {
     constructor(props) {
@@ -274,6 +275,8 @@ export default class BackPalavra extends Component {
     render() {
         return (
             <div className="backContainer">
+            <MenuTop 
+            tela="backoffice"/>
             
             {/* ALERTAS */}
             <ToastContainer 
