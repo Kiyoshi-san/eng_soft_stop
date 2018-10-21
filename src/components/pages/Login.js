@@ -105,15 +105,8 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-    uiActions: PropTypes.object,
-    loading: PropTypes.bool
+    uiActions: PropTypes.object
 };
-  
-function mapStateToProps(state) {
-  return {
-    loading: state.userInterface
-  };
-}
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -122,6 +115,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(Login);

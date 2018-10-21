@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
+import { Input, Button } from 'mdbreact';
 import { Redirect } from 'react-router';
 
 import StorageKey from '../../util/StorageKey';
@@ -79,22 +80,21 @@ class LoginBack extends Component {
         const { sucsses } = this.state;
 
         if (sucsses) {
-            return <Redirect to='/home'/>;
+            return <Redirect to='/'/>;
         }
 
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
                     <img src={logo} className="logo_stop" alt="stop" />
-                    <label htmlFor="defaultFormLoginEmailEx" className="grey-text">Usuário</label>
-                    <input type="text" id="userName" className="form-control" onChange={this.handleChange}
-                        value={this.state.userName}/>
-                    <br/>
-                    <label htmlFor="defaultFormLoginPasswordEx" className="grey-text">Senha</label>
-                    <input type="password" id="userPassword" className="form-control" onChange={this.handleChange}
-                        value={this.state.userPassword}/>
-                    <div className="text-center mt-4">
-                    <button className="btn btn-indigo" type="submit">Entrar</button>
+                    <div className="grey-text">
+                        <Input id="userName" label="Usuário" icon="user" value={this.state.userName} 
+                            group type="text" onChange={this.handleChange} />
+                        <Input id="userPassword" label="Senha" icon="lock" value={this.state.userPassword}
+                            group type="password" onChange={this.handleChange} />
+                    </div>
+                    <div className="text-center">
+                        <Button type="submit">Entrar</Button>
                     </div>
                 </form>
             </div>
