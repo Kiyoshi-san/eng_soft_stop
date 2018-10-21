@@ -37,7 +37,7 @@ export default class BackPalavra extends Component {
             })
         })
         .catch(res => {
-            toast.error('Erro ao listar as categorias. Erro: ');
+            toast.error('Erro ao listar as categorias. Erro: ' + res.response.data.messages);
         });
     }
 
@@ -63,7 +63,7 @@ export default class BackPalavra extends Component {
             });
         })
         .catch(res => {
-            toast.error("Erro ao cadastrar a categoria. Erro: ");
+            toast.error("Erro ao cadastrar a categoria. Erro: " + res.response.data.messages);
         });
     }
     
@@ -100,7 +100,7 @@ export default class BackPalavra extends Component {
              this.modoInsercaoCategoria();
          })
          .catch(res => {
-            toast.error("Erro ao atualizar a categoria. Erro: ");
+            toast.error("Erro ao atualizar a categoria. Erro: " + res.response.data.messages);
          });
     }
 
@@ -151,7 +151,7 @@ export default class BackPalavra extends Component {
                 this.modoInsercaoCategoria();
             })
             .catch(res => {
-                toast.error("Erro ao excluir a categoria. Erro: ");
+                toast.error("Erro ao excluir a categoria. Erro: " + res.response.data.messages);
             });
 
           }
@@ -180,7 +180,7 @@ export default class BackPalavra extends Component {
                     })
                 })
             .catch(res => {
-                toast.error("Erro ao listar as respostas. Erro: ");
+                toast.error("Erro ao listar as respostas. Erro: " + res.response.data.messages);
             });
         });        
     }
@@ -218,7 +218,7 @@ export default class BackPalavra extends Component {
             });
         })
         .catch(res => {
-            toast.error("Erro ao cadastrar a resposta. Erro: ");
+            toast.error("Erro ao cadastrar a resposta. Erro: " + res.response.data.messages);
         })
     }
 
@@ -244,7 +244,7 @@ export default class BackPalavra extends Component {
                 toast.success("Resposta excluída com sucesso.");
             })
             .catch(res => {
-                toast.error("Erro ao excluir a resposta. Erro: ");
+                toast.error("Erro ao excluir a resposta. Erro: " + res.response.data.messages);
             });
   
           }
