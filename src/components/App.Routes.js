@@ -19,7 +19,7 @@ class AppRoutes extends Component {
     render() {
         return (
             <LoadingScreen loading={this.props.loading} bgColor='#f1f1f1' spinnerColor='#9ee5f8'
-                textColor='#676767' logoSrc={logo} text='Carregando...'> 
+                textColor='#676767' logoSrc={logo} text={this.props.message}> 
                 <main className="mainContainer">
                     <Switch>
                         <Route exact path='/' component={Home}/>
@@ -37,12 +37,14 @@ class AppRoutes extends Component {
 
 AppRoutes.propTypes = {
     uiActions: PropTypes.object,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    message: PropTypes.string
 };
   
 function mapStateToProps(state) {
   return {
-    loading: state.userInterface
+    loading: state.userInterface.loading,
+    message: state.userInterface.message
   };
 }
 

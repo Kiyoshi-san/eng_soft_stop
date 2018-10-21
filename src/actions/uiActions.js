@@ -1,8 +1,9 @@
 import * as actionTypes from './actionTypes';
 
-export function loading() {
+export function loading(message) {
     return {
-      type: actionTypes.LOADING_TRUE
+      type: actionTypes.LOADING_TRUE,
+      message: message ? message : "Carregando..."
     }
 }
 
