@@ -4,6 +4,7 @@ import axios from "axios";
 import { Input, Button, Table, TableBody, TableHead  } from 'mdbreact';
 import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
 import { ToastContainer, toast } from "mdbreact";
+import swal from 'sweetalert'
 
 export default class BackPalavra extends Component {
     constructor(props) {
@@ -129,20 +130,32 @@ export default class BackPalavra extends Component {
 
     /* Exclusão de categoria */
     excluirCategoria(categoria_id) {
-        
-        if (window.confirm("Deseja realmente excluir esta categoria?")) {
+
+        swal({
+          title: "Tem certeza?",
+          text: "- As respostas desta categoria também serão removidas.",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+          buttons: ["Cancelar", "OK"],
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+
             axios
             .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": categoria_id } })
             .then(res => {
                 toast.success("Categoria excluída com sucesso.");
-
+    
                 this.categoryList();
                 this.modoInsercaoCategoria();
             })
             .catch(res => {
                 toast.error("Erro ao excluir a categoria. Erro: ");
             });
-        }
+
+          }
+        });
     }
 
 
@@ -212,18 +225,30 @@ export default class BackPalavra extends Component {
 
     /* Exclusão de resposta */
     excluirResposta(answer_id){
-        
-        if (window.confirm("Deseja realmente excluir esta resposta?")) {
+
+        swal({
+          title: "Tem certeza?",
+          text: "- A resposta será removida da categoria.",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+          buttons: ["Cancelar", "OK"],
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+  
             axios
             .delete('https://es3-stop-prod.herokuapp.com/answer', { data: { "answer_id": answer_id } })
             .then(res => {
                 this.respostasList();
-                alert("Resposta excluída com sucesso.");
+                toast.success("Resposta excluída com sucesso.");
             })
             .catch(res => {
                 toast.error("Erro ao excluir a resposta. Erro: ");
-            })
-        }
+            });
+  
+          }
+        });
     }
 
 
