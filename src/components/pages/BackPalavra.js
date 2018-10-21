@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import '../../css/backoffice.css';
 import axios from "axios";
 
-import { Row, Alert, Button } from 'react-bootstrap';
-
 export default class BackPalavra extends Component {
     constructor(props) {
         super(props);
@@ -258,7 +256,7 @@ export default class BackPalavra extends Component {
 
     render() {
         return (
-            <Row className="backContainer">
+            <div className="backContainer">
             {/* <div className="row bck--container"> */}
                 <h1 class="bkfcTitulo">Cadastro</h1>
                 <div className="col-xs-12 col-sm-12">
@@ -319,23 +317,24 @@ export default class BackPalavra extends Component {
 
                             {/* Respostas */}
                             { 
-                                () => { if(this.state.show) {
-                                    alert("haha")
-                                    return (
-                                    <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
-                                        <h4>Oh snap! You got an error!</h4>
-                                        <p>
-                                            Change this and that and try again. Duis mollis, est non commodo
-                                            luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
-                                            Cras mattis consectetur purus sit amet fermentum.
-                                        </p>
-                                        <p>
-                                            <Button bsStyle="danger">Take this action</Button>
-                                            <span> or </span>
-                                            <Button onClick={this.handleDismiss}>Hide Alert</Button>
-                                        </p>
-                                    </Alert>)
-                                } } 
+                                // () => { if(this.state.show) {
+                                //     alert("haha")
+                                //     return (
+                                //     // <Alert bsStyle="danger" onDismiss={this.handleDismiss}>
+                                //     //     <h4>Oh snap! You got an error!</h4>
+                                //     //     <p>
+                                //     //         Change this and that and try again. Duis mollis, est non commodo
+                                //     //         luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+                                //     //         Cras mattis consectetur purus sit amet fermentum.
+                                //     //     </p>
+                                //     //     <p>
+                                //     //         <Button bsStyle="danger">Take this action</Button>
+                                //     //         <span> or </span>
+                                //     //         <Button onClick={this.handleDismiss}>Hide Alert</Button>
+                                //     //     </p>
+                                //     // </Alert>
+                                //     )
+                                // } } 
                             }
                             <div className="col-xs-12 col-sm-6">
                                 <table class="table">
@@ -372,7 +371,7 @@ export default class BackPalavra extends Component {
                     </form>
                 </div>
             {/* </div> */}
-            </Row>
+            </div>
         )
     }
 }

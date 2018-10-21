@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import axios from "axios";
-import Alert from 'react-bootstrap/lib/Alert';
-import Button from 'react-bootstrap/lib/Button';
-import Card from 'react-bootstrap/lib/Card';
-import Form from 'react-bootstrap/lib/Form';
+import { Container, Row, Col, Input, Button } from 'mdbreact';
 import { Redirect } from 'react-router';
 
+import StorageKey from '../../util/StorageKey';
 import "../../css/login.css";
+
+const loginLevel = 2;
 
 export default class Login extends Component {
     constructor(props) {
@@ -47,12 +47,17 @@ export default class Login extends Component {
     }
 
     validateLogin = (body, errorCallback) => {
-        axios.post(`${'https://cors-anywhere.herokuapp.com/'}https://es3-stop-prod.herokuapp.com/auth/login/2`, body)
+        axios.post(`https://es3-stop-prod.herokuapp.com/auth/login/${loginLevel}`, body)
             .then(res => {
-                if (res.data.code === 200) {
+                if (res.data.status_code === 200) {
                     this.setState({
                         sucsses: true,
                     });
+                    localStorage.setItem(StorageKey.AUTENTICACAO, JSON.stringify({
+                        type: loginLevel,
+                        userId: res.data.content.user_id,
+                        userName: res.data.content.user_name
+                    }));
                 } else {
                     errorCallback("Usuário ou senha inexistente.");
                 }
@@ -64,50 +69,29 @@ export default class Login extends Component {
         const { sucsses, message, dirty } = this.state;
 
         if (sucsses) {
-            return <Redirect to='/home'/>;
+            window.location.reload();
+            return <Redirect to='/'/>;
         }
 
         return (
-            <div className="d-flex login-body">
-                {dirty && !sucsses && message !== "" && <Alert dismissible variant="danger" className="login-alert">
-                    <Alert.Heading>Ops houve um erro!</Alert.Heading>
-                    <p>
-                        {message}.
-                    </p>
-                </Alert>}
-                <Card className="login-card">
-                <Card.Body>
-                    <Card.Title>Login do Usuário</Card.Title>
-                    <form onSubmit={this.handleSubmit}>
-                        <Form.Group controlId="userName">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="email" value={this.state.userName}
-                                onChange={this.handleChange} />
-                            <Form.Text className="text-muted">
-                            Use aqui seu email e senha cadastrados.
-                            </Form.Text>
-                        </Form.Group>
-
-                        <Form.Group controlId="userPassword">
-                            <Form.Label>Senha</Form.Label>
-                            <Form.Control type="password" placeholder="senha" value={this.state.userPassword}
-                                onChange={this.handleChange} />
-                        </Form.Group>
-                        <Button variant="primary" type="submit">Login</Button>
-                    </form>
-                </Card.Body>
-                </Card>
-                <Card bg="primary" text="white" className="login-card">
-                <Card.Body>
-                    <Card.Title>Em Breve</Card.Title>
-                    <Card.Text>
-                        Em breve estaremos disponibilizando o cadastro a todos usuários,
-                        por enquanto estamos preparando a melhor experiência pra você ;)
-                    </Card.Text>
-                </Card.Body>
-                </Card>
-            </div>
-
+            <Container>
+                <Row>
+                    <Col md="6">
+                        <form onSubmit={this.handleSubmit}>
+                            <p className="h5 text-center mb-4">Login do usuário</p>
+                            <div className="grey-text">
+                                <Input id="userName" label="Usuário" icon="user" value={this.state.userName} 
+                                    group type="text" onChange={this.handleChange} />
+                                <Input id="userPassword" label="Senha" icon="lock" value={this.state.userPassword}
+                                    group type="password" onChange={this.handleChange} />
+                            </div>
+                            <div className="text-center">
+                                <Button type="submit">Entrar</Button>
+                            </div>
+                        </form>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
