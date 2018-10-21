@@ -5,6 +5,8 @@ import logo from '../../images/stop_logo_v2.png';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faStoreAlt } from '@fortawesome/free-solid-svg-icons'
+import { faHome } from '@fortawesome/free-solid-svg-icons'
 
 export default class MenuTop extends React.Component {
     constructor(props) {
@@ -32,10 +34,10 @@ export default class MenuTop extends React.Component {
                     <Collapse isOpen = { this.state.collapse } navbar>
                         <NavbarNav right>
                           <NavItem active>
-                              <NavLink to="/">Home</NavLink>
+                              <NavLink to="/"><FontAwesomeIcon icon={faHome} /> Home</NavLink>
                           </NavItem>
                           <NavItem>
-                              <NavLink to="/loja">Loja</NavLink>
+                              <NavLink to="/loja"><FontAwesomeIcon icon={faStoreAlt} /> Loja</NavLink>
                           </NavItem>
                           <NavItem>
                             <Dropdown>
