@@ -41,3 +41,58 @@
 .addResposta {
     width: 200px;
 }
+
+.css-kmersm, [data-css-kmersm]
+{
+    width: auto !important;
+}
+
+.md-form .prefix.active
+{
+    color: #6657b0 !important;
+}
+
+.md-form input[type=text]:focus:not([readonly]), .md-form input[type=password]:focus:not([readonly]), .md-form input[type=email]:focus:not([readonly]), .md-form input[type=url]:focus:not([readonly]), .md-form input[type=time]:focus:not([readonly]), .md-form input[type=date]:focus:not([readonly]), .md-form input[type=datetime-local]:focus:not([readonly]), .md-form input[type=tel]:focus:not([readonly]), .md-form input[type=number]:focus:not([readonly]), .md-form input[type=search-md]:focus:not([readonly]), .md-form input[type=search]:focus:not([readonly]), .md-form textarea.md-textarea:focus:not([readonly])
+{
+     -webkit-box-shadow: 0 1px 0 0 #6657b0;
+    box-shadow: 0 1px 0 0 #6657b0;
+    border-bottom: 1px solid #6657b0;
+}
+
+.purple-color {
+    background-color: #6657b0 !important;
+    color: white;
+}
+
+.purple-text 
+{
+    color: #6657b0 !important;
+}
+
+.bq-purple
+{
+    border-left: 3px solid #6657b0 !important;
+}
+
+.btn-purple
+{
+    background-color: #6657b0 !important;
+    color: #fff !important;
+}
+
+td {
+    vertical-align: middle !important;
+}
+
+tr.clickable {
+    cursor: pointer;
+}
+
+.close
+{
+    color: #fff !important;
+}
+
+.table-sm td, .table-sm th{
+    padding-left: .75rem !important;
+}
