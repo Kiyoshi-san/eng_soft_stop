@@ -45,6 +45,7 @@ export default class MenuTop extends React.Component {
     }
 
     menuTop = () => {
+        let { itens } = this.state;
         let menuBackoffice = (<Router>
             <Navbar color="elegant-color" dark expand="md" scrolling>
                 <NavbarBrand href="/">
@@ -60,10 +61,17 @@ export default class MenuTop extends React.Component {
                             <Dropdown>
                                 <DropdownToggle nav caret
                                 ><Fa icon="user" className="ml-1"/>Usuario</DropdownToggle>
-                                <DropdownMenu>
+
+                                {/* <DropdownMenu>
                                     <DropdownItem href="/conta">Conta</DropdownItem>
                                     <DropdownItem href="/#">Sair</DropdownItem>
+                                </DropdownMenu> */}
+                                <DropdownMenu>
+                                    {itens.map(e => {
+                                        return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
+                                    })}
                                 </DropdownMenu>
+
                             </Dropdown>
                         </NavItem>
                     </NavbarNav>
@@ -90,10 +98,17 @@ export default class MenuTop extends React.Component {
                         <NavItem>
                             <Dropdown>
                                 <DropdownToggle nav caret><Fa icon="user" className="ml-1"/> Perfil</DropdownToggle>
-                                <DropdownMenu>
+
+                                {/* <DropdownMenu>
                                     <DropdownItem href="/conta">Conta</DropdownItem>
                                     <DropdownItem href="/itens">Itens</DropdownItem>
+                                </DropdownMenu> */}
+                                <DropdownMenu>
+                                    {itens.map(e => {
+                                        return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
+                                    })}
                                 </DropdownMenu>
+
                             </Dropdown>
                         </NavItem>
                     </NavbarNav>
@@ -111,9 +126,6 @@ export default class MenuTop extends React.Component {
 
     }
     render() {
-        console.log(Constants.SU_LINKS)
-        console.log(Constants.LOGED_LINKS)
-        console.log(Constants.PUBLIC_LINKS)
         let { tela } = this.props;
         const { itens } = this.state;
         return (
