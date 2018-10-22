@@ -277,7 +277,6 @@ class BackPalavra extends Component {
     render() {
         return (
             <div className="backContainer">
-            
             {/* ALERTAS */}
             <ToastContainer 
                 newestOnTop={true}/>
