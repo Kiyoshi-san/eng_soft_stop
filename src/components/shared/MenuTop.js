@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Input } from 'mdbreact';
+import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Input, Fa } from 'mdbreact';
 import { BrowserRouter as Router } from 'react-router-dom';
 import logo from '../../images/stop_logo_v2.png';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { faStoreAlt } from '@fortawesome/free-solid-svg-icons'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
 
 import StorageKey from '../../util/StorageKey';
 import Constants from '../../util/Constants';
@@ -63,10 +58,11 @@ export default class MenuTop extends React.Component {
                         </NavItem>
                         <NavItem>
                             <Dropdown>
-                                <DropdownToggle nav caret><FontAwesomeIcon icon={faUser} />{}</DropdownToggle>
+                                <DropdownToggle nav caret
+                                ><Fa icon="user" className="ml-1"/>Usuario</DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem href="/conta">bbb</DropdownItem>
-                                    <DropdownItem href="/itens">cc</DropdownItem>
+                                    <DropdownItem href="/conta">Conta</DropdownItem>
+                                    <DropdownItem href="/#">Sair</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </NavItem>
@@ -85,15 +81,15 @@ export default class MenuTop extends React.Component {
                 <Collapse isOpen = { this.state.collapse } navbar>
                     <NavbarNav right>
 
-                        <NavItem active>
-                            <NavLink to="/"><FontAwesomeIcon icon={faHome} /> Home</NavLink>
+                        <NavItem>
+                            <NavLink to="/"><Fa icon="home" className="ml-1"/> Home</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink to="/loja"><FontAwesomeIcon icon={faStoreAlt} /> Loja</NavLink>
+                            <NavLink to="/loja"><Fa icon="store-alt" className="ml-1"/> Loja</NavLink>
                         </NavItem>
                         <NavItem>
                             <Dropdown>
-                                <DropdownToggle nav caret><FontAwesomeIcon icon={faUser} /> Perfil</DropdownToggle>
+                                <DropdownToggle nav caret><Fa icon="user" className="ml-1"/> Perfil</DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem href="/conta">Conta</DropdownItem>
                                     <DropdownItem href="/itens">Itens</DropdownItem>

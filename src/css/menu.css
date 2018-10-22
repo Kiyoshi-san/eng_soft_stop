@@ -48,3 +48,8 @@
     background-color: #222222;
     width: fit-content;
 }
+
+/* menu top */
+.navbar .dropdown-menu {
+    left: -45px;
+}
