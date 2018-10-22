@@ -12,15 +12,16 @@ export default class MenuTop extends React.Component {
         this.state = {
             collapse: false,
             isWideEnough: false,
+            user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
         };
         this.onClick = this.onClick.bind(this);
         this.state = {
             itens: this.buildMenu()
-        }        
+        }
     }
 
     buildMenu = () => {
-        let user = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO));
+        let { user } = this.state;
         let itens = [];
 
         if (user) {
@@ -44,6 +45,10 @@ export default class MenuTop extends React.Component {
         });
     }
 
+    refresh(){
+        window.location.reload()
+    }
+
     menuTop = () => {
         let { itens } = this.state;
         let menuBackoffice = (<Router>
@@ -55,12 +60,12 @@ export default class MenuTop extends React.Component {
                 <Collapse isOpen = { this.state.collapse } navbar>
                     <NavbarNav right>
                         <NavItem>
-                            <input className="form-control mr-sm-2 mb-0 text-white" type="text" placeholder="Search" aria-label="Search"/>
+                            {/* <input className="form-control mr-sm-2 mb-0 text-white" type="text" placeholder="Search" aria-label="Search"/> */}
                         </NavItem>
                         <NavItem>
                             <Dropdown>
                                 <DropdownToggle nav caret
-                                ><Fa icon="user" className="ml-1"/>Usuario</DropdownToggle>
+                                >{this.state.user ? <label><Fa icon="user" className="ml-1"/>Usuario</label> : <label><Fa icon="gear" className="ml-1"/>Configuração</label> }</DropdownToggle>
 
                                 {/* <DropdownMenu>
                                     <DropdownItem href="/conta">Conta</DropdownItem>
@@ -90,10 +95,10 @@ export default class MenuTop extends React.Component {
                     <NavbarNav right>
 
                         <NavItem>
-                            <NavLink to="/"><Fa icon="home" className="ml-1"/> Home</NavLink>
+                            <NavLink onClick={this.refresh} to="/"><Fa icon="home" className="ml-1"/>Home</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink to="/loja"><Fa icon="store-alt" className="ml-1"/> Loja</NavLink>
+                            <NavLink onClick={this.refresh} to="/loja"><Fa icon="shopping-basket" className="ml-1"/> Loja</NavLink>
                         </NavItem>
                         <NavItem>
                             <Dropdown>
