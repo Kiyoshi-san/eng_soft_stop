@@ -116,12 +116,12 @@ export default class MenuTop extends React.Component {
             </Navbar>
         </Router>)
 
-        if(window.location.pathname == "/backoffice"){             
+        if(window.location.pathname.includes("backoffice")){
             return menuBackoffice
-        } else if(window.location.pathname == "/login"){
+        } else if(window.location.pathname.includes("login")){
             return;
         } else {
-            return menuGeral                    
+            return menuGeral
         }
 
     }
