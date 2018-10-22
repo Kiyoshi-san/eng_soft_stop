@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import axios from "axios";
 import { Container, Row, Col, Input, Button } from 'mdbreact';
 import { Redirect } from 'react-router';
+import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
@@ -16,8 +17,6 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: "",
-            dirty: false,
             sucsses: false,
             userName: "",
             userPassword: ""
@@ -26,8 +25,7 @@ class Login extends Component {
 
     handleChange = (event) => {
         this.setState({
-          [event.target.id]: event.target.value,
-          dirty: true
+          [event.target.id]: event.target.value
         });
     }
 
@@ -44,11 +42,11 @@ class Login extends Component {
         this.validateLogin(body, (error) => {
             this.setState({
                 sucsses: false,
-                message: `Não foi possível efetuar o login pelo seguinte erro:
-                    ${error.response.data.messages[0]}`,
                 userName: "",
                 userPassword: ""
             });
+
+            toast.error(`${error.response ? error.response.data.messages[0] : error}`);
         });
 
         this.props.uiActions.stopLoading();
@@ -74,15 +72,15 @@ class Login extends Component {
     }
 
     render() {
-        const { sucsses, message, dirty } = this.state;
+        const { sucsses } = this.state;
 
         if (sucsses) {
-            window.location.reload();
-            return <Redirect to='/'/>;
+            return <Redirect to='/home'/>;
         }
 
         return (
             <Container>
+                <ToastContainer newestOnTop={true}/>
                 <Row>
                     <Col md="6">
                         <form onSubmit={this.handleSubmit}>

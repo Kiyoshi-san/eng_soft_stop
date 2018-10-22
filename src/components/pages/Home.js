@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+
 import MenuTop from '../shared/MenuTop';
+import * as uiActions from '../../actions/uiActions';
 
-export default class Home extends Component {
-    constructor(props) {
-        super(props);
-    }
-
+class Home extends React.Component {
     render() {
         return (
             <div>
@@ -14,3 +15,18 @@ export default class Home extends Component {
         )
     }
 }
+
+Home.propTypes = {
+    uiActions: PropTypes.object
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(Home);
