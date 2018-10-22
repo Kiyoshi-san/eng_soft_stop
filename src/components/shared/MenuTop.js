@@ -49,12 +49,7 @@ export default class MenuTop extends React.Component {
         });
     }
 
-    render() {
-        console.log(Constants.SU_LINKS)
-        console.log(Constants.LOGED_LINKS)
-        console.log(Constants.PUBLIC_LINKS)
-        let { tela } = this.props;
-        const { itens } = this.state;
+    menuTop = () => {
         let menuBackoffice = (<Router>
             <Navbar color="elegant-color" dark expand="md" scrolling>
                 <NavbarBrand href="/">
@@ -109,17 +104,25 @@ export default class MenuTop extends React.Component {
                 </Collapse>
             </Navbar>
         </Router>)
+
+        if(window.location.pathname == "/backoffice"){             
+            return menuBackoffice
+        } else if(window.location.pathname == "/login"){
+            return;
+        } else {
+            return menuGeral                    
+        }
+
+    }
+    render() {
+        console.log(Constants.SU_LINKS)
+        console.log(Constants.LOGED_LINKS)
+        console.log(Constants.PUBLIC_LINKS)
+        let { tela } = this.props;
+        const { itens } = this.state;
         return (
             <div>
-            {() => {
-                if(window.location.pathname == "/backoffice"){             
-                    menuBackoffice
-                } else if(window.location.pathname !== "/login"){
-                    menuGeral
-                } else {
-                    menuGeral                    
-                }
-            }}
+            { this.menuTop() }
             </div>
         );
     }
