@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import '../../css/backoffice.css';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { ToastContainer, toast } from "mdbreact";
 import { Chart } from 'react-chartjs-2';
 import axios from "axios";
 
-export default class BackDashboard extends Component {
+import * as uiActions from '../../actions/uiActions';
+import '../../css/backoffice.css';
+
+class BackDashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -59,7 +64,9 @@ export default class BackDashboard extends Component {
     }
 
     componentDidMount() {
-       this.popularGraficoPartidas();
+        this.props.uiActions.loading("Preparando Visualização...");
+        this.popularGraficoPartidas();
+        this.props.uiActions.stopLoading();
     }
 
     //Renderização da tela
@@ -226,5 +233,19 @@ export default class BackDashboard extends Component {
             </div>
         )
     }
-
 }
+
+BackDashboard.propTypes = {
+    uiActions: PropTypes.object
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(BackDashboard);

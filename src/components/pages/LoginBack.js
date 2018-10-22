@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { Input, Button } from 'mdbreact';
+import { Container, Row, Col, Input, Button } from 'mdbreact';
 import { Redirect } from 'react-router';
+import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
@@ -19,8 +20,6 @@ class LoginBack extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: "",
-            dirty: false,
             sucsses: false,
             userName: "",
             userPassword: ""
@@ -29,8 +28,7 @@ class LoginBack extends Component {
 
     handleChange = (event) => {
         this.setState({
-          [event.target.id]: event.target.value,
-          dirty: true
+          [event.target.id]: event.target.value
         });
     }
 
@@ -47,11 +45,11 @@ class LoginBack extends Component {
         this.validateLogin(body, (error) => {
             this.setState({
                 sucsses: false,
-                message: `Não foi possível efetuar o login pelo seguinte erro:
-                    ${error.response.data.messages[0]}`,
                 userName: "",
                 userPassword: ""
             });
+
+            toast.error(`${error.response ? error.response.data.messages[0] : error}`);
         });
 
         this.props.uiActions.stopLoading();
@@ -80,24 +78,29 @@ class LoginBack extends Component {
         const { sucsses } = this.state;
 
         if (sucsses) {
-            return <Redirect to='/'/>;
+            return <Redirect to='/backoffice-dashboard'/>;
         }
 
         return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <img src={logo} className="logo_stop" alt="stop" />
-                    <div className="grey-text">
-                        <Input id="userName" label="Usuário" icon="user" value={this.state.userName} 
-                            group type="text" onChange={this.handleChange} />
-                        <Input id="userPassword" label="Senha" icon="lock" value={this.state.userPassword}
-                            group type="password" onChange={this.handleChange} />
-                    </div>
-                    <div className="text-center">
-                        <Button type="submit">Entrar</Button>
-                    </div>
-                </form>
-            </div>
+            <Container>
+                <ToastContainer newestOnTop={true}/>
+                <Row>
+                    <Col md="6">
+                        <form onSubmit={this.handleSubmit}>
+                            <img src={logo} className="logo_stop" alt="stop" />
+                            <div className="grey-text">
+                                <Input id="userName" label="Usuário" icon="user" value={this.state.userName} 
+                                    group type="text" onChange={this.handleChange} />
+                                <Input id="userPassword" label="Senha" icon="lock" value={this.state.userPassword}
+                                    group type="password" onChange={this.handleChange} />
+                            </div>
+                            <div className="text-center">
+                                <Button type="submit">Entrar</Button>
+                            </div>
+                        </form>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

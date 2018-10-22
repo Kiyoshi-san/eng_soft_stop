@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import '../../css/backoffice.css';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import axios from "axios";
 import { Input, Button, Table, TableBody, TableHead  } from 'mdbreact';
 import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
 import { ToastContainer, toast } from "mdbreact";
-import swal from 'sweetalert'
+import swal from 'sweetalert';
 
-export default class BackPalavra extends Component {
+import * as uiActions from '../../actions/uiActions';
+import '../../css/backoffice.css';
+
+class BackPalavra extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,11 +25,16 @@ export default class BackPalavra extends Component {
         };
     }
     
+    /* Executa ao carregar o componente */
+    componentDidMount() {
+        this.props.uiActions.loading("Preparando Visualização...");
+        this.categoryList();
+        this.props.uiActions.stopLoading();
+    }
+    
     idx = 0;
 
-
     // *********************** INÍCIO - CATEGORIAS ***********************
-
 
     /* Lista as categorias existentes */
     categoryList() {
@@ -254,13 +264,6 @@ export default class BackPalavra extends Component {
 
     // *********************** FIM - RESPOSTAS **************************
 
-    
-    /* Executa ao carregar o componente */
-    componentDidMount() {        
-        this.categoryList();
-    }
-
-
     /* Faz o controle de alteração do state em elementos two-way data binding */
     handleChange = (event) => {
         this.setState({
@@ -392,3 +395,18 @@ export default class BackPalavra extends Component {
         )
     }
 }
+
+BackPalavra.propTypes = {
+    uiActions: PropTypes.object
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(BackPalavra);
