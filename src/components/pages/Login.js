@@ -54,6 +54,7 @@ class Login extends Component {
             });
 
             toast.error(`${error.response ? error.response.data.messages[0] : error}`);
+            this.props.uiActions.stopLoading();
         });
     }
 
