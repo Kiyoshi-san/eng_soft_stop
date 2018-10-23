@@ -8,6 +8,7 @@ import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact'
 import { ToastContainer, toast } from "mdbreact";
 import swal from 'sweetalert';
 
+import MenuSide from '../shared/MenuSide';
 import * as uiActions from '../../actions/uiActions';
 import '../../css/backoffice.css';
 
@@ -29,7 +30,6 @@ class BackPalavra extends Component {
     componentDidMount() {
         this.props.uiActions.loading("Preparando Visualização...");
         this.categoryList();
-        this.props.uiActions.stopLoading();
     }
     
     idx = 0;
@@ -45,9 +45,11 @@ class BackPalavra extends Component {
             this.setState({ 
                 listaCategorias: res.data.content
             })
+            this.props.uiActions.stopLoading();
         })
         .catch(res => {
             toast.error('Erro ao listar as categorias. Erro: ' + res.response.data.messages);
+            this.props.uiActions.stopLoading();
         });
     }
 
@@ -277,6 +279,7 @@ class BackPalavra extends Component {
     render() {
         return (
             <div className="backContainer">
+            <MenuSide />
             {/* ALERTAS */}
             <ToastContainer 
                 newestOnTop={true}/>

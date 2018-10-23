@@ -55,8 +55,6 @@ class Login extends Component {
 
             toast.error(`${error.response ? error.response.data.messages[0] : error}`);
         });
-
-        this.props.uiActions.stopLoading();
     }
 
     validateLogin = (body, errorCallback) => {
@@ -122,9 +120,9 @@ class Login extends Component {
                             </div>
                         </Col>
                         
-                        <label className="sem-cadastro-login"><a onClick={() => this.toggle(1)}>Ainda não possui conta?</a></label>
-                        <Modal isOpen={this.state.modal} toggle={() => this.toggle(1)} >
-                        <ModalHeader className="text-center" titleClass="w-100 font-weight-bold" toggle={() => this.toggle(1)}>Cadastro de Usuário</ModalHeader>
+                        <label className="sem-cadastro-login"><a onClick={this.toggle}>Ainda não possui conta?</a></label>
+                        <Modal isOpen={this.state.modal} toggle={this.toggle} >
+                        <ModalHeader className="text-center" titleClass="w-100 font-weight-bold" toggle={this.toggle}>Cadastro de Usuário</ModalHeader>
                         <ModalBody>
                             <form className="mx-3 grey-text">
                                 <Input id="cadLogin" label="Nome para login" icon="user" group type="text" onChange={this.handleChange} />
@@ -132,7 +130,7 @@ class Login extends Component {
                             </form>
                         </ModalBody>
                         <ModalFooter className="justify-content-center">
-                            <Button onClick={() => this.toggle(1)}>Login</Button>
+                            <Button onClick={this.toggle}>Login</Button>
                         </ModalFooter>
                         </Modal>
                         

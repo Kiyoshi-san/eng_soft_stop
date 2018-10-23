@@ -51,9 +51,10 @@ class LoginBack extends Component {
             });
 
             toast.error(`${error.response ? error.response.data.messages[0] : error}`);
+
+            //this.props.uiActions.stopLoading();
         });
 
-        this.props.uiActions.stopLoading();
     }
 
     validateLogin = (body, errorCallback) => {
@@ -68,7 +69,8 @@ class LoginBack extends Component {
                         userId: res.data.content.user_id,
                         userName: res.data.content.user_name
                     }));
-                    window.location.href = '/backoffice';
+                    //this.props.uiActions.stopLoading();
+                    window.location.href = '/backoffice-dashboard';
                 } else {
                     errorCallback("Usuário ou senha inexistente.");
                 }

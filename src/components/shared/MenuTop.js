@@ -6,20 +6,24 @@ import { Redirect } from 'react-router';
 
 import StorageKey from '../../util/StorageKey';
 import Constants from '../../util/Constants';
+import "../../css/menu.css";
 
-export default class MenuTop extends React.Component {
+export default class MenuTop extends Component {
     constructor(props) {
         super(props);
         this.state = {
             collapse: false,
             isWideEnough: false,
-            user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
+            user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
+            itens: null
         };
         this.onClick = this.onClick.bind(this);
-        this.state = {
-            itens: this.buildMenu(),
-            user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
-        }
+    }
+
+    componentDidMount(){
+        this.setState({
+            itens: this.buildMenu()
+        });
     }
 
     buildMenu = () => {
@@ -104,37 +108,37 @@ export default class MenuTop extends React.Component {
     menuTop = () => {
         let { itens } = this.state;
         let menuBackoffice = (<Router>
-                <Navbar color="elegant-color" dark expand="md" scrolling>
-                    <NavbarBrand href="/">
-                        <img src={logo} className="logo_stop" alt="stop" />
-                    </NavbarBrand>
-                    { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
-                    <Collapse isOpen = { this.state.collapse } navbar>
-                        <NavbarNav right>
-                            <NavItem>
-                                {/* <input className="form-control mr-sm-2 mb-0 text-white" type="text" placeholder="Search" aria-label="Search"/> */}
-                            </NavItem>
-                            <NavItem>
-                                <Dropdown>
-                                    <DropdownToggle nav caret
-                                    >{this.state.user ? <label><Fa icon="user" className="ml-1"/> { this.state.user.userName }</label> : <label><Fa icon="gear" className="ml-1"/> Configuração</label> }</DropdownToggle>
-
-                                    {/* <DropdownMenu>
-                                        <DropdownItem href="/conta">Conta</DropdownItem>
-                                        <DropdownItem href="/#">Sair</DropdownItem>
-                                    </DropdownMenu> */}
-                                    <DropdownMenu>
-                                        {itens.map(e => {
-                                            return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
-                                        })}
-                                    </DropdownMenu>
-
-                                </Dropdown>
-                            </NavItem>
-                        </NavbarNav>
-                    </Collapse>
-                </Navbar>
-            </Router>)
+            <Navbar color="elegant-color" dark expand="md" scrolling className="menu-height">
+                <NavbarBrand href="/">
+                    <img src={logo} className="logo_stop" alt="stop" />
+                </NavbarBrand>
+                { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
+                <Collapse isOpen = { this.state.collapse } navbar>
+                    <NavbarNav right>
+                        <NavItem>
+                            {/* <input className="form-control mr-sm-2 mb-0 text-white" type="text" placeholder="Search" aria-label="Search"/> */}
+                        </NavItem>
+                        <NavItem>
+                            <Dropdown>
+                                <DropdownToggle nav caret
+                                >{this.state.user ? <label><Fa icon="user" className="ml-1"/> { this.state.user.userName }</label> : <label><Fa icon="gear" className="ml-1"/> Configuração</label> }</DropdownToggle>
+        
+                                {/* <DropdownMenu>
+                                    <DropdownItem href="/conta">Conta</DropdownItem>
+                                    <DropdownItem href="/#">Sair</DropdownItem>
+                                </DropdownMenu> */}
+                                <DropdownMenu>
+                                    {itens && itens.map(e => {
+                                        return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
+                                    })}
+                                </DropdownMenu>
+        
+                            </Dropdown>
+                        </NavItem>
+                    </NavbarNav>
+                </Collapse>
+            </Navbar>
+        </Router>)
         
         let menuGeral = (<Router>
             <Navbar color="elegant-color" dark expand="md" scrolling>
@@ -161,7 +165,7 @@ export default class MenuTop extends React.Component {
                                     <DropdownItem href="/itens">Itens</DropdownItem>
                                 </DropdownMenu> */}
                                 <DropdownMenu>
-                                    {itens.map(e => {
+                                    {itens && itens.map(e => {
                                         return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
                                     })}
                                 </DropdownMenu>

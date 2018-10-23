@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "mdbreact";
 import { Chart } from 'react-chartjs-2';
 import axios from "axios";
 
+import MenuSide from '../shared/MenuSide';
 import * as uiActions from '../../actions/uiActions';
 import '../../css/backoffice.css';
 
@@ -55,25 +56,25 @@ class BackDashboard extends Component {
                         responsive: false
                     }
                 });
-
+                this.props.uiActions.stopLoading();
             });
         })
         .catch(res => {
             toast.error('Erro ao carregar os dados do dashboard. Erro: ' + res.response.data.messages);
+            this.props.uiActions.stopLoading();
         });
     }
 
     componentDidMount() {
         this.props.uiActions.loading("Preparando Visualização...");
         this.popularGraficoPartidas();
-        this.props.uiActions.stopLoading();
     }
 
     //Renderização da tela
     render() {
         return (
             <div className="backContainer">
-            
+                <MenuSide />
                 {/* ALERTAS */}
                 <ToastContainer 
                     newestOnTop={true}/>

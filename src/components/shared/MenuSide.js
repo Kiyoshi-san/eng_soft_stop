@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import * as uiActions from '../../actions/uiActions';
 
-class Home extends React.Component {
+class MenuSide extends React.Component {
     render() {
         return (
             <div>
@@ -18,7 +18,7 @@ class Home extends React.Component {
     }
 }
 
-Home.propTypes = {
+MenuSide.propTypes = {
     uiActions: PropTypes.object
 };
 
@@ -31,4 +31,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
     null,
     mapDispatchToProps
-)(Home);
+)(MenuSide);
