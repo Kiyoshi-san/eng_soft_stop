@@ -13,11 +13,15 @@ class Logout extends Component {
         setTimeout(() => {
             localStorage.removeItem(StorageKey.AUTENTICACAO);
             this.props.uiActions.stopLoading();
-        }, 3000)
+            window.location.href = '/home';
+        }, 3000);
     }
 
-    render() {
-        return <Redirect to='/home'/>;
+    render(){
+        return(
+            <div>
+            </div>
+        )
     }
 }
 

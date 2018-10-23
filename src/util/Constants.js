@@ -11,7 +11,7 @@ const PUBLIC_LINKS = [
     },
     {
         name: "Backoffice",
-        link: "backoffice",
+        link: "login-back",
         icon: "gear"
     }
 ];
