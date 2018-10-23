@@ -49,7 +49,9 @@
 }
 
 /* menu top */
-.navbar .dropdown-menu {
-    margin-top: -10px;
-    left: -45px !important;
+@media(min-width: 400px){
+    .navbar .dropdown-menu {
+        margin-top: -10px;
+        left: -45px !important;
+    }
 }
