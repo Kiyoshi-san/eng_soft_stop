@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Input, Fa } from 'mdbreact';
 import { BrowserRouter as Router } from 'react-router-dom';
 import logo from '../../images/stop_logo_v2.png';
+import { Redirect } from 'react-router';
 
 import StorageKey from '../../util/StorageKey';
 import Constants from '../../util/Constants';
@@ -16,7 +17,8 @@ export default class MenuTop extends React.Component {
         };
         this.onClick = this.onClick.bind(this);
         this.state = {
-            itens: this.buildMenu()
+            itens: this.buildMenu(),
+            user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
         }
     }
 
@@ -39,6 +41,56 @@ export default class MenuTop extends React.Component {
         return itens;
     }
     
+
+    /* validaUser = () => {
+        let { user } = this.state
+        // if (window.location.pathname.includes("backoffice")) {
+        if (window.location.pathname.includes("backoffice")) {
+            if (user) {
+                alert(user.type)
+                if (user.type === 2) {
+                    return <Redirect to='/login' />;
+                } else {
+                    return <Redirect to='/login-back' />;
+                }
+            } else {
+                if (window.location.pathname == "/backoffice") {
+                    alert("")
+                    return <Redirect to='/login' />;
+                } else if (window.location.pathname == "/backoffice-dashboard") {
+                    return <Redirect to='/login-back' />;
+                } else {
+                    return
+                }
+            }
+        }
+    } */
+    validaUser = () => {
+        let user = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
+        if (window.location.pathname.includes("backoffice")) {
+            if (user) {
+                if (user.type === 2) {
+                    // return <Redirect to='/login' />;
+                    window.location.pathname = '/home';
+                }
+            } else {
+                if(window.location.pathname == "/backoffice") {
+                    // return <Redirect to='/home' />;
+                    window.location.pathname = '/login-back';
+                } else if (window.location.pathname == "/backoffice-dashboard") {
+                    // return <Redirect to='/login-back' />;
+                    window.location.pathname = '/login-back';
+                }
+            }
+        }
+    }
+
+    validRefresh = () => {
+        if (window.location.pathname.includes("backoffice")) {
+            window.location.reload()
+        }
+    }
+
     onClick(){
         this.setState({
             collapse: !this.state.collapse,
@@ -52,37 +104,37 @@ export default class MenuTop extends React.Component {
     menuTop = () => {
         let { itens } = this.state;
         let menuBackoffice = (<Router>
-            <Navbar color="elegant-color" dark expand="md" scrolling>
-                <NavbarBrand href="/">
-                    <img src={logo} className="logo_stop" alt="stop" />
-                </NavbarBrand>
-                { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
-                <Collapse isOpen = { this.state.collapse } navbar>
-                    <NavbarNav right>
-                        <NavItem>
-                            {/* <input className="form-control mr-sm-2 mb-0 text-white" type="text" placeholder="Search" aria-label="Search"/> */}
-                        </NavItem>
-                        <NavItem>
-                            <Dropdown>
-                                <DropdownToggle nav caret
-                                >{this.state.user ? <label><Fa icon="user" className="ml-1"/>Usuario</label> : <label><Fa icon="gear" className="ml-1"/>Configuração</label> }</DropdownToggle>
+                <Navbar color="elegant-color" dark expand="md" scrolling>
+                    <NavbarBrand href="/">
+                        <img src={logo} className="logo_stop" alt="stop" />
+                    </NavbarBrand>
+                    { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
+                    <Collapse isOpen = { this.state.collapse } navbar>
+                        <NavbarNav right>
+                            <NavItem>
+                                {/* <input className="form-control mr-sm-2 mb-0 text-white" type="text" placeholder="Search" aria-label="Search"/> */}
+                            </NavItem>
+                            <NavItem>
+                                <Dropdown>
+                                    <DropdownToggle nav caret
+                                    >{this.state.user ? <label><Fa icon="user" className="ml-1"/> { this.state.user.userName }</label> : <label><Fa icon="gear" className="ml-1"/> Configuração</label> }</DropdownToggle>
 
-                                {/* <DropdownMenu>
-                                    <DropdownItem href="/conta">Conta</DropdownItem>
-                                    <DropdownItem href="/#">Sair</DropdownItem>
-                                </DropdownMenu> */}
-                                <DropdownMenu>
-                                    {itens.map(e => {
-                                        return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
-                                    })}
-                                </DropdownMenu>
+                                    {/* <DropdownMenu>
+                                        <DropdownItem href="/conta">Conta</DropdownItem>
+                                        <DropdownItem href="/#">Sair</DropdownItem>
+                                    </DropdownMenu> */}
+                                    <DropdownMenu>
+                                        {itens.map(e => {
+                                            return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
+                                        })}
+                                    </DropdownMenu>
 
-                            </Dropdown>
-                        </NavItem>
-                    </NavbarNav>
-                </Collapse>
-            </Navbar>
-        </Router>)
+                                </Dropdown>
+                            </NavItem>
+                        </NavbarNav>
+                    </Collapse>
+                </Navbar>
+            </Router>)
         
         let menuGeral = (<Router>
             <Navbar color="elegant-color" dark expand="md" scrolling>
@@ -135,7 +187,8 @@ export default class MenuTop extends React.Component {
         const { itens } = this.state;
         return (
             <div>
-            { this.menuTop() }
+                { this.validaUser() }
+                { this.menuTop() }
             </div>
         );
     }

@@ -64,6 +64,7 @@ class Login extends Component {
                         userId: res.data.content.user_id,
                         userName: res.data.content.user_name
                     }));
+                    window.location.href = '/home';
                 } else {
                     errorCallback("Usuário ou senha inexistente.");
                 }
@@ -75,7 +76,7 @@ class Login extends Component {
         const { sucsses } = this.state;
 
         if (sucsses) {
-            return <Redirect to='/home'/>;
+            // return <Redirect to='/home'/>;
         }
 
         return (
