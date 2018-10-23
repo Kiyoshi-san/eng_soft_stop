@@ -283,7 +283,7 @@ class BackPalavra extends Component {
             {/* ALERTAS */}
             <ToastContainer 
                 newestOnTop={true}/>
-            
+                <div className="content">
                 {/* Título da página */}
                 <blockquote className="blockquote bq-purple">                        
                     <p className="bq-title purple-text"><i className="fa fa-graduation-cap" aria-hidden="true"/> Categorias</p>
@@ -392,6 +392,7 @@ class BackPalavra extends Component {
                         </Container>
 
                     </div>
+                </div>
                 </div>
             </div>
         )

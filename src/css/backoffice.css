@@ -157,3 +157,7 @@ tr.clickable {
     color: #0064fa;
     width: fit-content;
 }
+
+.content {
+    margin-left: 100px;
+}

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Input, Fa } from 'mdbreact';
+import { Navbar, NavbarBrand, NavbarNav, NavbarToggler, Collapse, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Fa } from 'mdbreact';
 import { BrowserRouter as Router } from 'react-router-dom';
 import logo from '../../images/stop_logo_v2.png';
-import { Redirect } from 'react-router';
 
 import StorageKey from '../../util/StorageKey';
 import Constants from '../../util/Constants';
@@ -78,10 +77,10 @@ export default class MenuTop extends Component {
                     window.location.pathname = '/home';
                 }
             } else {
-                if(window.location.pathname == "/backoffice") {
+                if(window.location.pathname === "/backoffice") {
                     // return <Redirect to='/home' />;
                     window.location.pathname = '/login-back';
-                } else if (window.location.pathname == "/backoffice-dashboard") {
+                } else if (window.location.pathname === "/backoffice-dashboard") {
                     // return <Redirect to='/login-back' />;
                     window.location.pathname = '/login-back';
                 }
@@ -108,7 +107,7 @@ export default class MenuTop extends Component {
     menuTop = () => {
         let { itens } = this.state;
         let menuBackoffice = (<Router>
-            <Navbar color="elegant-color" dark expand="md" scrolling className="menu-height">
+            <Navbar color="elegant-color" dark expand="md" scrolling className="menu-header">
                 <NavbarBrand href="/">
                     <img src={logo} className="logo_stop" alt="stop" />
                 </NavbarBrand>
