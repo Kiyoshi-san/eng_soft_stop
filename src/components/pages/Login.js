@@ -84,7 +84,7 @@ class Login extends Component {
         });
         
         if(this.state.modal) {
-            axios.post('https://es3-stop-prod.herokuapp.com/auth/login', {data: { "user_name": this.state.cadLogin, "user_password": this.state.cadSenha }})
+            axios.post('https://es3-stop-prod.herokuapp.com/auth/login', { "user_name": this.state.cadLogin, "user_password": this.state.cadSenha })
             .then(res => {
                 toast.success("Usuário cadastrado com sucesso.");
             })
@@ -121,7 +121,7 @@ class Login extends Component {
                             </div>
                         </Col>
                         
-                        <label className="sem-cadastro-login"><a onClick={this.toggle}>Ainda não possui conta?</a></label>
+                        {/* <label className="sem-cadastro-login"><a onClick={this.toggle}>Ainda não possui conta?</a></label> */}
                         <Modal isOpen={this.state.modal} toggle={this.toggle} >
                         <ModalHeader className="text-center" titleClass="w-100 font-weight-bold" toggle={this.toggle}>Cadastro de Usuário</ModalHeader>
                         <ModalBody>

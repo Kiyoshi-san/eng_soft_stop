@@ -57,3 +57,10 @@
     height: 80px;;
     z-index: 1;
 }
+
+@media(min-width: 400px){
+    .navbar .dropdown-menu {
+        margin-top: -10px;
+        left: -45px !important;
+    }
+}

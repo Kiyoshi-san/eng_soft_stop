@@ -124,6 +124,13 @@ tr.clickable {
     margin: 10% auto;
 }
 
+@media(max-width: 400px){
+    .container-login-backoffice {
+        margin-top: 80px;
+        width: 90%;
+    }
+}
+
 .btn-login-backoffice {
     background-color: #6657b0;
     margin-left: 0;
@@ -145,6 +152,7 @@ tr.clickable {
     margin-top: -3px;
     height: 25px;
 }
+
 
 .form-login-back {
     padding: 0;

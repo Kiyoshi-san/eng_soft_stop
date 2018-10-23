@@ -33,6 +33,11 @@ const SU_LINKS = [
         icon: "gear"
     },
     {
+        name: "Backoffice Dashboard",
+        link: "backoffice-dashboard",
+        icon: "gear"
+    },
+    {
         name: "Sair",
         link: "logout",
         icon: "logout"
