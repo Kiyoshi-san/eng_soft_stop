@@ -65,14 +65,21 @@ export default class MenuTop extends React.Component {
         }
     } */
     validaUser = () => {
-        let { user } = this.state
+        let user = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
         if (window.location.pathname.includes("backoffice")) {
             if (user) {
                 if (user.type === 2) {
-                    return <Redirect to='/home' />;
+                    // return <Redirect to='/login' />;
+                    window.location.pathname = '/login';
                 }
             } else {
-                return <Redirect to='/home' />;
+                if(window.location.pathname == "/backoffice") {
+                    // return <Redirect to='/home' />;
+                    window.location.pathname = '/home';
+                } else if (window.location.pathname == "/backoffice-dashboard") {
+                    // return <Redirect to='/login-back' />;
+                    window.location.pathname = '/login-back';
+                }
             }
         }
     }
@@ -180,7 +187,6 @@ export default class MenuTop extends React.Component {
         return (
             <div>
                 { this.validaUser() }
-                { this.validRefresh() }
                 { this.menuTop() }
             </div>
         );
