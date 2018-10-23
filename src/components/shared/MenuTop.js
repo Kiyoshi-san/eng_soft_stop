@@ -17,7 +17,8 @@ export default class MenuTop extends React.Component {
         };
         this.onClick = this.onClick.bind(this);
         this.state = {
-            itens: this.buildMenu()
+            itens: this.buildMenu(),
+            user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
         }
     }
 
@@ -70,12 +71,12 @@ export default class MenuTop extends React.Component {
             if (user) {
                 if (user.type === 2) {
                     // return <Redirect to='/login' />;
-                    window.location.pathname = '/login';
+                    window.location.pathname = '/home';
                 }
             } else {
                 if(window.location.pathname == "/backoffice") {
                     // return <Redirect to='/home' />;
-                    window.location.pathname = '/home';
+                    window.location.pathname = '/login-back';
                 } else if (window.location.pathname == "/backoffice-dashboard") {
                     // return <Redirect to='/login-back' />;
                     window.location.pathname = '/login-back';
@@ -116,7 +117,7 @@ export default class MenuTop extends React.Component {
                             <NavItem>
                                 <Dropdown>
                                     <DropdownToggle nav caret
-                                    >{this.state.user ? <label><Fa icon="user" className="ml-1"/>Usuario</label> : <label><Fa icon="gear" className="ml-1"/>Configuração</label> }</DropdownToggle>
+                                    >{this.state.user ? <label><Fa icon="user" className="ml-1"/> { this.state.user.userName }</label> : <label><Fa icon="gear" className="ml-1"/> Configuração</label> }</DropdownToggle>
 
                                     {/* <DropdownMenu>
                                         <DropdownItem href="/conta">Conta</DropdownItem>
