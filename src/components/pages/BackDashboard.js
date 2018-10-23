@@ -26,7 +26,8 @@ class BackDashboard extends Component {
     popularGraficoPartidas() {
         
         axios
-        .get('https://es3-stop-prod.herokuapp.com/dashboard')
+        // .get('https://es3-stop-prod.herokuapp.com/dashboard')
+            .get('https://backoffice-dashboard.free.beeceptor.com/info')
         .then(res => {
 
             this.setState({ 
