@@ -148,3 +148,11 @@ tr.clickable {
 .form-login-back {
     padding: 0;
 }
+
+.sem-cadastro-login {
+    display: block;
+    margin-left: auto;
+    margin-right: 23px;
+    color: #0064fa;
+    width: fit-content;
+}
