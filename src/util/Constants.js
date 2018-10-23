@@ -8,19 +8,29 @@ const PUBLIC_LINKS = [
         name: "Login",
         link: "login",
         icon: "login"
+    },
+    {
+        name: "Backoffice",
+        link: "backoffice",
+        icon: "gear"
     }
 ];
 
 const SU_LINKS = [
     {
         name: "Cadastro",
-        link: "backoffice",
+        link: "cadastro",
         icon: "paste"
     },
     {
         name: "Perfil",
         link: "user",
         icon: "user"
+    },
+    {
+        name: "Backoffice",
+        link: "backoffice",
+        icon: "gear"
     },
     {
         name: "Sair",
@@ -39,6 +49,11 @@ const LOGED_LINKS = [
         name: "Perfil",
         link: "user",
         icon: "user"
+    },
+    {
+        name: "Backoffice",
+        link: "backoffice",
+        icon: "gear"
     },
     {
         name: "Sair",
