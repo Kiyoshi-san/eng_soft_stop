@@ -50,5 +50,6 @@
 
 /* menu top */
 .navbar .dropdown-menu {
-    left: -45px;
+    margin-top: -10px;
+    left: -45px !important;
 }
