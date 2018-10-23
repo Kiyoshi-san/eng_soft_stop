@@ -2,13 +2,24 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { Fa } from 'mdbreact';
 
 import * as uiActions from '../../actions/uiActions';
+import "../../css/vertical-menu.css";
 
-class MenuSide extends React.Component {
+class MenuSide extends Component {
     render() {
         return (
-            <div>
+            <div className="sidenav">
+                <a href="/backoffice-dashboard">
+                    <Fa icon="dashboard"/>
+                </a>
+                <a href="/backoffice">
+                    <Fa icon="graduation-cap"/>
+                </a>
+                <a href="/logout">
+                    <Fa icon="power-off"/>
+                </a>
             </div>
         )
     }

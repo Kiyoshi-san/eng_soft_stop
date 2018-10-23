@@ -49,6 +49,15 @@
 }
 
 /* menu top */
+.navbar .dropdown-menu {
+    left: -45px;
+}
+
+.menu-header {
+    height: 80px;;
+    z-index: 1;
+}
+
 @media(min-width: 400px){
     .navbar .dropdown-menu {
         margin-top: -10px;

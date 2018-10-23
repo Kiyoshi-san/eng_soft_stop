@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router';
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';

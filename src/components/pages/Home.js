@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import * as uiActions from '../../actions/uiActions';
 
-class Home extends React.Component {
+class Home extends Component {
     render() {
         return (
             <div>

@@ -81,157 +81,158 @@ class BackDashboard extends Component {
                     newestOnTop={true}/>
 
                 {/* Título da página */}
-                <blockquote className="blockquote bq-purple">                        
-                    <p className="bq-title purple-text"><i className="fa fa-dashboard" aria-hidden="true"/> Dashboard</p>
-                </blockquote>
+                <div className="content">
+                    <blockquote className="blockquote bq-purple">                        
+                        <p className="bq-title purple-text"><i className="fa fa-dashboard" aria-hidden="true"/> Dashboard</p>
+                    </blockquote>
 
-                <div className="backContainer row">
-                    <div className="col">
+                    <div className="backContainer row">
+                        <div className="col">
 
-                        {/* <!-- Section: Pricing v.4 --> */}
-                        <section class="text-center my-5">
+                            {/* <!-- Section: Pricing v.4 --> */}
+                            <section class="text-center my-5">
 
-                            {/* <!-- Grid row --> */}
-                            <div class="row">
+                                {/* <!-- Grid row --> */}
+                                <div class="row">
 
-                                {/* <!-- Grid column --> */}
-                                <div class="col-md-12 animated jackInTheBox">
+                                    {/* <!-- Grid column --> */}
+                                    <div class="col-md-12 animated jackInTheBox">
 
-                                    {/* <!-- Card --> */}
-                                    <div class="card rgba-grey-slight">
-                                        {/* <div class="mask rgba-white-light"></div> */}
-                                        
-                                        {/* <!-- Content --> */}
-                                        <div class="card-body">
-
-                                            <div class="price header white-text purple-gradient rounded-top dash-padding" style={{marginBottom: 20}}>                                    
-                                                <h4 className="option" style={{fontWeight: 500}}><i className="fa fa-gamepad" aria-hidden="true"/> Partidas</h4>
-                                            </div>
-
-                                            {/* <!-- Price --> */}
-                                            <div class="price header white-text rounded-top dash-padding">  
-                                                <center>
-                                                    <canvas id="doughnutChart" width="400" height="200"></canvas>
-                                                </center>
-                                            </div>
-
-                                        </div>
-                                        {/* <!-- Content --> */}
-
-                                    </div>
-                                    {/* <!-- Card --> */}
-
-                                </div>
-                                {/* <!-- Grid column --> */}
-
-                            </div>
-                            {/* <!-- Grid row --> */}
-
-                        </section>
-                        {/* <!-- Section: Pricing v.4 --> */}
-
-                        {/* <!-- Section: Pricing v.4 --> */}
-                        <section class="text-center my-5">
-
-                            {/* <!-- Grid row --> */}
-                            <div class="row">
-
-                                {/* <!-- Grid column --> */}
-                                <div class="col-md-4 animated jackInTheBox">
-
-                                    {/* <!-- Card --> */}
-                                    <div class="card rgba-grey-slight view overlay">
-                                        <div class="mask rgba-white-light"></div>
-
-                                        {/* <!-- Content --> */}
-                                        <div class="card-body">
-
-                                            {/* <!-- Price --> */}
-                                            <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
-                                                <h1 class="font-weight-bold"><i className="fa fa-graduation-cap" aria-hidden="true"/></h1>
-                                                <h1 class="font-weight-bold">{this.state.categorias} categorias</h1>
-                                            </div>
-
-                                            {/* <!--Price --> */}
+                                        {/* <!-- Card --> */}
+                                        <div class="card rgba-grey-slight">
+                                            {/* <div class="mask rgba-white-light"></div> */}
                                             
-                                            <p class="grey-text dash-padding">Quantidade total de categorias cadastradas na aplicação.</p>
+                                            {/* <!-- Content --> */}
+                                            <div class="card-body">
 
-                                        </div>
-                                        {/* <!-- Content --> */}
+                                                <div class="price header white-text purple-gradient rounded-top dash-padding" style={{marginBottom: 20}}>                                    
+                                                    <h4 className="option" style={{fontWeight: 500}}><i className="fa fa-gamepad" aria-hidden="true"/> Partidas</h4>
+                                                </div>
 
-                                    </div>
-                                    {/* <!-- Card --> */}
+                                                {/* <!-- Price --> */}
+                                                <div class="price header white-text rounded-top dash-padding">  
+                                                    <center>
+                                                        <canvas id="doughnutChart" width="400" height="200"></canvas>
+                                                    </center>
+                                                </div>
 
-                                </div>
-                                {/* <!-- Grid column --> */}
-
-                                {/* <!-- Grid column --> */}
-                                <div class="col-md-4 animated jackInTheBox">
-
-                                    {/* <!-- Card --> */}
-                                    <div class="card rgba-grey-slight view overlay">
-                                        <div class="mask rgba-white-light"></div>
-
-                                        {/* <!-- Content --> */}
-                                        <div class="card-body">
-
-                                            {/* <!-- Price --> */}
-                                            <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
-                                                <h1 class="font-weight-bold"><i className="fa fa-commenting" aria-hidden="true"/></h1>
-                                                <h1 class="font-weight-bold">{this.state.respostas} respostas</h1>
                                             </div>
-
-                                            {/* <!--Price --> */}
-                                            
-                                            <p class="grey-text dash-padding">Quantidade total de respostas cadastradas na aplicação.</p>
+                                            {/* <!-- Content --> */}
 
                                         </div>
-                                        {/* <!-- Content --> */}
+                                        {/* <!-- Card --> */}
 
                                     </div>
-                                    {/* <!-- Card --> */}
+                                    {/* <!-- Grid column --> */}
 
                                 </div>
-                                {/* <!-- Grid column --> */}
+                                {/* <!-- Grid row --> */}
 
-                                {/* <!-- Grid column --> */}
-                                <div class="col-md-4 animated jackInTheBox">
+                            </section>
+                            {/* <!-- Section: Pricing v.4 --> */}
 
-                                    {/* <!-- Card --> */}
-                                    <div class="card rgba-grey-slight view overlay">
-                                        <div class="mask rgba-white-light"></div>
+                            {/* <!-- Section: Pricing v.4 --> */}
+                            <section class="text-center my-5">
 
-                                        {/* <!-- Content --> */}
-                                        <div class="card-body">
+                                {/* <!-- Grid row --> */}
+                                <div class="row">
 
-                                            {/* <!-- Price --> */}
-                                            <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
-                                                <h1 class="font-weight-bold"><i className="fa fa-users" aria-hidden="true"/></h1>
-                                                <h1 class="font-weight-bold">{this.state.jogadores} jogadores</h1>
+                                    {/* <!-- Grid column --> */}
+                                    <div class="col-md-4 animated jackInTheBox">
+
+                                        {/* <!-- Card --> */}
+                                        <div class="card rgba-grey-slight view overlay">
+                                            <div class="mask rgba-white-light"></div>
+
+                                            {/* <!-- Content --> */}
+                                            <div class="card-body">
+
+                                                {/* <!-- Price --> */}
+                                                <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
+                                                    <h1 class="font-weight-bold"><i className="fa fa-graduation-cap" aria-hidden="true"/></h1>
+                                                    <h1 class="font-weight-bold">{this.state.categorias} categorias</h1>
+                                                </div>
+
+                                                {/* <!--Price --> */}
+                                                
+                                                <p class="grey-text dash-padding">Quantidade total de categorias cadastradas na aplicação.</p>
+
                                             </div>
-
-                                            {/* <!--Price --> */}
-                                            
-                                            <p class="grey-text dash-padding">Quantidade total de jogadores cadastrados na aplicação.</p>
+                                            {/* <!-- Content --> */}
 
                                         </div>
-                                        {/* <!-- Content --> */}
+                                        {/* <!-- Card --> */}
 
                                     </div>
-                                    {/* <!-- Card --> */}
+                                    {/* <!-- Grid column --> */}
+
+                                    {/* <!-- Grid column --> */}
+                                    <div class="col-md-4 animated jackInTheBox">
+
+                                        {/* <!-- Card --> */}
+                                        <div class="card rgba-grey-slight view overlay">
+                                            <div class="mask rgba-white-light"></div>
+
+                                            {/* <!-- Content --> */}
+                                            <div class="card-body">
+
+                                                {/* <!-- Price --> */}
+                                                <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
+                                                    <h1 class="font-weight-bold"><i className="fa fa-commenting" aria-hidden="true"/></h1>
+                                                    <h1 class="font-weight-bold">{this.state.respostas} respostas</h1>
+                                                </div>
+
+                                                {/* <!--Price --> */}
+                                                
+                                                <p class="grey-text dash-padding">Quantidade total de respostas cadastradas na aplicação.</p>
+
+                                            </div>
+                                            {/* <!-- Content --> */}
+
+                                        </div>
+                                        {/* <!-- Card --> */}
+
+                                    </div>
+                                    {/* <!-- Grid column --> */}
+
+                                    {/* <!-- Grid column --> */}
+                                    <div class="col-md-4 animated jackInTheBox">
+
+                                        {/* <!-- Card --> */}
+                                        <div class="card rgba-grey-slight view overlay">
+                                            <div class="mask rgba-white-light"></div>
+
+                                            {/* <!-- Content --> */}
+                                            <div class="card-body">
+
+                                                {/* <!-- Price --> */}
+                                                <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
+                                                    <h1 class="font-weight-bold"><i className="fa fa-users" aria-hidden="true"/></h1>
+                                                    <h1 class="font-weight-bold">{this.state.jogadores} jogadores</h1>
+                                                </div>
+
+                                                {/* <!--Price --> */}
+                                                
+                                                <p class="grey-text dash-padding">Quantidade total de jogadores cadastrados na aplicação.</p>
+
+                                            </div>
+                                            {/* <!-- Content --> */}
+
+                                        </div>
+                                        {/* <!-- Card --> */}
+
+                                    </div>
+                                    {/* <!-- Grid column --> */}
 
                                 </div>
-                                {/* <!-- Grid column --> */}
+                                {/* <!-- Grid row --> */}
 
-                            </div>
-                            {/* <!-- Grid row --> */}
-
-                        </section>
-                        {/* <!-- Section: Pricing v.4 --> */}
-                        
+                            </section>
+                            {/* <!-- Section: Pricing v.4 --> */}
+                            
+                        </div>
                     </div>
                 </div>
-
             </div>
         )
     }
