@@ -11,6 +11,9 @@ import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
 import "../../css/login.css";
 
+import logo from '../../images/stop_logo_v2.png';
+import rightArrow from '../../images/right-arrow-icon.png';
+
 const loginLevel = 2;
 
 class Login extends Component {
@@ -80,25 +83,31 @@ class Login extends Component {
         }
 
         return (
-            <Container>
+            <div className="div-container-login-backoffice">
+            <Container className="container-login-backoffice">
                 <ToastContainer newestOnTop={true}/>
                 <Row>
-                    <Col md="6">
-                        <form onSubmit={this.handleSubmit}>
-                            <p className="h5 text-center mb-4">Login do usuário</p>
+                    <form className="form-login-back col-md-12" onSubmit={this.handleSubmit}>
+                        <img src={logo} className="logo_stop-backoffice" alt="stop" />
+                        <Col md="12">
                             <div className="grey-text">
-                                <Input id="userName" label="Usuário" icon="user" value={this.state.userName} 
-                                    group type="text" onChange={this.handleChange} />
-                                <Input id="userPassword" label="Senha" icon="lock" value={this.state.userPassword}
-                                    group type="password" onChange={this.handleChange} />
+                                <Col md="12">
+                                    <Input id="userName" label="Usuário" icon="user" value={this.state.userName} 
+                                        group type="text" onChange={this.handleChange} />
+                                </Col>
+                                <Col md="12">
+                                    <Input id="userPassword" label="Senha" icon="lock" value={this.state.userPassword}
+                                        group type="password" onChange={this.handleChange} />
+                                </Col>
                             </div>
-                            <div className="text-center">
-                                <Button type="submit">Entrar</Button>
-                            </div>
-                        </form>
-                    </Col>
+                        </Col>
+                        <div className="text-center">
+                            <Button color="primary-color-dark" className="btn-login-backoffice col-md-12" type="submit">Entrar<img src={rightArrow} className="rightArrow-backoffice" /></Button>
+                        </div>
+                    </form>
                 </Row>
             </Container>
+            </div>
         );
     }
 }
