@@ -44,30 +44,6 @@ export default class MenuTop extends Component {
         return itens;
     }
     
-
-    /* validaUser = () => {
-        let { user } = this.state
-        // if (window.location.pathname.includes("backoffice")) {
-        if (window.location.pathname.includes("backoffice")) {
-            if (user) {
-                alert(user.type)
-                if (user.type === 2) {
-                    return <Redirect to='/login' />;
-                } else {
-                    return <Redirect to='/login-back' />;
-                }
-            } else {
-                if (window.location.pathname == "/backoffice") {
-                    alert("")
-                    return <Redirect to='/login' />;
-                } else if (window.location.pathname == "/backoffice-dashboard") {
-                    return <Redirect to='/login-back' />;
-                } else {
-                    return
-                }
-            }
-        }
-    } */
     validaUser = () => {
         let user = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
         if (window.location.pathname.includes("backoffice")) {
