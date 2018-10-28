@@ -4,8 +4,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import { Container, Row, Col, Input, Button } from 'mdbreact';
-import { Redirect } from 'react-router';
-import { ToastContainer, toast, Fa } from "mdbreact";
+import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
@@ -69,7 +68,6 @@ class LoginBack extends Component {
                         userId: res.data.content.user_id,
                         userName: res.data.content.user_name
                     }));
-                    //this.props.uiActions.stopLoading();
                     window.location.href = '/backoffice';
                 } else {
                     errorCallback("Usuário ou senha inexistente.");
@@ -79,12 +77,6 @@ class LoginBack extends Component {
     }
 
     render() {
-        const { sucsses } = this.state;
-
-        if (sucsses) {
-            // return <Redirect to='/backoffice-dashboard'/>;
-        }
-
         return (
             <div className="div-container-login-backoffice">
             <Container className="container-login-backoffice">
@@ -105,7 +97,10 @@ class LoginBack extends Component {
                             </div>
                         </Col>
                         <div className="text-center">
-                            <Button color="primary-color-dark" className="btn-login-backoffice col-md-12" type="submit">Entrar<img src={rightArrow} className="rightArrow-backoffice" /></Button>
+                            <Button color="primary-color-dark" className="btn-login-backoffice col-md-12" type="submit">
+                                Entrar
+                                <img src={rightArrow} className="rightArrow-backoffice" alt="" />
+                            </Button>
                         </div>
                     </form>
                 </Row>

@@ -16,7 +16,6 @@ export default class MenuTop extends Component {
             user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
             itens: null
         };
-        this.onClick = this.onClick.bind(this);
     }
 
     componentDidMount(){
@@ -43,26 +42,6 @@ export default class MenuTop extends Component {
 
         return itens;
     }
-    
-    validaUser = () => {
-        let user = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO))
-        if (window.location.pathname.includes("backoffice")) {
-            if (user) {
-                if (user.type === 2) {
-                    // return <Redirect to='/login' />;
-                    window.location.pathname = '/home';
-                }
-            } else {
-                if(window.location.pathname === "/backoffice") {
-                    // return <Redirect to='/home' />;
-                    window.location.pathname = '/login-back';
-                } else if (window.location.pathname === "/backoffice-dashboard") {
-                    // return <Redirect to='/login-back' />;
-                    window.location.pathname = '/login-back';
-                }
-            }
-        }
-    }
 
     validRefresh = () => {
         if (window.location.pathname.includes("backoffice")) {
@@ -70,13 +49,13 @@ export default class MenuTop extends Component {
         }
     }
 
-    onClick(){
+    onClick = () => {
         this.setState({
             collapse: !this.state.collapse,
         });
     }
 
-    refresh(){
+    refresh = () => {
         window.location.reload()
     }
 
@@ -87,7 +66,7 @@ export default class MenuTop extends Component {
                 <NavbarBrand href="/">
                     <img src={logo} className="logo_stop" alt="stop" />
                 </NavbarBrand>
-                { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
+                { !this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
                 <Collapse isOpen = { this.state.collapse } navbar>
                     <NavbarNav right>
                         <NavItem>
@@ -95,17 +74,25 @@ export default class MenuTop extends Component {
                         </NavItem>
                         <NavItem>
                             <Dropdown>
-                                <DropdownToggle nav caret
-                                >{this.state.user ? <label><Fa icon="user" className="ml-1"/> { this.state.user.userName }</label> : <label><Fa icon="gear" className="ml-1"/> Configuração</label> }</DropdownToggle>
-        
-                                {/* <DropdownMenu>
-                                    <DropdownItem href="/conta">Conta</DropdownItem>
-                                    <DropdownItem href="/#">Sair</DropdownItem>
-                                </DropdownMenu> */}
+                                <DropdownToggle nav caret> {this.state.user ? 
+                                    <label><Fa icon="user" className="ml-1"/>
+                                        {this.state.user.userName}
+                                    </label> 
+                                    : 
+                                    <label><Fa icon="gear" className="ml-1"/>
+                                        Configuração
+                                    </label>}
+                                </DropdownToggle>
                                 <DropdownMenu>
-                                    {itens && itens.map(e => {
-                                        return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
-                                    })}
+                                    {itens ?
+                                    itens.map((e, i) => {
+                                        return (
+                                            <DropdownItem key={i} href={"/" + e.link}>
+                                                <Fa icon="{e.icon}" className="ml-1"/>
+                                                {e.name}
+                                            </DropdownItem>
+                                        )
+                                    }) : <div></div> }
                                 </DropdownMenu>
         
                             </Dropdown>
@@ -121,10 +108,9 @@ export default class MenuTop extends Component {
                 <NavbarBrand href="/">
                     <img src={logo} className="logo_stop" alt="stop" />
                 </NavbarBrand>
-                { !this.state.isWideEnough && <NavbarToggler onClick = { this.onClick } />}
+                { !this.state.isWideEnough && <NavbarToggler onClick={this.onClick} />}
                 <Collapse isOpen = { this.state.collapse } navbar>
                     <NavbarNav right>
-
                         <NavItem>
                             <NavLink onClick={this.refresh} to="/"><Fa icon="home" className="ml-1"/>Home</NavLink>
                         </NavItem>
@@ -133,18 +119,20 @@ export default class MenuTop extends Component {
                         </NavItem>
                         <NavItem>
                             <Dropdown>
-                                <DropdownToggle nav caret><Fa icon="user" className="ml-1"/> Perfil</DropdownToggle>
-
-                                {/* <DropdownMenu>
-                                    <DropdownItem href="/conta">Conta</DropdownItem>
-                                    <DropdownItem href="/itens">Itens</DropdownItem>
-                                </DropdownMenu> */}
+                                <DropdownToggle nav caret><Fa icon="user" className="ml-1"/>
+                                    Perfil
+                                </DropdownToggle>
                                 <DropdownMenu>
-                                    {itens && itens.map(e => {
-                                        return (<DropdownItem href={"/" + e.link}><Fa icon="{e.icon}" className="ml-1"/>{e.name}</DropdownItem>)
-                                    })}
+                                    {itens ?
+                                    itens.map((e, i) => {
+                                        return (
+                                            <DropdownItem key={i} href={"/" + e.link}>
+                                                <Fa icon="{e.icon}" className="ml-1"/>
+                                                {e.name}
+                                            </DropdownItem>
+                                        )
+                                    }) : <div></div> }
                                 </DropdownMenu>
-
                             </Dropdown>
                         </NavItem>
                     </NavbarNav>
@@ -162,11 +150,8 @@ export default class MenuTop extends Component {
 
     }
     render() {
-        let { tela } = this.props;
-        const { itens } = this.state;
         return (
             <div>
-                { this.validaUser() }
                 { this.menuTop() }
             </div>
         );

@@ -147,7 +147,6 @@ class BackPalavra extends Component {
           title: "Tem certeza?",
           text: "- As respostas desta categoria também serão removidas.",
           icon: "warning",
-          buttons: true,
           dangerMode: true,
           buttons: ["Cancelar", "OK"],
         })
@@ -170,13 +169,9 @@ class BackPalavra extends Component {
         });
     }
 
-
     // *********************** FIM - CATEGORIAS **************************
-    
-
 
     // *********************** INÍCIO - RESPOSTAS ***********************
-
 
     /* Lista as Respostas existentes de uma determinada categoria */
     respostasList() {
@@ -242,7 +237,6 @@ class BackPalavra extends Component {
           title: "Tem certeza?",
           text: "- A resposta será removida da categoria.",
           icon: "warning",
-          buttons: true,
           dangerMode: true,
           buttons: ["Cancelar", "OK"],
         })
@@ -296,7 +290,7 @@ class BackPalavra extends Component {
                         {/* Formulário de Cadastro - CATEGORIAS */}
                         <div className="row">
                             <div className="col-md-4 align-self-center">
-                                <Input type="text" id="descricaoCategoria" placeHolder="Digite a descrição para inserir uma nova categoria" className="form-control" value={this.state.descricaoCategoria} onChange={this.handleChange}
+                                <Input type="text" id="descricaoCategoria" placeholder="Digite a descrição para inserir uma nova categoria" className="form-control" value={this.state.descricaoCategoria} onChange={this.handleChange}
                                     onKeyPress={ (event) => event.key === "Enter" ? (this.state.modoCrudCategoria === 1 ? this.enviarCadastroCategoria() : this.enviarAtualizacaoCategoria()) : '' }/>
                             </div>
                             <div className="col-md-2 align-self-center">
@@ -327,9 +321,9 @@ class BackPalavra extends Component {
                                         </tr>
                                     </TableHead>
                                     <TableBody>
-                                        { this.state.listaCategorias.map(res => {
+                                        { this.state.listaCategorias.map((res, i) => {
                                             return (
-                                                <tr className="clickable">
+                                                <tr key={i} className="clickable">
                                                     <td onClick={ () => this.modoAtualizacaoCategoria(res.category_id, res.name) }>{res.name}</td>                                                    
                                                     <td className="text-center"><Button size="sm" color="purple" onClick={ () => this.clickAdicionarRespostas(res.category_id, res.name) } title="Cadastrar respostas para a categoria"><i className="fa fa-commenting" arria-hidden="true" /> Respostas</Button></td>
                                                     <td className="text-center"><Button size="sm" color="danger" onClick={ () => this.excluirCategoria(res.category_id) } title="Excluir categoria"><i className="fa fa-times" arria-hidden="true" /> Excluir</Button></td>
@@ -350,7 +344,7 @@ class BackPalavra extends Component {
                                 {/* Formulário de Cadastro - RESPOSTAS */}
                                 <div className="row">
                                     <div className="col-md-8 align-self-center">
-                                        <Input type="text" id="descricaoResposta" placeHolder="Digite uma nova resposta para esta categoria" className="form-control" value={this.state.descricaoResposta} onChange={this.handleChange} onKeyPress={(event) => event.key === "Enter" ? this.enviarCadastroResposta() : ''}/>
+                                        <Input type="text" id="descricaoResposta" placeholder="Digite uma nova resposta para esta categoria" className="form-control" value={this.state.descricaoResposta} onChange={this.handleChange} onKeyPress={(event) => event.key === "Enter" ? this.enviarCadastroResposta() : ''}/>
                                     </div>
                                     <div className="col-md-4 align-self-center">
                                         <Button color="purple" onClick={() => this.enviarCadastroResposta()} title="Cadastrar nova resposta">Cadastrar&nbsp;&nbsp; <i className="fa fa-plus" arria-hidden="true"/></Button>

@@ -28,16 +28,6 @@ const SU_LINKS = [
         icon: "user"
     },
     {
-        name: "Backoffice",
-        link: "backoffice",
-        icon: "gear"
-    },
-    {
-        name: "Backoffice Dashboard",
-        link: "backoffice-dashboard",
-        icon: "gear"
-    },
-    {
         name: "Sair",
         link: "logout",
         icon: "logout"
