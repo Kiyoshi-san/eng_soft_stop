@@ -90,27 +90,27 @@ class BackDashboard extends Component {
                         <div className="col">
 
                             {/* <!-- Section: Pricing v.4 --> */}
-                            <section class="text-center my-5">
+                            <section className="text-center my-5">
 
                                 {/* <!-- Grid row --> */}
-                                <div class="row">
+                                <div className="row">
 
                                     {/* <!-- Grid column --> */}
-                                    <div class="col-md-12 animated jackInTheBox">
+                                    <div className="col-md-12 animated jackInTheBox">
 
                                         {/* <!-- Card --> */}
-                                        <div class="card rgba-grey-slight">
-                                            {/* <div class="mask rgba-white-light"></div> */}
+                                        <div className="card rgba-grey-slight">
+                                            {/* <div className="mask rgba-white-light"></div> */}
                                             
                                             {/* <!-- Content --> */}
-                                            <div class="card-body">
+                                            <div className="card-body">
 
-                                                <div class="price header white-text purple-gradient rounded-top dash-padding" style={{marginBottom: 20}}>                                    
+                                                <div className="price header white-text purple-gradient rounded-top dash-padding" style={{marginBottom: 20}}>                                    
                                                     <h4 className="option" style={{fontWeight: 500}}><i className="fa fa-gamepad" aria-hidden="true"/> Partidas</h4>
                                                 </div>
 
                                                 {/* <!-- Price --> */}
-                                                <div class="price header white-text rounded-top dash-padding">  
+                                                <div className="price header white-text rounded-top dash-padding">  
                                                     <center>
                                                         <canvas id="doughnutChart" width="400" height="200"></canvas>
                                                     </center>
@@ -132,30 +132,33 @@ class BackDashboard extends Component {
                             {/* <!-- Section: Pricing v.4 --> */}
 
                             {/* <!-- Section: Pricing v.4 --> */}
-                            <section class="text-center my-5">
+                            <section className="text-center my-5">
 
                                 {/* <!-- Grid row --> */}
-                                <div class="row">
+                                <div className="row">
 
                                     {/* <!-- Grid column --> */}
-                                    <div class="col-md-4 animated jackInTheBox">
+                                    <div className="col-md-4 animated jackInTheBox">
 
                                         {/* <!-- Card --> */}
-                                        <div class="card rgba-grey-slight view overlay">
-                                            <div class="mask rgba-white-light"></div>
+                                        <div className="card rgba-grey-slight view overlay">
+                                            <div className="mask rgba-white-light"></div>
 
                                             {/* <!-- Content --> */}
-                                            <div class="card-body">
+                                            <div className="card-body">
 
                                                 {/* <!-- Price --> */}
-                                                <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
-                                                    <h1 class="font-weight-bold"><i className="fa fa-graduation-cap" aria-hidden="true"/></h1>
-                                                    <h1 class="font-weight-bold">{this.state.categorias} categorias</h1>
+                                                <div className="price header white-text purple-gradient rounded-top dash-padding">                                    
+                                                    <h1 className="font-weight-bold">
+                                                        <i className="fa fa-graduation-cap" aria-hidden="true"/>
+                                                        <br />
+                                                        {this.state.categorias} categorias
+                                                    </h1>
                                                 </div>
 
                                                 {/* <!--Price --> */}
                                                 
-                                                <p class="grey-text dash-padding">Quantidade total de categorias cadastradas na aplicação.</p>
+                                                <p className="grey-text dash-padding">Quantidade total de categorias cadastradas na aplicação.</p>
 
                                             </div>
                                             {/* <!-- Content --> */}
@@ -167,24 +170,27 @@ class BackDashboard extends Component {
                                     {/* <!-- Grid column --> */}
 
                                     {/* <!-- Grid column --> */}
-                                    <div class="col-md-4 animated jackInTheBox">
+                                    <div className="col-md-4 animated jackInTheBox">
 
                                         {/* <!-- Card --> */}
-                                        <div class="card rgba-grey-slight view overlay">
-                                            <div class="mask rgba-white-light"></div>
+                                        <div className="card rgba-grey-slight view overlay">
+                                            <div className="mask rgba-white-light"></div>
 
                                             {/* <!-- Content --> */}
-                                            <div class="card-body">
+                                            <div className="card-body">
 
                                                 {/* <!-- Price --> */}
-                                                <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
-                                                    <h1 class="font-weight-bold"><i className="fa fa-commenting" aria-hidden="true"/></h1>
-                                                    <h1 class="font-weight-bold">{this.state.respostas} respostas</h1>
+                                                <div className="price header white-text purple-gradient rounded-top dash-padding">                                    
+                                                    <h1 className="font-weight-bold">
+                                                        <i className="fa fa-commenting" aria-hidden="true"/>
+                                                        <br />
+                                                        {this.state.respostas} respostas
+                                                    </h1>
                                                 </div>
 
                                                 {/* <!--Price --> */}
                                                 
-                                                <p class="grey-text dash-padding">Quantidade total de respostas cadastradas na aplicação.</p>
+                                                <p className="grey-text dash-padding">Quantidade total de respostas cadastradas na aplicação.</p>
 
                                             </div>
                                             {/* <!-- Content --> */}
@@ -196,24 +202,27 @@ class BackDashboard extends Component {
                                     {/* <!-- Grid column --> */}
 
                                     {/* <!-- Grid column --> */}
-                                    <div class="col-md-4 animated jackInTheBox">
+                                    <div className="col-md-4 animated jackInTheBox">
 
                                         {/* <!-- Card --> */}
-                                        <div class="card rgba-grey-slight view overlay">
-                                            <div class="mask rgba-white-light"></div>
+                                        <div className="card rgba-grey-slight view overlay">
+                                            <div className="mask rgba-white-light"></div>
 
                                             {/* <!-- Content --> */}
-                                            <div class="card-body">
+                                            <div className="card-body">
 
                                                 {/* <!-- Price --> */}
-                                                <div class="price header white-text purple-gradient rounded-top dash-padding">                                    
-                                                    <h1 class="font-weight-bold"><i className="fa fa-users" aria-hidden="true"/></h1>
-                                                    <h1 class="font-weight-bold">{this.state.jogadores} jogadores</h1>
+                                                <div className="price header white-text purple-gradient rounded-top dash-padding">                                    
+                                                    <h1 className="font-weight-bold">
+                                                        <i className="fa fa-users" aria-hidden="true"/>
+                                                        <br />
+                                                        {this.state.jogadores} jogadores
+                                                    </h1>
                                                 </div>
 
                                                 {/* <!--Price --> */}
                                                 
-                                                <p class="grey-text dash-padding">Quantidade total de jogadores cadastrados na aplicação.</p>
+                                                <p className="grey-text dash-padding">Quantidade total de jogadores cadastrados na aplicação.</p>
 
                                             </div>
                                             {/* <!-- Content --> */}

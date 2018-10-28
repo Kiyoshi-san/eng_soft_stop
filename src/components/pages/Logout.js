@@ -13,7 +13,7 @@ class Logout extends Component {
             localStorage.removeItem(StorageKey.AUTENTICACAO);
             this.props.uiActions.stopLoading();
             window.location.href = '/home';
-        }, 3000);
+        }, 1500);
     }
 
     render(){

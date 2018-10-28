@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import LoadingScreen from 'react-loading-screen';
 import { Switch, Route } from 'react-router-dom';
 
+import { BackRoute } from './shared/BackRoute';
+//import { PrivateRoute } from './shared/PrivateRoute';
+
 import BackDashboard from './pages/BackDashboard.js';
 import BackPalavra from './pages/BackPalavra.js';
 import Home from './pages/Home';
@@ -28,8 +31,8 @@ class AppRoutes extends Component {
                         <Route path='/login' component={Login}/>
                         <Route path='/logout' component={Logout}/>
                         <Route path='/login-back' component={LoginBack}/>
-                        <Route path='/backoffice' component={BackPalavra}/>
-                        <Route path='/backoffice-dashboard' component={BackDashboard}/>
+                        <BackRoute path='/backoffice' component={BackPalavra}/>
+                        <BackRoute path='/backoffice-dashboard' component={BackDashboard}/>
                         <Route component={NotFound}/>
                     </Switch>
                 </main>

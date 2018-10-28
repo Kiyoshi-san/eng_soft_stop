@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import { Container, Row, Col, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
-import { Redirect } from 'react-router';
 import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
@@ -95,12 +94,6 @@ class Login extends Component {
     }
 
     render() {
-        const { sucsses } = this.state;
-
-        if (sucsses) {
-            // return <Redirect to='/home'/>;
-        }
-
         return (
             <div className="div-container-login-backoffice">
             <Container className="container-login-backoffice">
@@ -134,9 +127,11 @@ class Login extends Component {
                             <Button onClick={this.toggle}>Login</Button>
                         </ModalFooter>
                         </Modal>
-                        
                         <div className="text-center">
-                            <Button color="primary-color-dark" className="btn-login-backoffice col-md-12" type="submit">Entrar<img src={rightArrow} className="rightArrow-backoffice" /></Button>
+                            <Button color="primary-color-dark" className="btn-login-backoffice col-md-12" type="submit">
+                                Entrar
+                                <img src={rightArrow} className="rightArrow-backoffice" alt="" />
+                            </Button>
                         </div>
                     </form>
                 </Row>
