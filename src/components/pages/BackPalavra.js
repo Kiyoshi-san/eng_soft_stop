@@ -28,16 +28,15 @@ class BackPalavra extends Component {
     
     /* Executa ao carregar o componente */
     componentDidMount() {
-        this.props.uiActions.loading("Preparando Visualização...");
         this.categoryList();
     }
-    
-    idx = 0;
 
     // *********************** INÍCIO - CATEGORIAS ***********************
 
     /* Lista as categorias existentes */
     categoryList() {
+
+        this.props.uiActions.loading("Preparando Visualização...");
         
         axios
         .get('https://es3-stop-prod.herokuapp.com/categories')
@@ -63,10 +62,14 @@ class BackPalavra extends Component {
             toast.warn("Informe uma descrição válida para a categoria.");
             return;
         }
+        
+        this.props.uiActions.loading("Processando...");
             
         axios
         .post('https://es3-stop-prod.herokuapp.com/category', { "name": descricao })
         .then(res => {
+
+            this.props.uiActions.stopLoading();
             toast.success("Categoria cadastrada com sucesso.");
 
             this.categoryList();
@@ -75,6 +78,7 @@ class BackPalavra extends Component {
             });
         })
         .catch(res => {
+            this.props.uiActions.stopLoading();
             toast.error("Erro ao cadastrar a categoria. Erro: " + res.response.data.messages);
         });
     }
@@ -102,16 +106,20 @@ class BackPalavra extends Component {
             toast.warn("Informe uma descrição válida para a categoria.");
             return;
         }
+        
+        this.props.uiActions.loading("Processando...");
             
          axios
          .put('https://es3-stop-prod.herokuapp.com/category/' + id, { "name": descricao } )
          .then(res => {
+            this.props.uiActions.stopLoading();
             toast.success("Categoria atualizada com sucesso.");
 
              this.categoryList();
              this.modoInsercaoCategoria();
          })
          .catch(res => {
+            this.props.uiActions.stopLoading();
             toast.error("Erro ao atualizar a categoria. Erro: " + res.response.data.messages);
          });
     }
@@ -152,16 +160,20 @@ class BackPalavra extends Component {
         })
         .then((willDelete) => {
           if (willDelete) {
+        
+            this.props.uiActions.loading("Processando...");
 
             axios
             .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": categoria_id } })
             .then(res => {
+                this.props.uiActions.stopLoading();
                 toast.success("Categoria excluída com sucesso.");
     
                 this.categoryList();
                 this.modoInsercaoCategoria();
             })
             .catch(res => {
+                this.props.uiActions.stopLoading();
                 toast.error("Erro ao excluir a categoria. Erro: " + res.response.data.messages);
             });
 
@@ -179,14 +191,20 @@ class BackPalavra extends Component {
         this.setState({
             listaPalavras: []
         }, () => {
+        
+            this.props.uiActions.loading("Preparando Visualização...");
+
             axios
             .get('https://es3-stop-prod.herokuapp.com/answers?category=' + this.state.category_id)
             .then(res => {
+                    
+                    this.props.uiActions.stopLoading();
                     this.setState({
                         listaPalavras: res.data.content
                     })
                 })
             .catch(res => {
+                this.props.uiActions.stopLoading();
                 toast.error("Erro ao listar as respostas. Erro: " + res.response.data.messages);
             });
         });        
@@ -212,11 +230,14 @@ class BackPalavra extends Component {
         }
 
         let categoriaId = this.state.category_id;
+        
+        this.props.uiActions.loading("Processando...");
 
         axios
         .post('https://es3-stop-prod.herokuapp.com/answer', { "category_id": categoriaId, "description": descricao })
         .then(res => {
 
+            this.props.uiActions.stopLoading();
             toast.success("Resposta cadastrada com sucesso.");
 
             this.respostasList();
@@ -225,6 +246,7 @@ class BackPalavra extends Component {
             });
         })
         .catch(res => {
+            this.props.uiActions.stopLoading();
             toast.error("Erro ao cadastrar a resposta. Erro: " + res.response.data.messages);
         })
     }
@@ -242,14 +264,18 @@ class BackPalavra extends Component {
         })
         .then((willDelete) => {
           if (willDelete) {
+        
+            this.props.uiActions.loading("Processando...");
   
             axios
             .delete('https://es3-stop-prod.herokuapp.com/answer', { data: { "answer_id": answer_id } })
             .then(res => {
+                this.props.uiActions.stopLoading();
                 this.respostasList();
                 toast.success("Resposta excluída com sucesso.");
             })
             .catch(res => {
+                this.props.uiActions.stopLoading();
                 toast.error("Erro ao excluir a resposta. Erro: " + res.response.data.messages);
             });
   
@@ -290,7 +316,7 @@ class BackPalavra extends Component {
                         {/* Formulário de Cadastro - CATEGORIAS */}
                         <div className="row">
                             <div className="col-md-4 align-self-center">
-                                <Input type="text" id="descricaoCategoria" placeholder="Digite a descrição para inserir uma nova categoria" className="form-control" value={this.state.descricaoCategoria} onChange={this.handleChange}
+                                <Input type="text" id="descricaoCategoria" placeHolder="Digite a descrição para inserir uma nova categoria" className="form-control" value={this.state.descricaoCategoria} onChange={this.handleChange}
                                     onKeyPress={ (event) => event.key === "Enter" ? (this.state.modoCrudCategoria === 1 ? this.enviarCadastroCategoria() : this.enviarAtualizacaoCategoria()) : '' }/>
                             </div>
                             <div className="col-md-2 align-self-center">
@@ -344,7 +370,7 @@ class BackPalavra extends Component {
                                 {/* Formulário de Cadastro - RESPOSTAS */}
                                 <div className="row">
                                     <div className="col-md-8 align-self-center">
-                                        <Input type="text" id="descricaoResposta" placeholder="Digite uma nova resposta para esta categoria" className="form-control" value={this.state.descricaoResposta} onChange={this.handleChange} onKeyPress={(event) => event.key === "Enter" ? this.enviarCadastroResposta() : ''}/>
+                                        <Input type="text" id="descricaoResposta" placeHolder="Digite uma nova resposta para esta categoria" className="form-control" value={this.state.descricaoResposta} onChange={this.handleChange} onKeyPress={(event) => event.key === "Enter" ? this.enviarCadastroResposta() : ''}/>
                                     </div>
                                     <div className="col-md-4 align-self-center">
                                         <Button color="purple" onClick={() => this.enviarCadastroResposta()} title="Cadastrar nova resposta">Cadastrar&nbsp;&nbsp; <i className="fa fa-plus" arria-hidden="true"/></Button>

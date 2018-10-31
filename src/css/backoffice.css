@@ -107,6 +107,12 @@ tr.clickable {
     background: linear-gradient(40deg, #8c81c0, #5648a1) !important;
 }
 
+.inputNumber
+{
+    width: 70% !important;
+    text-align: center;
+}
+
 
 /* FORMULARIO LOGIN BACKOFFICE */
 .div-container-login-backoffice {
