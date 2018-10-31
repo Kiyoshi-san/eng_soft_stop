@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Fa } from 'mdbreact';
 
 import * as uiActions from '../../actions/uiActions';
-import "../../css/vertical-menu.css";
+import "../../css/menu-side.css";
 
 class MenuSide extends Component {
     render() {
