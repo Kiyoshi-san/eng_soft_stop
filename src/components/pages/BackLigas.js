@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { ToastContainer, toast } from "mdbreact";
-import { Input, Button, Table, TableBody, TableHead  } from 'mdbreact';
+import { Input, Button, Table, TableBody, TableHead } from 'mdbreact';
+import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
+
 import axios from "axios";
 import swal from 'sweetalert';
 
@@ -18,7 +20,14 @@ class BackLigas extends Component {
             salvarAlteracoes: false,
             descricaoLiga: '',
             listaLigas: [],
-            efeitoSalvarAlteracoes: 'animated zoomInUp'
+            efeitoSalvarAlteracoes: 'animated flash',
+            league_id: 0,
+            league_index: '',
+            league_description: '',
+            modalUploadImage: false,
+            uploadImageURL: "https://api.cloudinary.com/v1_1/stopgame/image/upload",
+            uploadImagePreset: "mbbotdvm",
+            selectedFile: null
         };
     }
 
@@ -52,15 +61,32 @@ class BackLigas extends Component {
 
         if(this.state.salvarAlteracoes === false)
         {
+
             //Anima o botão de salvar alterações
-            document.getElementById("divSalvarAlteracoes").className = "";
+            document.getElementById("divSalvarAlteracoes").className = "";            
             setTimeout(() => {
+
                 document.getElementById("divSalvarAlteracoes").className = this.state.efeitoSalvarAlteracoes;
+
+                setInterval(() =>{
+                    //Anima o botão de salvar alterações
+                    document.getElementById("divSalvarAlteracoes").className = "";
+                    setTimeout(() => {
+                        document.getElementById("divSalvarAlteracoes").className = this.state.efeitoSalvarAlteracoes;
+                    }, 0);
+                }, 3000);
+                
             }, 0);
+
+            setTimeout(() =>{
+                this.setState({
+                    salvarAlteracoes: true
+                });
+            }, 1);           
+
         }
 
         this.setState({
-            salvarAlteracoes: true,
             dirty: true
         });
         
@@ -73,7 +99,7 @@ class BackLigas extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
         
         axios
-        .get('https://backoffice2.free.beeceptor.com/league')
+        .get('https://backoffice4.free.beeceptor.com/league')
         .then(res => {
             this.setState({ 
                 listaLigas: res.data.content,
@@ -125,6 +151,16 @@ class BackLigas extends Component {
     salvarAlteracoesLigas() {
 
         this.props.uiActions.loading("Processando...");
+
+        let ligas = [];
+
+        //Atualiza só as ligas que tiveram alterações
+        this.state.listaLigas.forEach((liga) => {
+            
+            if(liga["has_changes"] === true)
+                ligas.push(liga);
+
+        });
             
         //axios
         //.post('https://es3-stop-prod.herokuapp.com/category', { "name": descricao })
@@ -143,6 +179,65 @@ class BackLigas extends Component {
         //    toast.error("Erro ao salvar as alterações nas ligas. Erro: " + res.response.data.messages);
         //});
 
+    }    
+
+
+    /* Abre o modal para adicionar imagem de fundo na liga*/
+    clickUploadImage(liga_id, liga_index, liga_descricao){
+
+        this.setState({
+            league_id: liga_id,
+            league_index: liga_index,
+            league_description: liga_descricao,
+            selectedFile: null
+        }, () => {
+            this.toggleModalUploadImage();
+        });
+        
+    }
+
+
+    /* Controla visibilidade do modal de upload de imagem */
+    toggleModalUploadImage = () => {
+        this.setState({
+            modalUploadImage: !this.state.modalUploadImage
+        });
+    }
+
+
+    /* Armazena os bytes da imagem selecionada para Upload */
+    fileChangedHandler = (event) => {
+        this.setState({selectedFile: event.target.files[0]})
+    }
+
+
+    /* Faz o upload da imagem de fundo no cloudinary e recupera a URL gerada */
+    uploadImagemFundo = () => {
+        
+        //Recupera o current index da liga que stá sendo realizado upload
+        let league_index = this.state.league_index;
+        const formData = new FormData();
+        formData.append('file', this.state.selectedFile);
+        formData.append('upload_preset', this.state.uploadImagePreset);
+
+        this.props.uiActions.loading("Realizando Upload...");
+
+        axios
+        .post(this.state.uploadImageURL, formData)
+        .then(res => {
+
+            this.props.uiActions.stopLoading();
+            toast.success("Upload realizado com sucesso.");
+
+            //Recupera a URL gerada pelo cloudinary para ser o background_image da liga
+            this.state.listaLigas[league_index]["background_image"] = res.data.url;
+            this.toggleModalUploadImage();
+
+        })
+        .catch(res => {
+           this.props.uiActions.stopLoading();
+           toast.error("Erro ao fazer upload da imagem. Erro: " + res.response.data.error.message);
+        });
     }
 
 
@@ -228,7 +323,8 @@ class BackLigas extends Component {
                                                     <th width="40%" className="text-right">DESCRIÇÃO</th>
                                                     <th width="10%" className="text-center">PONTUAÇÃO MÍNIMA</th>
                                                     <th width="10%" className="text-center">PONTUAÇÃO MÁXIMA</th>
-                                                    <th width="35%" className="text-left">IMAGEM DE FUNDO</th>
+                                                    <th width="30%" className="text-center">IMAGEM DE FUNDO</th>
+                                                    <th width="5%" className="text-center"></th>
                                                     <th width="5%" className="text-center"></th>
                                                 </tr>
                                             </TableHead>
@@ -237,10 +333,11 @@ class BackLigas extends Component {
                                                     return (
                                                         <tr key={i}>
                                                             <td className="text-right"><input type="text" className="form-control text-right" value={res.description} onChange={this.handleChangeLigas} model="description" index={i} /></td>
-                                                            <td className="text-center" title="Quantidade mínima de pepitas necessárias para alcançar esta liga"><input type="number" className={`inputNumber ${(i === this.state.listaLigas.length - 1 ? "disabled" : "" )}` } step="10" value={res.range_min} onChange={this.handleChangeLigas} model="range_min" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
-                                                            <td className="text-center" title="Quantidade máxima de pepitas antes de avançar para a próxima liga"><input type="number" className={`inputNumber ${(i === 0 ? "disabled" : "" )}` } step="10" max="999999999" value={res.range_max} onChange={this.handleChangeLigas} model="range_max" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
-                                                            <td className="text-left"><input type="text" className="form-control text-right" value={res.background_image} onChange={this.handleChangeLigas} model="background_image" index={i} /></td>
-                                                            <td className="text-center"><Button size="sm" color="danger" className={ i === this.state.listaLigas.length - 1 ? "disabled" : "" } onClick={ () => this.excluirLiga(res.id) } title="Excluir liga"><i className="fa fa-times" arria-hidden="true" /> Excluir</Button></td>
+                                                            <td className="text-center" title="Quantidade mínima de pepitas necessárias para alcançar esta liga"><input className="inputNumber" readOnly={true} value={res.range_min} onChange={this.handleChangeLigas} model="range_min" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
+                                                            <td className="text-center" title="Quantidade máxima de pepitas antes de avançar para a próxima liga"><input className="inputNumber" readOnly={i === 0} value={res.range_max} onChange={this.handleChangeLigas} model="range_max" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
+                                                            <td className="text-center"><a href={res.background_image} target="_blank" rel="noopener noreferrer"><img src={res.background_image} alt={`Liga ${res.description}`} width={50} height={50} className="img-thumbnail" /></a>{/*<input type="text" className="form-control text-right" value={res.background_image} onChange={this.handleChangeLigas} model="background_image" index={i} />*/}</td>
+                                                            <td className="text-center"><Button size="sm" color="indigo" onClick={ () => this.clickUploadImage(res.league_id, i, res.description) }  title="Upload de imagem de fundo da liga"><i className="fa fa-picture-o" arria-hidden="true" /> Alterar Imagem</Button></td>
+                                                            <td className="text-center"><Button size="sm" color="danger" className={ i === this.state.listaLigas.length - 1 ? "disabled" : "" } onClick={ () => this.excluirLiga(res.league_id) } title="Excluir liga"><i className="fa fa-times" arria-hidden="true" /> Excluir</Button></td>
                                                         </tr>
                                                     )
                                                 }) }
@@ -248,6 +345,35 @@ class BackLigas extends Component {
                                         </Table>
                                     </div>                            
                                 </div>
+
+                                {/* Modal - UPLOAD IMAGEM */}
+                                <Container>
+                                    <Modal isOpen={this.state.modalUploadImage} toggle={this.toggleModalUploadImage} size="lg">
+                                    <ModalHeader toggle={this.toggleModalUploadImage} className="purple-color"><b>Upload de Imagem</b><h6>Liga {this.state.league_description}</h6></ModalHeader>
+                                    <ModalBody>
+
+                                        {/* Formulário de Cadastro - RESPOSTAS */}
+                                        <br />
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <p>Selecione uma imagem para ser o fundo da Liga selecionada:</p>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-8 align-self-center">
+                                                <input type="file" onChange={this.fileChangedHandler} />
+                                            </div>
+                                            <div className="col-md-4 align-self-center">
+                                                <Button color="purple" onClick={() => this.uploadImagemFundo()} title="Realizar o upload da imagem">Upload&nbsp;&nbsp; <i className="fa fa-upload" arria-hidden="true"/></Button>
+                                            </div>
+                                        </div>                                      
+                                        
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button color="purple" onClick={this.toggleModalUploadImage}>Fechar</Button>
+                                    </ModalFooter>
+                                    </Modal>
+                                </Container>
 
                             </div>
                         </div>
