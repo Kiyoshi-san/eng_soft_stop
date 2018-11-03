@@ -69,7 +69,7 @@ const LOGED_LINKS_MATCH = [
         icon: "gear"
     },
     {
-        name: "Sair",
+        name: "Sair da Sala",
         link: "home",
         icon: "logout"
     }
