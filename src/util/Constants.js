@@ -57,8 +57,27 @@ const LOGED_LINKS = [
     }
 ];
 
+const LOGED_LINKS_MATCH = [
+    {
+        name: "Perfil",
+        link: "user",
+        icon: "user"
+    },
+    {
+        name: "Backoffice",
+        link: "backoffice",
+        icon: "gear"
+    },
+    {
+        name: "Sair",
+        link: "home",
+        icon: "logout"
+    }
+];
+
 export default {
     PUBLIC_LINKS,
     SU_LINKS,
-    LOGED_LINKS
+    LOGED_LINKS,
+    LOGED_LINKS_MATCH
 }
