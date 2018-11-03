@@ -30,9 +30,17 @@ export default class MenuTop extends Component {
 
         if (user) {
             if (user.type === 1) {
-                itens = Constants.SU_LINKS;
+                if(window.location.pathname.includes("match")){
+                    itens = Constants.LOGED_LINKS_MATCH;
+                } else {
+                    itens = Constants.SU_LINKS;
+                }
             } else if (user.type === 2) {
-                itens = Constants.LOGED_LINKS;
+                if(window.location.pathname.includes("match")){
+                    itens = Constants.LOGED_LINKS_MATCH;
+                } else {
+                    itens = Constants.LOGED_LINKS;
+                }
             } else {
                 itens = Constants.PUBLIC_LINKS;
             }
