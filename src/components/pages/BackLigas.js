@@ -93,6 +93,95 @@ class BackLigas extends Component {
     }
 
 
+    /* Valida os range_min e range_max das ligas antes de salvar as alterações */
+    validarRangesLigas(currentIndex) {
+        
+        let validationObject = { 
+            isOk: true, 
+            mensagemProblematica: ''
+        };
+
+        for(var i = this.state.listaLigas.length - 1; i >= 0; i--)
+        {
+            let liga = this.state.listaLigas[i];
+
+            //Primeira Liga da lista, valida o range minimo em comparação ao seu máximo e em comparação a Liga anterior
+            if(i === 0)
+            {
+                //Recupera a liga anterior
+                let ligaAnterior = this.state.listaLigas[(i + 1)];
+
+                //Se o range_mínimo desta liga não for igual ao range_max da liga anterior + 1, então é inválido
+                validationObject = this.validarRangeMinComMaxLigaAnterior(validationObject, liga, ligaAnterior);
+                if (validationObject.isOk === false)
+                    return validationObject;
+
+                //Se o range_max estiver menor que o range mínimo, então é inválido
+                validationObject = this.validarRangeMax(validationObject, liga);
+                if (validationObject.isOk === false)
+                    return validationObject;
+                
+            }
+            // Última Liga da lista, valida apenas o range máximo
+            else if (i === this.state.listaLigas.length - 1)
+            {
+                //Se o range_max estiver menor que o range mínimo, então é inválido
+                validationObject = this.validarRangeMax(validationObject, liga);
+                if (validationObject.isOk === false)
+                    return validationObject;
+            }
+            //Ligas do meio, valida seus ranges min e máximo, e compara sempre com as ligas anteriores
+            else 
+            {                
+                //Recupera a liga anterior
+                let ligaAnterior = this.state.listaLigas[(i + 1)];
+
+                //Se o range_mínimo desta liga não for igual ao range_max da liga anterior + 1, então é inválido
+                validationObject = this.validarRangeMinComMaxLigaAnterior(validationObject, liga, ligaAnterior);
+                if (validationObject.isOk === false)
+                    return validationObject;
+
+                //Se o range_max estiver menor que o range mínimo, então é inválido
+                validationObject = this.validarRangeMax(validationObject, liga);
+                if (validationObject.isOk === false)
+                    return validationObject;
+            }
+        }
+
+        //Retorna resultados da validação
+        return validationObject;
+
+    }
+
+
+    /* Validar range_max X range_min de uma mesma liga*/
+    validarRangeMax(validationObject, liga){
+
+        //Se o range_max estiver menor que o range mínimo, então é inválido
+        if(parseInt(liga["range_max"], 10) < parseInt(liga["range_min"], 10))
+        {
+            validationObject.isOk = false;
+            validationObject.mensagemProblematica = "Problemas na liga '" + liga["description"] + "': Range MÁXIMO deve ser maior que seu range MÍNIMO.";
+        }
+
+        return validationObject;
+    }
+
+
+    /* Valida o range mínimo de uma liga em comparação com o range máximo da liga anterior */
+    validarRangeMinComMaxLigaAnterior(validationObject, liga, ligaAnterior){
+
+        //Se o range_mínimo desta liga não for igual ao range_max da liga anterior + 1, então é inválido
+        if(parseInt(liga["range_min"], 10) !== (parseInt(ligaAnterior["range_max"], 10) + 1))
+        {
+            validationObject.isOk = false;
+            validationObject.mensagemProblematica = "Problemas na liga '" + liga["description"] + "': Range MÍNIMO deve ser igual ao range MÁXIMO da liga '" + ligaAnterior["description"] + "' + 1.";
+        }
+
+        return validationObject;
+    }
+
+
     /* Carrega a lista com as ligas existentes */
     listarLigas() {
 
@@ -150,18 +239,19 @@ class BackLigas extends Component {
     /* Salva as alterações feitas nas ligas */
     salvarAlteracoesLigas() {
 
-        this.props.uiActions.loading("Processando...");
-
-        let ligas = [];
+        //Valida os ranges das ligas
+        let validation = this.validarRangesLigas();
+        if(validation.isOk === false)
+        {
+            toast.warn(validation.mensagemProblematica);
+            return;
+        }
 
         //Atualiza só as ligas que tiveram alterações
-        this.state.listaLigas.forEach((liga) => {
-            
-            if(liga["has_changes"] === true)
-                ligas.push(liga);
+        let ligas = this.state.listaLigas.filter(liga => liga["has_changes"] === true);
 
-        });
-            
+        this.props.uiActions.loading("Processando...");
+                    
         //axios
         //.post('https://es3-stop-prod.herokuapp.com/category', { "name": descricao })
         //.then(res => {
@@ -333,8 +423,8 @@ class BackLigas extends Component {
                                                     return (
                                                         <tr key={i}>
                                                             <td className="text-right"><input type="text" className="form-control text-right" value={res.description} onChange={this.handleChangeLigas} model="description" index={i} /></td>
-                                                            <td className="text-center" title="Quantidade mínima de pepitas necessárias para alcançar esta liga"><input className="inputNumber" readOnly={true} value={res.range_min} onChange={this.handleChangeLigas} model="range_min" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
-                                                            <td className="text-center" title="Quantidade máxima de pepitas antes de avançar para a próxima liga"><input className="inputNumber" readOnly={i === 0} value={res.range_max} onChange={this.handleChangeLigas} model="range_max" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
+                                                            <td className="text-center" title="Quantidade mínima de pepitas necessárias para alcançar esta liga"><input type="number" className="inputNumber" readOnly={i === this.state.listaLigas.length - 1} value={res.range_min} onChange={this.handleChangeLigas} model="range_min" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
+                                                            <td className="text-center" title="Quantidade máxima de pepitas antes de avançar para a próxima liga"><input type="number" className="inputNumber" readOnly={i === 0} value={res.range_max} onChange={this.handleChangeLigas} model="range_max" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
                                                             <td className="text-center"><a href={res.background_image} target="_blank" rel="noopener noreferrer"><img src={res.background_image} alt={`Liga ${res.description}`} width={50} height={50} className="img-thumbnail" /></a>{/*<input type="text" className="form-control text-right" value={res.background_image} onChange={this.handleChangeLigas} model="background_image" index={i} />*/}</td>
                                                             <td className="text-center"><Button size="sm" color="indigo" onClick={ () => this.clickUploadImage(res.league_id, i, res.description) }  title="Upload de imagem de fundo da liga"><i className="fa fa-picture-o" arria-hidden="true" /> Alterar Imagem</Button></td>
                                                             <td className="text-center"><Button size="sm" color="danger" className={ i === this.state.listaLigas.length - 1 ? "disabled" : "" } onClick={ () => this.excluirLiga(res.league_id) } title="Excluir liga"><i className="fa fa-times" arria-hidden="true" /> Excluir</Button></td>
