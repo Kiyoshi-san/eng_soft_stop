@@ -7,11 +7,20 @@
     color: white;
 }
 
+.colTbl-width {
+    width: 50px;
+}
+
+.faOptions {
+    margin: 0 auto;
+}
+
 .iconTbl .fa {
     margin-left: 0px !important;   
 }
 
 .iconTbl-info {
+    margin-top: -3px !important;
     margin-left: 24%;
 }
 
@@ -20,13 +29,19 @@
     font-size: 15px;
     display: inline-block;
     border-radius: 50%;
-    border: solid #000;
+    border: 1px solid #000;
     vertical-align: middle; 
-    line-height: 20px;
+    line-height: 28px;
     text-align: center;
     width: 30px;
     height: 30px;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+.iconTbl:hover {
+    border-color: rgb(170, 194, 238);
+    color: rgb(170, 194, 238);
 }
 
 
