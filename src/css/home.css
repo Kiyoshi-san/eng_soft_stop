@@ -7,6 +7,10 @@
     color: white;
 }
 
+.colTbl-width {
+    width: 50px;
+}
+
 .faOptions {
     margin: 0 auto;
 }
@@ -16,6 +20,7 @@
 }
 
 .iconTbl-info {
+    margin-top: -3px !important;
     margin-left: 24%;
 }
 
