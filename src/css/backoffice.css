@@ -113,6 +113,11 @@ td {
     text-align: center;
 }
 
+.sideRight
+{
+    margin-right: 30px;
+}
+
 
 /* FORMULARIO LOGIN BACKOFFICE */
 .div-container-login-backoffice {

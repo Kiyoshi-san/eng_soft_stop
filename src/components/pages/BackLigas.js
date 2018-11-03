@@ -17,6 +17,7 @@ class BackLigas extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            backEndURL: 'https://es3-stop-prod.herokuapp.com',
             salvarAlteracoes: false,
             descricaoLiga: '',
             listaLigas: [],
@@ -188,7 +189,7 @@ class BackLigas extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
         
         axios
-        .get('https://backoffice4.free.beeceptor.com/league')
+        .get(this.state.backEndURL + '/leagues')
         .then(res => {
             this.setState({ 
                 listaLigas: res.data.content,
@@ -217,22 +218,22 @@ class BackLigas extends Component {
         
         this.props.uiActions.loading("Processando...");
             
-        //axios
-        //.post('https://es3-stop-prod.herokuapp.com/category', { "name": descricao })
-        //.then(res => {
+        axios
+        .post(this.state.backEndURL + '/league', { "description": descricao })
+        .then(res => {
 
             this.props.uiActions.stopLoading();
             toast.success("Liga cadastrada com sucesso.");
 
-            //this.listarLigas();
+            this.listarLigas();
             this.setState({
                 descricaoLiga: ''
             });
-        //})
-        //.catch(res => {
-        //    this.props.uiActions.stopLoading();
-        //    toast.error("Erro ao cadastrar a liga. Erro: " + res.response.data.messages);
-        //});
+        })
+        .catch(res => {
+            this.props.uiActions.stopLoading();
+            toast.error("Erro ao cadastrar a liga. Erro: " + res.response.data.messages);
+        });
     }
 
 
@@ -252,9 +253,9 @@ class BackLigas extends Component {
 
         this.props.uiActions.loading("Processando...");
                     
-        //axios
-        //.post('https://es3-stop-prod.herokuapp.com/category', { "name": descricao })
-        //.then(res => {
+        axios
+        .put(this.state.backEndURL + '/leagues', ligas)
+        .then(res => {
 
             this.props.uiActions.stopLoading();
             toast.success("Ligas atualizadas com sucesso.");
@@ -263,11 +264,11 @@ class BackLigas extends Component {
             this.setState({
                 salvarAlteracoes: false
             });
-        //})
-        //.catch(res => {
-        //    this.props.uiActions.stopLoading();
-        //    toast.error("Erro ao salvar as alterações nas ligas. Erro: " + res.response.data.messages);
-        //});
+        })
+        .catch(res => {
+            this.props.uiActions.stopLoading();
+            toast.error("Erro ao salvar as alterações nas ligas. Erro: " + res.response.data.messages);
+        });
 
     }    
 
@@ -317,16 +318,38 @@ class BackLigas extends Component {
         .then(res => {
 
             this.props.uiActions.stopLoading();
-            toast.success("Upload realizado com sucesso.");
 
             //Recupera a URL gerada pelo cloudinary para ser o background_image da liga
             this.state.listaLigas[league_index]["background_image"] = res.data.url;
             this.toggleModalUploadImage();
 
+            //Atualiza diretamente na liga
+            this.atualizarImagemFundoLiga(this.state.listaLigas[league_index]);
+
         })
         .catch(res => {
            this.props.uiActions.stopLoading();
            toast.error("Erro ao fazer upload da imagem. Erro: " + res.response.data.error.message);
+        });
+    }
+
+
+    /* Atualiza a imagem de fundo de uma liga específica */
+    atualizarImagemFundoLiga(liga)
+    {
+        this.props.uiActions.loading("Processando...");
+                    
+        axios
+        .put(this.state.backEndURL + '/league/image', liga)
+        .then(res => {
+
+            this.props.uiActions.stopLoading();
+            toast.success("Upload realizado com sucesso.");
+
+        })
+        .catch(res => {
+            this.props.uiActions.stopLoading();
+            toast.error("Erro ao atualizar a imagem da liga. Erro: " + res.response.data.messages);
         });
     }
 
@@ -346,19 +369,18 @@ class BackLigas extends Component {
         
             this.props.uiActions.loading("Processando...");
 
-            // axios
-            // .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": categoria_id } })
-            // .then(res => {
+            axios
+            .delete(this.state.backEndURL + '/league', { data: { "league_id": liga_id } })
+            .then(res => {
                  this.props.uiActions.stopLoading();
                  toast.success("Liga excluída com sucesso.");
     
                  this.listarLigas();
-            // })
-            // .catch(res => {
-            //     this.props.uiActions.stopLoading();
-            //     toast.error("Erro ao excluir a liga. Erro: " + res.response.data.messages);
-            // });
-
+            })
+            .catch(res => {
+                this.props.uiActions.stopLoading();
+                toast.error("Erro ao excluir a liga. Erro: " + res.response.data.messages);
+            });
           }
         });
     }
