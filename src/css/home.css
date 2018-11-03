@@ -1,0 +1,32 @@
+.home-container {
+    padding: 20px;
+}
+
+.purple-color {
+    background-color: #6657b0 !important;
+    color: white;
+}
+
+.iconTbl .fa {
+    margin-left: 0px !important;   
+}
+
+.iconTbl-info {
+    margin-left: 24%;
+}
+
+.iconTbl {
+    margin-top: 5px;
+    font-size: 15px;
+    display: inline-block;
+    border-radius: 50%;
+    border: solid #000;
+    vertical-align: middle; 
+    line-height: 20px;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+

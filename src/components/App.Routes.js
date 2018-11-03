@@ -16,6 +16,7 @@ import Login from './pages/Login';
 import Logout from './pages/Logout';
 import LoginBack from './pages/LoginBack';
 import NotFound from './pages/NotFound';
+import Match from './pages/Match';
 import * as uiActions from '../actions/uiActions';
 
 import logo from '../images/Diamond_512.gif';
@@ -32,6 +33,7 @@ class AppRoutes extends Component {
                         <Route path='/login' component={Login}/>
                         <Route path='/logout' component={Logout}/>
                         <Route path='/login-back' component={LoginBack}/>
+                        <PrivateRoute path='/match' component={Match}/>
                         <PrivateRoute path='/account' component={Account} />
                         <BackRoute path='/backoffice' component={BackPalavra}/>
                         <BackRoute path='/backoffice-dashboard' component={BackDashboard}/>
