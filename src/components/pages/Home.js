@@ -18,7 +18,8 @@ class Home extends Component {
             linhasTbl: [],
             qtdCols: 4,
             user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
-            logado: false
+            logado: false,
+            idMatch:0
         }
     }
 
@@ -36,10 +37,12 @@ class Home extends Component {
         return;        
     }
 
-    toggle = () => {
+    toggle(idMatch) {
         this.setState({
-            modal: !this.state.modal
+            modal: !this.state.modal,
+            idMatch
         });
+        console.log(idMatch)
     }
 
     info() {
@@ -57,6 +60,20 @@ class Home extends Component {
                 </ModalFooter>
             </Modal>
         )
+    }
+
+    matchDetail() {
+        axios
+        .get('https://es3-stop-prod.herokuapp.com//match/{this.state.idMatch}')
+        .then(res => {
+            this.setState({
+                partidas: res.data.content
+                // linhasTbl: [...this.state.linhasTbl, res.data.content.forEach(e => {e.description})]
+            })
+        })
+        .catch(res => {
+            
+        });
     }
 
     /* Lista as partidas existentes */
@@ -90,11 +107,11 @@ class Home extends Component {
             for (i; i < qtdCols; i++) {
                 if(partidas[ctCol]) {
                     children.push(<td key={partidas[ctCol].match_id}> {partidas[ctCol].description}
-                        <div>
+                        <div class="faOptions">
                             <label class="iconTbl iconTbl-gamepad" onClick={this.jogar}>
                                 <Fa icon="gamepad" className="ml-1"/>
                             </label>
-                            <label class="iconTbl iconTbl-info" onClick={this.toggle}>
+                            <label class="iconTbl iconTbl-info" onClick={ () => {this.toggle(partidas[ctCol].match_id)} }>
                                 <Fa icon="info" className="ml-1"/>
                             </label>
                         </div>
