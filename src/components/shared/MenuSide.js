@@ -23,6 +23,10 @@ class MenuSide extends Component {
                     <Fa icon="sitemap"/>
                     <span className="description">Ligas</span>
                 </a>
+                <a href="/backoffice-loja">
+                    <Fa icon="shopping-basket"/>
+                    <span className="description">Loja</span>
+                </a>
                 <a href="/logout">
                     <Fa icon="power-off"/>
                     <span className="description">Logout</span>
