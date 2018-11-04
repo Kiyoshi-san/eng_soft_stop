@@ -84,7 +84,7 @@ td {
     vertical-align: middle !important;
 }
 
-tr.clickable {
+.clickable {
     cursor: pointer;
 }
 
@@ -105,6 +105,17 @@ tr.clickable {
 .purple-gradient
 {
     background: linear-gradient(40deg, #8c81c0, #5648a1) !important;
+}
+
+.inputNumber
+{
+    width: 70% !important;
+    text-align: center;
+}
+
+.sideRight
+{
+    margin-right: 30px;
 }
 
 

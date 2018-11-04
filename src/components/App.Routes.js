@@ -11,6 +11,8 @@ import { PrivateRoute } from './shared/PrivateRoute';
 import Account from './pages/Account';
 import BackDashboard from './pages/BackDashboard.js';
 import BackPalavra from './pages/BackPalavra.js';
+import BackLigas from './pages/BackLigas.js';
+import BackStore from './pages/BackStore.js';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Logout from './pages/Logout';
@@ -35,8 +37,10 @@ class AppRoutes extends Component {
                         <Route path='/login-back' component={LoginBack}/>
                         <PrivateRoute path='/match' component={Match}/>
                         <PrivateRoute path='/account' component={Account} />
-                        <BackRoute path='/backoffice' component={BackPalavra}/>
                         <BackRoute path='/backoffice-dashboard' component={BackDashboard}/>
+                        <BackRoute path='/backoffice-categorias' component={BackPalavra}/>
+                        <BackRoute path='/backoffice-ligas' component={BackLigas}/>
+                        <BackRoute path='/backoffice-loja' component={BackStore}/>
                         <Route component={NotFound}/>
                     </Switch>
                 </main>
