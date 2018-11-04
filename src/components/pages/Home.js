@@ -317,7 +317,7 @@ class Home extends Component {
         })
 
         var els = document.getElementsByName("categoriasArrayEnvio");
-        els.forEach((a) => console.log(a))
+        els.forEach((a) => console.log(a.value))
     }
 
     criarPartida() {
