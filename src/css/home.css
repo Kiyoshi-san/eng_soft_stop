@@ -7,12 +7,17 @@
     color: white;
 }
 
+.tblTitle {
+    text-align: center;
+    font-size: 30px;
+}
+
 .colTbl-width {
     width: 50px;
 }
 
 .faOptions {
-    margin: 0 auto;
+    margin-left: 25%;
 }
 
 .iconTbl .fa {
@@ -20,19 +25,21 @@
 }
 
 .iconTbl-info {
-    margin-left: 24%;
+    margin-left: 25%;
 }
 
 .iconTbl {
     margin-top: 5px;
-    font-size: 15px;
+    font-size: 20px;
     display: inline-block;
-    border-radius: 50%;
-    border: 1px solid #000;
+    border-radius: 10em;
+    border: 2px solid #aa66cc;
+    background-color: #fff;
     vertical-align: middle; 
-    line-height: 28px;
+    line-height: 28px !important;
+    padding-bottom: 10px;
     text-align: center;
-    width: 30px;
+    width: 50px;
     height: 30px;
     cursor: pointer;
     transition: 0.3s;
@@ -59,3 +66,4 @@
     padding-left: 5px;
     padding-right: 0;
 }
+
