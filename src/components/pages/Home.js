@@ -102,7 +102,8 @@ class Home extends Component {
 
         return (
             <Modal isOpen={this.state.modal} toggle={this.toggle} >
-                <ModalHeader className="text-center" titleClass="w-100 font-weight-bold" toggle={this.toggle}>Sala {partidasDescription.description}</ModalHeader>
+                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleClass="w-100 font-weight-bold" toggle={this.toggle}><h3 className="white-text mb-3 pt-3 font-weight-bold">Sala {partidasDescription.description}</h3>
+                </ModalHeader>
                 <ModalBody>
                     <Row>
                         <Col size="3" className="d-flex justify-content-center align-items-center">
@@ -135,8 +136,8 @@ class Home extends Component {
                     </Row>
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
-                    <Button class="btn btn-deep-purple" onClick={this.jogar}>Jogar</Button>
-                    <Button class="btn btn-danger" onClick={this.toggle}>Cancelar</Button>
+                    <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
+                    <Button color="danger" className="roundedBtn" outline onClick={this.toggle}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
         )
