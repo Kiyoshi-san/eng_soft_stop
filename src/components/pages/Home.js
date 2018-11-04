@@ -322,7 +322,7 @@ class Home extends Component {
 
                         <TableHead color="deep-purple" textWhite>
                             <tr>
-                                <th align="center" colSpan={ qtdCols }>Salas</th>
+                                <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
                             </tr>
                         </TableHead>
                         <TableBody>
