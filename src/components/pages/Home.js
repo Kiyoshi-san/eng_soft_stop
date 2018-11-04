@@ -312,12 +312,17 @@ class Home extends Component {
     }
     
     fnHandleChangeCheck = () => {
-        this.setState({
-            categoriasArrayEnvio: []
-        })
+        let categoriasArrayEnvio = []
 
         var els = document.getElementsByName("categoriasArrayEnvio");
-        els.forEach((a) => console.log(a.value))
+        els.forEach((a) => {
+            if ( a.checked ) {
+                categoriasArrayEnvio.push({ "category_id": a.value })
+            }
+            this.setState({
+                categoriasArrayEnvio
+            })            
+        })
     }
 
     criarPartida() {
@@ -325,19 +330,13 @@ class Home extends Component {
         { qtdJogadores } = this.state,
         { userId } = this.state.user,
         { categoriasArrayEnvio } = this.state
-        console.log(categoriasArrayEnvio)
-        return
         
         axios
         .post('https://es3-stop-prod.herokuapp.com/match', {
             "description": salaNome,
             "players_count": qtdJogadores,
             "creator_player_id": userId,
-            /* "categories": [
-                {
-                    "category_id": int
-                }
-            ] */
+            "categories": categoriasArrayEnvio
         })
         .then(res => {
             console.log("Sala Criada")
