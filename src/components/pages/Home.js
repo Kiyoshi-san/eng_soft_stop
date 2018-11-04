@@ -21,8 +21,10 @@ class Home extends Component {
             user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
             logado: false,
             idMatch: 0,
+            listaCategorias: [],
+            salaNome: "",
             qtdJogadores: 0,
-            listaCategorias: []
+            categoriasArrayEnvio: [],
         }
     }
 
@@ -46,24 +48,27 @@ class Home extends Component {
         });
     }
     
+    validaLogin = () => {
+        let { user } = this.state;
+        if (!user) {
+            // toast.warn("Por gentileza efetue o login")
+            this.props.uiActions.loading("Efetuando login...");
+            window.location.href = '/login';
+        } else {
+            return true;
+        }
+    }
+    
     jogar = (e) => {
         if(e) {
             e.preventDefault();
             this.setState({
                 idMatch: e.currentTarget.value
             }, () => {
-                if (!user) {
-                    // toast.warn("Por gentileza efetue o login")
-                    this.props.uiActions.loading("Efetuando login...");
-                    window.location.href = '/login';
-                } else {
-                    this.entrandoPartida();
-                }
+                if(!this.validaLogin) return
+                else this.entrandoPartida();
             });
         }
-        let { user } = this.state;
-
-
         return;        
     }
 
@@ -187,8 +192,8 @@ class Home extends Component {
             i = 0;
             for (i; i < qtdCols; i++) {
                 if(partidas[ctCol]) {
-                    children.push(<td key={partidas[ctCol].match_id} className="colTbl-width"> {partidas[ctCol].description}
-                        <div class="faOptions">
+                    children.push(<td key={partidas[ctCol].match_id} className="colTbl"> {partidas[ctCol].description}
+                        <div>
                             <button class="iconTbl iconTbl-gamepad" value={ partidas[ctCol].match_id } onClick={this.jogar}>
                                 <Fa icon="gamepad" className="ml-1"/>
                             </button>
@@ -199,7 +204,7 @@ class Home extends Component {
                         </div>
                     </td>)
                 } else {
-                    children.push(<td className="colTbl-width"></td>)
+                    children.push(<td className="colTbl"></td>)
                 }
                 ctCol++;
             }
@@ -211,11 +216,12 @@ class Home extends Component {
     /* Abrindo Modal
     - 2 - Criar Sala
     */
-    toggleGeral(nr) {
+    toggleGeral(nr, func) {
         let modalNumber = 'modal' + nr
         this.setState({
           [modalNumber]: !this.state[modalNumber]
         });
+        func;
     }
 
     /* Lista as categorias existentes */
@@ -232,8 +238,8 @@ class Home extends Component {
             toast.error('Erro ao listar as categorias. Erro: ' + res.response.data.messages);
             this.props.uiActions.stopLoading();
         });
+        return
     }
-    
 
     /* Montando uma tabela Geral */
     componentTableGeral(lista) {
@@ -249,12 +255,12 @@ class Home extends Component {
             i = 0;
             for (i; i < qtdCols; i++) {
                 if(lista[ctCol]) {
-                    children.push(<td key={ lista[ctCol].value } className="colTbl-width">
-                    <input type="checkbox" onChange={ this.handleChange } value={ lista[ctCol].value }></input>
+                    children.push(<td key={ lista[ctCol].category_id } className="colTbl">
+                    <input id="categoriasArrayEnvio" name="categoriasArrayEnvio" type="checkbox" onChange={ this.fnHandleChangeCheck } value={ lista[ctCol].category_id }></input>
                     <label class="label-margin">{lista[ctCol].name}</label>
                     </td>)
                 } else {
-                    children.push(<td className="colTbl-width"></td>)
+                    children.push(<td className="colTbl"></td>)
                 }
                 ctCol++;
             }
@@ -264,8 +270,8 @@ class Home extends Component {
     }
 
     criarSala() {
-        this.categoryList()
         let { listaCategorias } = this.state;
+        if(!this.validaLogin) return
 
         return (
             <Modal isOpen={this.state.modal2} toggle={() => this.toggleGeral(2)} >
@@ -274,7 +280,7 @@ class Home extends Component {
                         <section className="form-light">
                         <Row>
                             <Col md="12">
-                                <Input label="Nome da Sala" group type="text" validate />
+                                <Input id="salaNome" label="Nome da Sala" onChange={ this.handleChange } group type="text" validate />
                                     <MDBTable className="tblCategory" bordered={true} striped={true}>
                                         <TableBody>
                                         { 
@@ -298,15 +304,52 @@ class Home extends Component {
                         </section>
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
-                    <Button color="secondary" className="roundedBtn" outline onClick={() => this.toggleGeral(2)}>Criar</Button>
+                    <Button color="secondary" className="roundedBtn" outline onClick={() => this.toggleGeral(2, this.criarPartida())}>Criar</Button>
                     <Button color="danger" className="roundedBtn" outline onClick={() => this.toggleGeral(2)}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
         )
     }
     
+    fnHandleChangeCheck = () => {
+        let categoriasArrayEnvio = []
+
+        var els = document.getElementsByName("categoriasArrayEnvio");
+        els.forEach((a) => {
+            if ( a.checked ) {
+                categoriasArrayEnvio.push({ "category_id": a.value })
+            }
+            this.setState({
+                categoriasArrayEnvio
+            })            
+        })
+    }
+
+    criarPartida() {
+        let { salaNome } = this.state,
+        { qtdJogadores } = this.state,
+        { userId } = this.state.user,
+        { categoriasArrayEnvio } = this.state
+        
+        axios
+        .post('https://es3-stop-prod.herokuapp.com/match', {
+            "description": salaNome,
+            "players_count": qtdJogadores,
+            "creator_player_id": userId,
+            "categories": categoriasArrayEnvio
+        })
+        .then(res => {
+            console.log("Sala Criada")
+        })
+        .catch(res => {
+            this.props.uiActions.stopLoading();
+            toast.error("Erro ao cadastrar a categoria. Erro: " + res.response.data.messages);
+        });
+    }
+    
     componentWillMount() {
         this.matchesList();
+        this.categoryList();
     }
     
     render() {
