@@ -68,7 +68,7 @@ class LoginBack extends Component {
                         userId: res.data.content.user_id,
                         userName: res.data.content.user_name
                     }));
-                    window.location.href = '/backoffice';
+                    window.location.href = '/backoffice-dashboard';
                 } else {
                     errorCallback("Usuário ou senha inexistente.");
                 }

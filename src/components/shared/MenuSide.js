@@ -13,12 +13,23 @@ class MenuSide extends Component {
             <div className="sidenav">
                 <a href="/backoffice-dashboard">
                     <Fa icon="dashboard"/>
+                    <span className="description">Dashboard</span>
                 </a>
-                <a href="/backoffice">
+                <a href="/backoffice-categorias">
                     <Fa icon="graduation-cap"/>
+                    <span className="description">Categorias</span>
+                </a>
+                <a href="/backoffice-ligas">
+                    <Fa icon="sitemap"/>
+                    <span className="description">Ligas</span>
+                </a>
+                <a href="/backoffice-loja">
+                    <Fa icon="shopping-basket"/>
+                    <span className="description">Loja</span>
                 </a>
                 <a href="/logout">
                     <Fa icon="power-off"/>
+                    <span className="description">Logout</span>
                 </a>
             </div>
         )
