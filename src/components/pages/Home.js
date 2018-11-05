@@ -50,10 +50,12 @@ class Home extends Component {
     
     validaLogin = () => {
         let { user } = this.state;
+        
         if (!user) {
-            // toast.warn("Por gentileza efetue o login")
-            this.props.uiActions.loading("Efetuando login...");
-            window.location.href = '/login';
+            toast.warn("Por gentileza efetue o login")
+            /* this.props.uiActions.loading("Efetuando login...");
+            window.location.href = '/login'; */
+            return false
         } else {
             return true;
         }
@@ -65,7 +67,7 @@ class Home extends Component {
             this.setState({
                 idMatch: e.currentTarget.value
             }, () => {
-                if(!this.validaLogin) return
+                if(!this.validaLogin()) return
                 else this.entrandoPartida();
             });
         }
@@ -270,8 +272,7 @@ class Home extends Component {
     }
 
     criarSala() {
-        let { listaCategorias } = this.state;
-        if(!this.validaLogin) return
+        if(!this.state.user) return
 
         return (
             <Modal isOpen={this.state.modal2} toggle={() => this.toggleGeral(2)} >
@@ -376,7 +377,7 @@ class Home extends Component {
                     </MDBTable>
                 </div>
                 <div className="col-xs-12 col-sm-12">
-                    <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2)}>Criar Sala</Button>
+                    <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}>Criar Sala</Button>
                 </div>
             </div>
         )
