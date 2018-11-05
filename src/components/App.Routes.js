@@ -18,6 +18,7 @@ import Login from './pages/Login';
 import Logout from './pages/Logout';
 import LoginBack from './pages/LoginBack';
 import NotFound from './pages/NotFound';
+import NewAccount from './pages/NewAccount';
 import Match from './pages/Match';
 import * as uiActions from '../actions/uiActions';
 
@@ -35,6 +36,7 @@ class AppRoutes extends Component {
                         <Route path='/login' component={Login}/>
                         <Route path='/logout' component={Logout}/>
                         <Route path='/login-back' component={LoginBack}/>
+                        <Route path='/novo-usuario' component={NewAccount}/>
                         <PrivateRoute path='/match' component={Match}/>
                         <PrivateRoute path='/account' component={Account} />
                         <BackRoute path='/backoffice-dashboard' component={BackDashboard}/>
