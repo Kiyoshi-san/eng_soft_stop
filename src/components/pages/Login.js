@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { Container, Row, Col, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
+import { Container, Row, Col, Input, Button } from 'mdbreact';
 import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
-import "../../css/login.css";
+import NewAccountShared from '../shared/NewAccountShared';
 
+import "../../css/login.css";
 import logo from '../../images/stop_logo_v2.png';
 import rightArrow from '../../images/right-arrow-icon.png';
 
@@ -76,21 +77,11 @@ class Login extends Component {
             })
             .catch(error => errorCallback(error));
     }
-        
+
     toggle = () => {
         this.setState({
             modal: !this.state.modal
         });
-        
-        if(this.state.modal) {
-            axios.post('https://es3-stop-prod.herokuapp.com/auth/login', { "user_name": this.state.cadLogin, "user_password": this.state.cadSenha })
-            .then(res => {
-                toast.success("Usuário cadastrado com sucesso.");
-            })
-            .catch(res => {
-                toast.error("Erro ao cadastrar o usuário. Erro: " + res.response.data.messages);
-            })
-        }
     }
 
     render() {
@@ -114,19 +105,8 @@ class Login extends Component {
                             </div>
                         </Col>
                         
-                        {/* <label className="sem-cadastro-login"><a onClick={this.toggle}>Ainda não possui conta?</a></label> */}
-                        <Modal isOpen={this.state.modal} toggle={this.toggle} >
-                        <ModalHeader className="text-center" titleClass="w-100 font-weight-bold" toggle={this.toggle}>Cadastro de Usuário</ModalHeader>
-                        <ModalBody>
-                            <form className="mx-3 grey-text">
-                                <Input id="cadLogin" label="Nome para login" icon="user" group type="text" onChange={this.handleChange} />
-                                <Input id="cadSenha" label="Cadastro de Senha" icon="lock" group type="password" validate onChange={this.handleChange}/>
-                            </form>
-                        </ModalBody>
-                        <ModalFooter className="justify-content-center">
-                            <Button onClick={this.toggle}>Login</Button>
-                        </ModalFooter>
-                        </Modal>
+                        <label className="sem-cadastro-login"><a onClick={this.toggle}>Ainda não possui conta?</a></label>
+                        <NewAccountShared modal={this.state.modal} toggle={this.toggle} />
                         <div className="text-center">
                             <Button color="primary-color-dark" className="btn-login-backoffice col-md-12" type="submit">
                                 Entrar

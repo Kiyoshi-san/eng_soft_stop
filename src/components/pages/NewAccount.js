@@ -3,18 +3,34 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
+import NewAccountShared from '../shared/NewAccountShared';
 import * as uiActions from '../../actions/uiActions';
 
 class NewAccount extends Component {
-    render() {
-        return (
-            <div>
-            </div>
-        )
+    constructor(props) {
+        super(props);
+        this.state = {
+            modal: false,
+        };
     }
 
     componentDidMount() {
         this.props.uiActions.stopLoading();
+        this.toggle();
+    }
+
+    toggle = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
+    render() {
+        return (
+            <div>
+                <NewAccountShared modal={this.state.modal} toggle={this.toggle} />
+            </div>
+        )
     }
 }
 
