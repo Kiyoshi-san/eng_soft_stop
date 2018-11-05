@@ -12,12 +12,8 @@
     font-size: 30px;
 }
 
-.colTbl-width {
-    width: 50px;
-}
-
-.faOptions {
-    margin-left: 25%;
+.colTbl {    
+    text-align: center;
 }
 
 .iconTbl .fa {
