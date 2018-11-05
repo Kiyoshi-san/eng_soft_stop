@@ -1,0 +1,65 @@
+.home-container {
+    padding: 20px;
+}
+
+.purple-color {
+    background-color: #6657b0 !important;
+    color: white;
+}
+
+.tblTitle {
+    text-align: center;
+    font-size: 30px;
+}
+
+.colTbl {    
+    text-align: center;
+}
+
+.iconTbl .fa {
+    margin-left: 0px !important;   
+}
+
+.iconTbl-info {
+    margin-left: 25%;
+}
+
+.iconTbl {
+    margin-top: 5px;
+    font-size: 20px;
+    display: inline-block;
+    border-radius: 10em;
+    border: 2px solid #aa66cc;
+    background-color: #fff;
+    vertical-align: middle; 
+    line-height: 28px !important;
+    padding-bottom: 10px;
+    text-align: center;
+    width: 50px;
+    height: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.iconTbl:hover {
+    border-color: rgb(170, 194, 238);
+    color: rgb(170, 194, 238);
+}
+
+.roundedBtn {
+    border-radius: 10em;
+}
+
+.label-margin {
+    margin: 0 10px;
+}
+
+.slider {
+    margin-left: 20px;
+}
+
+.tblCategory, .tblCategory th, .tblCategory tr, .tblCategory td {
+    padding-left: 5px;
+    padding-right: 0;
+}
+
