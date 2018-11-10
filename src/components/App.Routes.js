@@ -20,6 +20,7 @@ import LoginBack from './pages/LoginBack';
 import NotFound from './pages/NotFound';
 import NewAccount from './pages/NewAccount';
 import Match from './pages/Match';
+import Shop from './pages/Shop';
 import * as uiActions from '../actions/uiActions';
 
 import logo from '../images/Diamond_512.gif';
@@ -39,6 +40,7 @@ class AppRoutes extends Component {
                         <Route path='/novo-usuario' component={NewAccount}/>
                         <PrivateRoute path='/match' component={Match}/>
                         <PrivateRoute path='/account' component={Account} />
+                        <PrivateRoute path='/shop' component={Shop}/>
                         <BackRoute path='/backoffice-dashboard' component={BackDashboard}/>
                         <BackRoute path='/backoffice-categorias' component={BackPalavra}/>
                         <BackRoute path='/backoffice-ligas' component={BackLigas}/>
