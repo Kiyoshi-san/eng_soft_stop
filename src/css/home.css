@@ -1,5 +1,40 @@
 .home-container {
-    padding: 20px;
+    padding: 20px 0 20px 50px;
+}
+
+.home-grid {
+    padding: 0;
+    border: solid 1px #bab1eb;
+    box-shadow: 12px 7px 55px #cac3d2;
+}
+
+.home-grid-match {
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.home-grid-login {
+    padding-right: 50px;
+}
+
+.imgPerfil {
+    display: block;
+    text-align: center;
+}
+
+.tblGridHeader {
+    background-color: #5b32bc;
+    text-align: left;
+    font-size: 30px;
+    font-family: sans-serif;
+    padding: 10px;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 24px;
+    font-weight: bold;
+    font-weight: 400;
+    text-shadow: 0 0 10px rgba(255,255,255,.7);
 }
 
 .purple-color {
@@ -8,12 +43,46 @@
 }
 
 .tblTitle {
-    text-align: center;
+    text-align: left;
     font-size: 30px;
+    font-family: sans-serif;
+    margin: 6px 0 0 37px;
+    padding: 0;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 24px;
+    font-weight: bold;
+    width: 350px;
+    font-weight: 400;
+    text-shadow: 0 0 10px rgba(255,255,255,.7);
 }
 
 .colTbl {    
     text-align: center;
+    cursor: pointer;
+}
+
+.colTblActive {
+    background-color: rgb(170, 194, 238);;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255,255,255,.7);
+}
+
+.btnJogar {
+    float: right;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.iconCircle {
+    border: solid 2px #bab1eb;
+    border-radius: 50% !important;
+    padding-top: 4px;
+    width: 25px;
+    height: 25px;
+    font-size: 20px;
+    border-radius: 20px;
+    vertical-align: middle; 
 }
 
 .iconTbl .fa {

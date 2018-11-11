@@ -7,6 +7,7 @@ import axios from "axios";
 import '../../css/home.css';
 
 import Login from "./Login.js";
+import Userhome from "./Userhome.js";
 
 import StorageKey from '../../util/StorageKey';
 
@@ -26,8 +27,9 @@ class Home extends Component {
             listaCategorias: [],
             salaNome: "",
             qtdJogadores: 0,
-            categoriasArrayEnvio: [],
+            categoriasArrayEnvio: []
         }
+        this.setActiveElement = this.setActiveElement.bind(this);
     }
 
     handleChange = (event) => {
@@ -39,7 +41,7 @@ class Home extends Component {
     
     entrandoPartida() {
         axios
-        .get('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch + "/join")
+        .post('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch + "/join", { "player_id": this.state.user.userId })
         .then(res => {
             this.props.uiActions.loading("Entrando na partida...");
             window.location.href = '/match';
@@ -64,7 +66,7 @@ class Home extends Component {
     }
     
     jogar = (e) => {
-        if(e) {
+        /* if(e) {
             e.preventDefault();
             this.setState({
                 idMatch: e.currentTarget.value
@@ -72,7 +74,9 @@ class Home extends Component {
                 if(!this.validaLogin()) return
                 else this.entrandoPartida();
             });
-        }
+        } */
+        if(!this.validaLogin()) return
+        else this.entrandoPartida();
         return;        
     }
 
@@ -80,14 +84,15 @@ class Home extends Component {
         this.setState({
             modal: !this.state.modal
         });
-        if(e) {
+        /* if(e) {
             e.preventDefault();
             this.setState({
                 idMatch: e.currentTarget.value
             }, () => {
                 this.matchDetail();
             });
-        }
+        } */
+        this.matchDetail();
     }
 
     info() {
@@ -181,6 +186,18 @@ class Home extends Component {
         });
     }
 
+    setActiveElement = (e) => {
+        if(e) {
+            e.preventDefault();
+            this.setState({
+                idMatch: e.currentTarget.dataset.id
+            }/* , () => {
+                alert(this.state.idMatch)
+            } */);
+        }
+        return;   
+    }
+
     /* Montando a tabela com as partidas */
     componentTblMount() {
         let { partidas } = this.state,
@@ -196,16 +213,15 @@ class Home extends Component {
             i = 0;
             for (i; i < qtdCols; i++) {
                 if(partidas[ctCol]) {
-                    children.push(<td key={partidas[ctCol].match_id} className="colTbl"> {partidas[ctCol].description}
-                        <div>
+                    children.push(<td key={partidas[ctCol].match_id} className={partidas[ctCol].match_id == this.state.idMatch? "colTblActive colTbl" : "colTbl"} data-id={ partidas[ctCol].match_id } onClick={this.setActiveElement}> {partidas[ctCol].description}
+                        {/* <div>
                             <button class="iconTbl iconTbl-gamepad" value={ partidas[ctCol].match_id } onClick={this.jogar}>
                                 <Fa icon="gamepad" className="ml-1"/>
                             </button>
-                            {/* <label class="iconTbl iconTbl-info" onClick={ () => {this.toggle(partidas[ctCol].match_id)} }> */}
                             <button class="iconTbl iconTbl-info" value={ partidas[ctCol].match_id } onClick={ this.toggle }>
                                 <Fa icon="info" className="ml-1"/>
                             </button>
-                        </div>
+                        </div> */}
                     </td>)
                 } else {
                     children.push(<td className="colTbl"></td>)
@@ -343,6 +359,7 @@ class Home extends Component {
         })
         .then(res => {
             console.log("Sala Criada")
+            this.matchesList()
         })
         .catch(res => {
             this.props.uiActions.stopLoading();
@@ -351,12 +368,16 @@ class Home extends Component {
     }
 
     loginComponent = () => {
-        if(!this.state.logado){
+        if(!this.state.user){
             return (
                 <Login />
-            )
+                )
         } else {
-            return
+            return (
+                <Userhome 
+                    userData = {this.state.user}
+                />
+            )
         }
     }
     
@@ -371,28 +392,32 @@ class Home extends Component {
             <div className="home-container row">
                 { this.info() }
                 { this.criarSala() }
-                <div className="col-xs-8 col-sm-8">
-                    <MDBTable bordered={true} striped={true}>
-                        <ToastContainer 
-                            newestOnTop={true}/>
+                <div className="col-xs-8 col-sm-8 home-grid">
+                    <div class="tblGridHeader">
+                        <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
+                    </div>
+                    <div className="home-grid-match">
+                        <MDBTable bordered={true} striped={true}>
+                            <ToastContainer 
+                                newestOnTop={true}/>
 
-                        <TableHead color="deep-purple" textWhite>
-                            <tr>
-                                <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
-                            </tr>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                this.componentTblMount()
-                            }
-                        </TableBody>
-                    </MDBTable>
+                            <TableHead class="tblGridHeader" color="deep-purple" textWhite>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    this.componentTblMount()
+                                }
+                            </TableBody>
+                        </MDBTable>
+                    </div>
+                    <div className="home-grid-btn">
+                        <Button class="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
+                        <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
+                        <Button class="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                    </div>
                 </div>
-                <div>
+                <div className="col-xs-4 col-sm-4 home-grid-login">
                     { this.loginComponent() }
-                </div>
-                <div className="col-xs-8 col-sm-8">
-                    <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}>Criar Sala</Button>
                 </div>
             </div>
         )
