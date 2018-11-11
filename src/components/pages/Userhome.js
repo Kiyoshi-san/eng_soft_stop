@@ -52,10 +52,10 @@ let Userhome = ({userData}) => {
 
                         <div className="row">
                             <div className="col-sm-5">
-                                <Button className="btn btn-deep-purple" onClick={perfil}><Fa icon="info iconCircle" className="ml-1"/>Perfil</Button>
+                                <Button className="btn btn-deep-purple btn-login-home" onClick={perfil}><Fa icon="info iconCircle" className="ml-1"/>Perfil</Button>
                             </div>
                             <div className="col-sm-5">
-                                <Button className="btn btn-deep-purple" onClick={logout}><Fa icon="sign-out" className="ml-1"/>Deslogar</Button>
+                                <Button className="btn btn-deep-purple btn-login-home" onClick={logout}><Fa icon="sign-out iconCircle" className="ml-1"/>Deslogar</Button>
                             </div>
                         </div>
                     </div>
