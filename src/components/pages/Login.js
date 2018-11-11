@@ -86,12 +86,13 @@ class Login extends Component {
 
     render() {
         return (
-            <div className="div-container-login-backoffice">
-            <Container className="container-login-backoffice">
+            <div className="col-xs-12 col-sm-12">
+            {/* <div className="div-container-login-backoffice">
+            <Container className="container-login-backoffice"> */}
                 <ToastContainer newestOnTop={true}/>
                 <Row>
-                    <form className="form-login-back col-md-12" onSubmit={this.handleSubmit}>
-                        <img src={logo} className="logo_stop-backoffice" alt="stop" />
+                    <form class="form-login" onSubmit={this.handleSubmit}>
+                        <div className="tituloLogin" align="center">Login</div>
                         <Col md="12">
                             <div className="grey-text">
                                 <Col md="12">
@@ -108,14 +109,15 @@ class Login extends Component {
                         <label className="sem-cadastro-login"><a onClick={this.toggle}>Ainda não possui conta?</a></label>
                         <NewAccountShared modal={this.state.modal} toggle={this.toggle} />
                         <div className="text-center">
-                            <Button color="primary-color-dark" className="btn-login-backoffice col-md-12" type="submit">
+                            <Button color="deep-purple" className="btn-login col-md-12" type="submit">
                                 Entrar
                                 <img src={rightArrow} className="rightArrow-backoffice" alt="" />
                             </Button>
                         </div>
                     </form>
                 </Row>
-            </Container>
+            {/* </Container>
+            </div> */}
             </div>
         );
     }
