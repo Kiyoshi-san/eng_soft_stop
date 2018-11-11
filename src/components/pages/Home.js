@@ -26,7 +26,7 @@ class Home extends Component {
             idMatch: 0,
             listaCategorias: [],
             salaNome: "",
-            qtdJogadores: 0,
+            qtdJogadores: 2,
             categoriasArrayEnvio: [],
             validacaoNomeSala: "hidden",
             validacaoQtdCategorias: "hidden",
@@ -333,8 +333,8 @@ class Home extends Component {
                                 <div>
                                     {/* Qtd jogadores */}
                                     <label className={this.state.validacaoQtdJogadores + " validacao"}>Insira ao menos 2 jogadores</label>
-                                    <label>N° máx de Jogadores: { this.state.qtdJogadores ? this.state.qtdJogadores : 0 }</label>
-                                    <input id="qtdJogadores" type="range" class="slider" value={ this.state.qtdJogadores } min="0" max="10" onChange={ this.handleChange } />
+                                    <label>N° máx de Jogadores: { this.state.qtdJogadores ? this.state.qtdJogadores : 2 }</label>
+                                    <input id="qtdJogadores" type="range" class="slider" value={ this.state.qtdJogadores } min="2" max="10" onChange={ this.handleChange } />
                                 </div>
                             </Col>
                         </Row>
@@ -385,6 +385,7 @@ class Home extends Component {
                     this.validacaoNomeSala = 0
                 }
             , 3000);
+            return
         } else if(categoriasArrayEnvio.length < 3) {
             this.setState({
                 validacaoQtdCategorias: "show"
@@ -398,6 +399,7 @@ class Home extends Component {
                     this.validacaoQtdCategorias = 0
                 }
             , 3000);
+            return
         } else if(qtdJogadores < 2) {
             this.setState({
                 validacaoQtdJogadores: "show"
@@ -411,9 +413,8 @@ class Home extends Component {
                     this.validacaoQtdJogadores = 0
                 }
             , 3000);
+            return
         }
-        let {partidas} = this.state;
-        this.entrandoPartida(partidas[partidas.length-1].match_id)
         
         axios
         .post('https://es3-stop-prod.herokuapp.com/match', {
@@ -426,13 +427,13 @@ class Home extends Component {
             console.log("Sala Criada")
             this.matchesList()
         })
-        .then(() => {
+        /* .then(() => {
             let {partidas} = this.state;
             this.entrandoPartida(partidas[partidas.length].match_id)
-        })
+        }) */
         .catch(res => {
             this.props.uiActions.stopLoading();
-            toast.error("Erro ao cadastrar a categoria. Erro: " + res.response.data.messages);
+            toast.error("Erro ao cadastrar a Partida. Erro: " + res.response.data.messages);
         });
     }
 
