@@ -74,6 +74,10 @@
     font-weight: bold;
 }
 
+.btn-login-home {
+    height: 70px;
+}
+
 .iconCircle {
     border: solid 2px #bab1eb;
     border-radius: 50% !important;
@@ -82,7 +86,7 @@
     height: 25px;
     font-size: 20px;
     border-radius: 20px;
-    vertical-align: middle; 
+    vertical-align: middle;
 }
 
 .iconTbl .fa {
@@ -132,3 +136,14 @@
     padding-right: 0;
 }
 
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.validacao {
+    color: #fd3030;
+}
