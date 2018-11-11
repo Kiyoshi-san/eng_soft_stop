@@ -3,7 +3,7 @@ import axios from "axios";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { Input, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
+import { Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, ToastContainer, toast } from 'mdbreact';
 
 import * as uiActions from '../../actions/uiActions';
 import logo from '../../images/Diamond_512.gif';
@@ -36,24 +36,42 @@ class NewAccountShared extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
+        if(!this.state.cadLogin) {
+            toast.error("Insira um nome válido")
+            return
+        } else if(!this.state.cadSenha) {
+            toast.error("Insira uma senha válida")
+            return
+        }
+
         this.setState({
             loading: true,
             messages: "Enviando usuário..."
-        });        
-        axios.post('https://es3-stop-prod.herokuapp.com/auth/login', { "user_name": this.state.cadLogin, "user_password": this.state.cadSenha })
+        });
+        
+
+        axios.post('https://es3-stop-prod.herokuapp.com/auth/signup', { "user_name": this.state.cadLogin, "user_password": this.state.cadSenha })
             .then(() => {
                 this.setState({
                     loading: false,
                     messages: ""
                 });
                 this.toggle();
+                toast.success("Usuario cadastrado com sucesso.");
             })
-            .catch(() => {
+            .catch((res) => {
                 this.setState({
                     loading: false,
                     erro: true,
-                    messages: "Erro ao cadastrar o usuário."
+                    messages: "Erro ao cadastrar o usuário. Erro: " + res.response.data.messages
                 });
+
+                setTimeout(() => {
+                    this.setState({
+                        erro: false,
+                        loading: false
+                    })
+                }, 6000)
             });
     }
 
@@ -66,6 +84,7 @@ class NewAccountShared extends Component {
 
         return (
             <div>
+                <ToastContainer newestOnTop={true}/>
                 <Modal isOpen={this.props.modal} toggle={this.toggle} >
                     <form className="mx-3 grey-text" onSubmit={this.handleSubmit}>
                         <ModalHeader className="text-center" titleClass="w-100 font-weight-bold" toggle={this.toggle}>Cadastro de Usuário</ModalHeader>
