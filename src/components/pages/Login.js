@@ -59,7 +59,8 @@ class Login extends Component {
     }
 
     validateLogin = (body, errorCallback) => {
-        axios.post(`https://es3-stop-prod.herokuapp.com/auth/login/${loginLevel}`, body)
+        axios
+            .post(`https://es3-stop-prod.herokuapp.com/auth/login/${loginLevel}`, body)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState({
