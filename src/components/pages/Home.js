@@ -42,9 +42,10 @@ class Home extends Component {
         });
     }
     
-    entrandoPartida() {
+    entrandoPartida(idsala) {
+        let iddasala = idsala?idsala:this.state.idMatch
         axios
-        .post('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch + "/join", { "player_id": this.state.user.userId })
+        .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
             this.props.uiActions.loading("Entrando na partida...");
             window.location.href = '/match';
@@ -100,10 +101,10 @@ class Home extends Component {
 
     info() {
         let { partidasDescription } = this.state;
-        if(!partidasDescription.match_id) {
+        /* if(!partidasDescription.match_id) {
             toast.error("Selecione uma sala para obter informações");
             return
-        }
+        } */
         
         /* Listando Categorias da Partida */
         let matchesCategoryList = [];
@@ -411,7 +412,9 @@ class Home extends Component {
                 }
             , 3000);
         }
-        return
+        let {partidas} = this.state;
+        this.entrandoPartida(partidas[partidas.length-1].match_id)
+        
         axios
         .post('https://es3-stop-prod.herokuapp.com/match', {
             "description": salaNome,
@@ -422,6 +425,10 @@ class Home extends Component {
         .then(res => {
             console.log("Sala Criada")
             this.matchesList()
+        })
+        .then(() => {
+            let {partidas} = this.state;
+            this.entrandoPartida(partidas[partidas.length].match_id)
         })
         .catch(res => {
             this.props.uiActions.stopLoading();
