@@ -27,7 +27,10 @@ class Home extends Component {
             listaCategorias: [],
             salaNome: "",
             qtdJogadores: 0,
-            categoriasArrayEnvio: []
+            categoriasArrayEnvio: [],
+            validacaoNomeSala: "hidden",
+            validacaoQtdCategorias: "hidden",
+            validacaoQtdJogadores: "hidden",
         }
         this.setActiveElement = this.setActiveElement.bind(this);
     }
@@ -97,7 +100,11 @@ class Home extends Component {
 
     info() {
         let { partidasDescription } = this.state;
-
+        if(!partidasDescription.match_id) {
+            toast.error("Selecione uma sala para obter informações");
+            return
+        }
+        
         /* Listando Categorias da Partida */
         let matchesCategoryList = [];
         if (partidasDescription.categories) {
@@ -237,11 +244,13 @@ class Home extends Component {
     - 2 - Criar Sala
     */
     toggleGeral(nr, func) {
+        func;
+        if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
+
         let modalNumber = 'modal' + nr
         this.setState({
           [modalNumber]: !this.state[modalNumber]
         });
-        func;
     }
 
     /* Lista as categorias existentes */
@@ -299,22 +308,30 @@ class Home extends Component {
                         <section className="form-light">
                         <Row>
                             <Col md="12">
+                                {/* Nome da Sala */}
+                                <label className={this.state.validacaoNomeSala + " validacao"}>Insira um nome de sala válido</label>
                                 <Input id="salaNome" label="Nome da Sala" onChange={ this.handleChange } group type="text" validate />
-                                    <MDBTable className="tblCategory" bordered={true} striped={true}>
-                                        <TableBody>
-                                        { 
-                                            /* this.state.listaCategorias.map((res, i) => {
-                                                return (
-                                                    <tr key={i} className="clickable">
-                                                        <td><input type="checkbox" onChange={ this.handleChange } value={ i }></input><label class="label-margin">{res.name}</label></td>
-                                                    </tr>
-                                                )
-                                            })  */
-                                            this.componentTableGeral(this.state.listaCategorias)
-                                        }
-                                        </TableBody>
-                                    </MDBTable>
+
+                                {/* Selecao de Categorias */}
+                                <label className={this.state.validacaoQtdCategorias + " validacao"}>Insira ao menos 3 categorias</label>
+                                <MDBTable className="tblCategory" bordered={true} striped={true}>
+                                    <TableBody>
+                                    { 
+                                        /* this.state.listaCategorias.map((res, i) => {
+                                            return (
+                                                <tr key={i} className="clickable">
+                                                    <td><input type="checkbox" onChange={ this.handleChange } value={ i }></input><label class="label-margin">{res.name}</label></td>
+                                                </tr>
+                                            )
+                                        })  */
+                                        this.componentTableGeral(this.state.listaCategorias)
+                                    }
+                                    </TableBody>
+                                </MDBTable>
+
                                 <div>
+                                    {/* Qtd jogadores */}
+                                    <label className={this.state.validacaoQtdJogadores + " validacao"}>Insira ao menos 2 jogadores</label>
                                     <label>N° máx de Jogadores: { this.state.qtdJogadores ? this.state.qtdJogadores : 0 }</label>
                                     <input id="qtdJogadores" type="range" class="slider" value={ this.state.qtdJogadores } min="0" max="10" onChange={ this.handleChange } />
                                 </div>
@@ -330,6 +347,10 @@ class Home extends Component {
         )
     }
     
+    validacaoNomeSala = 0
+    validacaoQtdCategorias = 0
+    validacaoQtdJogadores = 0
+
     fnHandleChangeCheck = () => {
         let categoriasArrayEnvio = []
 
@@ -349,7 +370,48 @@ class Home extends Component {
         { qtdJogadores } = this.state,
         { userId } = this.state.user,
         { categoriasArrayEnvio } = this.state
-        
+
+        if(!salaNome) {
+            this.setState({
+                validacaoNomeSala: "show"
+            })
+            this.validacaoNomeSala = 1
+            setTimeout(
+                () => {
+                    this.setState({
+                        validacaoNomeSala: "hidden"
+                    })
+                    this.validacaoNomeSala = 0
+                }
+            , 3000);
+        } else if(categoriasArrayEnvio.length < 3) {
+            this.setState({
+                validacaoQtdCategorias: "show"
+            })
+            this.validacaoQtdCategorias = 1
+            setTimeout(
+                () => {
+                    this.setState({
+                        validacaoQtdCategorias: "hidden"
+                    })
+                    this.validacaoQtdCategorias = 0
+                }
+            , 3000);
+        } else if(qtdJogadores < 2) {
+            this.setState({
+                validacaoQtdJogadores: "show"
+            })
+            this.validacaoQtdJogadores = 1
+            setTimeout(
+                () => {
+                    this.setState({
+                        validacaoQtdJogadores: "hidden"
+                    })
+                    this.validacaoQtdJogadores = 0
+                }
+            , 3000);
+        }
+        return
         axios
         .post('https://es3-stop-prod.herokuapp.com/match', {
             "description": salaNome,
