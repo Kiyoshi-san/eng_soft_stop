@@ -86,11 +86,12 @@ class Login extends Component {
 
     render() {
         return (
-            <div className="div-container-login-backoffice">
-            <Container className="container-login-backoffice">
+            <div className="col-xs-12 col-sm-12">
+            {/* <div className="div-container-login-backoffice">
+            <Container className="container-login-backoffice"> */}
                 <ToastContainer newestOnTop={true}/>
                 <Row>
-                    <form className="form-login-back col-md-12" onSubmit={this.handleSubmit}>
+                    <form onSubmit={this.handleSubmit}>
                         <img src={logo} className="logo_stop-backoffice" alt="stop" />
                         <Col md="12">
                             <div className="grey-text">
@@ -115,7 +116,8 @@ class Login extends Component {
                         </div>
                     </form>
                 </Row>
-            </Container>
+            {/* </Container>
+            </div> */}
             </div>
         );
     }

@@ -6,6 +6,8 @@ import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, Mo
 import axios from "axios";
 import '../../css/home.css';
 
+import Login from "./Login.js";
+
 import StorageKey from '../../util/StorageKey';
 
 import * as uiActions from '../../actions/uiActions';
@@ -347,6 +349,16 @@ class Home extends Component {
             toast.error("Erro ao cadastrar a categoria. Erro: " + res.response.data.messages);
         });
     }
+
+    loginComponent = () => {
+        if(!this.state.logado){
+            return (
+                <Login />
+            )
+        } else {
+            return
+        }
+    }
     
     componentWillMount() {
         this.matchesList();
@@ -359,7 +371,7 @@ class Home extends Component {
             <div className="home-container row">
                 { this.info() }
                 { this.criarSala() }
-                <div className="col-xs-12 col-sm-12">
+                <div className="col-xs-8 col-sm-8">
                     <MDBTable bordered={true} striped={true}>
                         <ToastContainer 
                             newestOnTop={true}/>
@@ -376,7 +388,10 @@ class Home extends Component {
                         </TableBody>
                     </MDBTable>
                 </div>
-                <div className="col-xs-12 col-sm-12">
+                <div>
+                    { this.loginComponent() }
+                </div>
+                <div className="col-xs-8 col-sm-8">
                     <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}>Criar Sala</Button>
                 </div>
             </div>
