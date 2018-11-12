@@ -70,12 +70,45 @@ class Login extends Component {
                         userId: res.data.content.user_id,
                         userName: res.data.content.user_name
                     }));
-                    window.location.href = '/home';
+
+                    this.updateInventary()
+                    .then(() =>{
+                        window.location.href = '/home';
+                    });
+                    
                 } else {
                     errorCallback("Usuário ou senha inexistente.");
                 }
             })
             .catch(error => errorCallback(error));
+    }
+
+    updateInventary(){
+        return new Promise((resolve, reject) =>{
+
+            localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify({
+                credits: 40,
+                score: 650,
+                league_id: 10,
+                league_description: 'Rubi',
+                items: [{
+                    item_type: 1,
+                    item_name: 'Dica 1',
+                    quantity: 3
+                },{
+                    item_type: 1,
+                    item_name: 'Dica 2',
+                    quantity: 2
+                },{
+                    item_type: 2,
+                    item_name: 'Habilidade 1',
+                    quantity: 1
+                }]
+            }))
+
+            resolve();
+
+        });        
     }
 
     toggle = () => {

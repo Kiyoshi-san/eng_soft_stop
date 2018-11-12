@@ -21,6 +21,7 @@ import NotFound from './pages/NotFound';
 import NewAccount from './pages/NewAccount';
 import Match from './pages/Match';
 import Shop from './pages/Shop';
+import Profile from './pages/Profile';
 import * as uiActions from '../actions/uiActions';
 
 import logo from '../images/Diamond_512.gif';
@@ -41,6 +42,7 @@ class AppRoutes extends Component {
                         <PrivateRoute path='/match' component={Match}/>
                         <PrivateRoute path='/account' component={Account} />
                         <PrivateRoute path='/shop' component={Shop}/>
+                        <PrivateRoute path='/profile' component={Profile}/>
                         <BackRoute path='/backoffice-dashboard' component={BackDashboard}/>
                         <BackRoute path='/backoffice-categorias' component={BackPalavra}/>
                         <BackRoute path='/backoffice-ligas' component={BackLigas}/>

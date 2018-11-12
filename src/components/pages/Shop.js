@@ -103,6 +103,7 @@ class Shop extends Component {
 
             this.props.uiActions.stopLoading();
             toast.success("Compra efetuada com sucesso.");
+            this.toggleModalCompra();
 
             this.setState({
                 item_type: 0,
@@ -181,7 +182,8 @@ class Shop extends Component {
 
     // *********************** FIM - HABILIDADES **************************
 
-
+    
+    //Renderização da tela
     render(){
         return (
             <div className="backContainer">
@@ -355,7 +357,7 @@ class Shop extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="purple" onClick={this.toggleModalCompra}>Fechar</Button>
-                        <Button color="success" onClick={this.toggleModalCompra} onClick={ () => this.efetuarCompra() }><i className="fa fa-diamond" arria-hidden="true" /> Confirmar</Button>
+                        <Button color="success" onClick={ () => this.efetuarCompra() }><i className="fa fa-diamond" arria-hidden="true" /> Confirmar</Button>
                     </ModalFooter>
                     </Modal>
                 </Container>

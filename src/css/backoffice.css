@@ -207,3 +207,13 @@ td {
 .blockquote p.no-spacing{
     padding: 0px !important;
 }
+
+.border-purple
+{
+    border-color: #6657b0 !important;
+}
+
+tr.current
+{
+    background-color: #ebe4fd;
+}
