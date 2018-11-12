@@ -411,7 +411,7 @@ class Home extends Component {
         if(!this.state.redirect) {
             this.setState({
                 redirect: 1
-            }, () => {alert(this.state.redirect)} )
+            })
         }
     }
 
@@ -419,7 +419,7 @@ class Home extends Component {
         if(this.state.redirect) {
             this.setState({
                 redirect: 0
-            }, () => {alert(this.state.redirect)} )
+            })
         }
     }
 
@@ -441,7 +441,7 @@ class Home extends Component {
 
     }
 
-    escolherItens() {
+    modalEscolherItens() {
         let { itens } = this.state;
 
         let arrItens = [];
@@ -637,7 +637,7 @@ class Home extends Component {
             <div className="home-container row">
                 { this.info() }
                 { this.criarSala() }
-                { this.escolherItens() }
+                { this.modalEscolherItens() }
                 <div className="col-xs-8 col-sm-8 home-grid">
                     <div class="tblGridHeader">
                         <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
