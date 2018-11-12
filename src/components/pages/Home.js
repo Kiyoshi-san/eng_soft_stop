@@ -186,7 +186,7 @@ class Home extends Component {
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
                     {/* <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button> */}
-                    <Button color="secondary" className="roundedBtn" outline onClick={this.escolherItens}>Jogar</Button>
+                    <Button color="secondary" className="roundedBtn" outline onClick={this.escolherItensBtnJogar}>Jogar</Button>
                     <Button color="danger" className="roundedBtn" outline onClick={this.toggle}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
@@ -411,7 +411,7 @@ class Home extends Component {
         if(!this.state.redirect) {
             this.setState({
                 redirect: 1
-            }/* , () => {alert(this.state.redirect)} */ )
+            }, () => {alert(this.state.redirect)} )
         }
     }
 
@@ -419,15 +419,29 @@ class Home extends Component {
         if(this.state.redirect) {
             this.setState({
                 redirect: 0
-            }/* , () => {alert(this.state.redirect)} */ )
+            }, () => {alert(this.state.redirect)} )
         }
     }
 
-    escolherItens() {
+    escolherItensBtnJogar() {
+
         if(!this.state.user) return
 
         this.iniciarTempoRedirect();
+        console.log("a")
 
+        // this.startTimer
+        setTimeout(() => {
+            this.setState({
+                modal3: false
+            })
+            if(this.state.redirect) this.jogar()
+            else return
+        }, 10000)
+
+    }
+
+    escolherItens() {
         let { itens } = this.state;
 
         let arrItens = [];
@@ -440,15 +454,6 @@ class Home extends Component {
                 </div>
             )
         })
-
-        // this.startTimer
-        setTimeout(() => {
-            this.setState({
-                modal3: false
-            })
-            if(this.state.redirect) this.jogar()
-            else return
-        }, 10000)
 
         return (
             <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
@@ -655,7 +660,7 @@ class Home extends Component {
                         <Button class="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
                         <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
                         {/* <Button class="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button> */}
-                        <Button class="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItens())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                        <Button class="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
                 <div className="col-xs-4 col-sm-4 home-grid-login">
