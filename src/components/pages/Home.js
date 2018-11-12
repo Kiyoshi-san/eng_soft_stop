@@ -272,7 +272,7 @@ class Home extends Component {
     - 2 - Criar Sala
     */
     toggleGeral(nr, func) {
-        func;
+        func();
         if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
 
         let modalNumber = 'modal' + nr
