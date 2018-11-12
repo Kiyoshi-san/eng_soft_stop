@@ -185,8 +185,7 @@ class Home extends Component {
                     </Row>
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
-                    {/* <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button> */}
-                    <Button color="secondary" className="roundedBtn" outline onClick={this.escolherItensBtnJogar}>Jogar</Button>
+                    <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
                     <Button color="danger" className="roundedBtn" outline onClick={this.toggle}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
