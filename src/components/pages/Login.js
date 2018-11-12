@@ -38,6 +38,14 @@ class Login extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
+        if(!this.state.userName) {
+            toast.error("Insira um nome válido")
+            return
+        } else if(!this.state.userPassword) {
+            toast.error("Insira uma senha válida")
+            return
+        }
+
         this.props.uiActions.loading("Efetuando login...");
 
         const body = {

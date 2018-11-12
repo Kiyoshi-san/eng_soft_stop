@@ -31,8 +31,18 @@ class Home extends Component {
             validacaoNomeSala: "hidden",
             validacaoQtdCategorias: "hidden",
             validacaoQtdJogadores: "hidden",
+            itens: [],
+            redirect: 0,
+            time: {},
+            seconds: 5
         }
         this.setActiveElement = this.setActiveElement.bind(this);
+
+        /* Timer */
+        this.timer = 0;
+        this.startTimer = this.startTimer.bind(this);
+        this.countDown = this.countDown.bind(this);
+        /* Fim Timer */
     }
 
     handleChange = (event) => {
@@ -122,6 +132,17 @@ class Home extends Component {
             })
         }
 
+        /* Status do Jogo */
+        let status;
+        
+        if(partidasDescription.status == 1) {
+                status = "Iniciado"
+        } else if(partidasDescription.status == 2) {
+                status = "Espera"
+        } else {
+            status = ""
+        }
+
         return (
             <Modal isOpen={this.state.modal} toggle={this.toggle} >
                 <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleClass="w-100 font-weight-bold" toggle={this.toggle}><h3 className="white-text mb-3 pt-3 font-weight-bold">Sala {partidasDescription.description}</h3>
@@ -148,9 +169,15 @@ class Home extends Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <h5>N° de Jogadores</h5>
+                                            <h5>N° máx. de Jogadores</h5>
                                         </td>
                                         <td> { partidasDescription.players_count } </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h5>Status do jogo</h5>
+                                        </td>
+                                        <td> { status } </td>
                                     </tr>
                                 </TableBody>
                             </MDBTable>
@@ -158,7 +185,8 @@ class Home extends Component {
                     </Row>
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
-                    <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
+                    {/* <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button> */}
+                    <Button color="secondary" className="roundedBtn" outline onClick={this.escolherItens}>Jogar</Button>
                     <Button color="danger" className="roundedBtn" outline onClick={this.toggle}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
@@ -347,6 +375,147 @@ class Home extends Component {
             </Modal>
         )
     }
+
+    itensList = () => {
+        axios
+        // .get('https://es3-stop-prod.herokuapp.com/items' + this.state.user.userId)
+        .get('https://es3-stop-prod.herokuapp.com/items')
+        .then(res => {
+            this.setState({
+                itens: res.data.content
+            })
+            return true
+        })
+        .catch(res => {
+            return false;            
+        });
+    }
+
+    
+    fnHandleChangeCheckItens = () => {
+        let itensArrayEnvio = []
+
+        var els = document.getElementsByName("itensArrayEnvio");
+        els.forEach((a) => {
+            if ( a.checked ) {
+                itensArrayEnvio.push({ "category_id": a.value })
+            }
+            this.setState({
+                itensArrayEnvio
+            })            
+        })
+    }
+
+    iniciarTempoRedirect = () => {
+        // alert("a")
+        if(!this.state.redirect) {
+            this.setState({
+                redirect: 1
+            }/* , () => {alert(this.state.redirect)} */ )
+        }
+    }
+
+    cancelarTempoRedirect = () => {
+        if(this.state.redirect) {
+            this.setState({
+                redirect: 0
+            }/* , () => {alert(this.state.redirect)} */ )
+        }
+    }
+
+    escolherItens() {
+        if(!this.state.user) return
+
+        this.iniciarTempoRedirect();
+
+        let { itens } = this.state;
+
+        let arrItens = [];
+        itens.map(e => {
+            arrItens.push(
+                <div>
+                    <input name="itensArrayEnvio" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
+                    
+                    <label class="label-margin">{ e.item_name }</label>
+                </div>
+            )
+        })
+
+        // this.startTimer
+        setTimeout(() => {
+            this.setState({
+                modal3: false
+            })
+            if(this.state.redirect) this.jogar()
+            else return
+        }, 10000)
+
+        return (
+            <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
+                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleClass="w-100 font-weight-bold" toggle={() => this.toggleGeral(3)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Escolher Itens</h3></ModalHeader>
+                {this.state.time.s}
+                <ModalBody>
+                    <Row>
+                        <Col size="3" className="d-flex justify-content-center align-items-center">
+                            <Fa size="4x" icon="gamepad" className="ml-1" />
+                        </Col>
+                        <Col size="9">
+                            { arrItens }
+                        </Col>
+                    </Row>
+                </ModalBody>
+                <ModalFooter className="justify-content-center">
+                    <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
+                    <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect() )} }>Cancelar</Button>
+                </ModalFooter>
+            </Modal>
+        )
+    }
+
+    /* Timer */
+    secondsToTime(secs) {
+        let hours = Math.floor(secs / (60 * 60));
+
+        let divisor_for_minutes = secs % (60 * 60);
+        let minutes = Math.floor(divisor_for_minutes / 60);
+
+        let divisor_for_seconds = divisor_for_minutes % 60;
+        let seconds = Math.ceil(divisor_for_seconds);
+
+        let obj = {
+            "h": hours,
+            "m": minutes,
+            "s": seconds
+        };
+        return obj;
+    }
+
+    componentDidMount() {
+        let timeLeftVar = this.secondsToTime(this.state.seconds);
+        this.setState({ time: timeLeftVar });
+    }
+
+    startTimer() {
+        if (this.timer == 0 && this.state.seconds > 0) {
+            this.timer = setInterval(this.countDown, 1000);
+        }
+    }
+
+    countDown() {
+        // Remove one second, set state so a re-render happens.
+        let seconds = this.state.seconds - 1;
+        this.setState({
+            time: this.secondsToTime(seconds),
+            seconds: seconds,
+        });
+
+        // Check if we're at zero.
+        if (seconds == 0) {
+            clearInterval(this.timer);
+        }
+    }
+    
+    /* Fim Timer */
     
     validacaoNomeSala = 0
     validacaoQtdCategorias = 0
@@ -454,6 +623,7 @@ class Home extends Component {
     componentWillMount() {
         this.matchesList();
         this.categoryList();
+        this.itensList();
     }
     
     render() {
@@ -462,6 +632,7 @@ class Home extends Component {
             <div className="home-container row">
                 { this.info() }
                 { this.criarSala() }
+                { this.escolherItens() }
                 <div className="col-xs-8 col-sm-8 home-grid">
                     <div class="tblGridHeader">
                         <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
@@ -483,7 +654,8 @@ class Home extends Component {
                     <div className="home-grid-btn">
                         <Button class="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
                         <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
-                        <Button class="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                        {/* <Button class="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button> */}
+                        <Button class="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItens())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
                 <div className="col-xs-4 col-sm-4 home-grid-login">
