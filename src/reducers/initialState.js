@@ -1,4 +1,9 @@
 export default {
     loading: false,
-    message: ""
+    message: "",
+    matchid: 0,
+    letter: "",
+    userList: [],
+    categoryList: [],
+    skillList: []
 };
