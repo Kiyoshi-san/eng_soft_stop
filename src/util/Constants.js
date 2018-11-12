@@ -42,7 +42,7 @@ const LOGED_LINKS = [
     },
     {
         name: "Backoffice",
-        link: "backoffice",
+        link: "login-back",
         icon: "gear"
     },
     {
@@ -60,7 +60,7 @@ const LOGED_LINKS_MATCH = [
     },
     {
         name: "Backoffice",
-        link: "backoffice",
+        link: "login-back",
         icon: "gear"
     },
     {
