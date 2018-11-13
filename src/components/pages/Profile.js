@@ -30,7 +30,8 @@ class Profile extends Component {
             modalCompraCredito: false,
             tipType: 1,
             skillType: 2,
-            item_type: 0
+            item_type: 0,
+            userCredits: 0
         }
     }
 
@@ -44,8 +45,29 @@ class Profile extends Component {
 
         this.setState({
             tipsAmount: tipsAmount.length,
-            skillsAmount: skillsAmount.length
+            skillsAmount: skillsAmount.length,
+            userCredits: this.state.inventary.credits
         });
+    }
+
+
+    /* Atualizar o inventário do jogador */
+    updateInventary(){
+
+        let userId = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)).userId;
+
+        return new Promise((resolve) =>{
+
+            axios
+            .get(this.state.backEndURL + '/inventory/' + userId)
+            .then(res => {
+                localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify(res.data.content));
+                resolve(true);
+            })
+            .catch(res => {
+                resolve(false);
+            });
+        });        
     }
 
 
@@ -150,6 +172,12 @@ class Profile extends Component {
     /* Efetiva a compra dos créditos */
     efetuarCompraCredito(quantity){
 
+        let body = {
+            player_id: this.state.user.userId,
+            type: 0, //Credit
+            cashAmount: quantity
+        }
+
         swal({
             title: "Tem certeza?",
             text: "- O valor será debitado da sua conta",
@@ -160,21 +188,31 @@ class Profile extends Component {
           .then((willBuy) => {
             if (willBuy) {
           
-              this.props.uiActions.loading("Efetuando compra...");
-  
-            //   axios
-            //   .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": categoria_id } })
-            //   .then(res => {
+                this.props.uiActions.loading("Efetuando compra...");
 
-                  this.props.uiActions.stopLoading();
-                  swal("Feito!", "Compra de " + quantity + " créditos concluída", "success");
+                axios
+                .post(this.state.backEndURL + '/cash', body)
+                .then(res => {
+
+                    //Atualiza inventário do jogador com a nova quantidade de créditos
+                    this.updateInventary()
+                    .then((res) =>{
+
+                        this.props.uiActions.stopLoading();
+                        swal("Feito!", "Compra de " + quantity + " créditos concluída", "success");
+
+                        this.setState({
+                            userCredits: this.state.userCredits + quantity
+                        });
       
-                  this.toggleModalCompraCredito();
-            //   })
-            //   .catch(res => {
-            //       this.props.uiActions.stopLoading();
-            //       toast.error("Erro ao excluir a categoria. Erro: " + res.response.data.messages);
-            //   });
+                        this.toggleModalCompraCredito();
+                    });                   
+
+                })
+                .catch(res => {
+                    this.props.uiActions.stopLoading();
+                    toast.error("Erro ao efetuar compra dos créditos. Erro: " + res.response.data.messages);
+                });
   
             }
           });
@@ -257,7 +295,7 @@ class Profile extends Component {
                                             <CardBody className="text-success">
                                                 <CardTitle tag="h5"><i className="fa fa-money" aria-hidden="true" /> SALDO</CardTitle>
                                                 <br />
-                                                <h1 className="text-center" style={{fontWeight: 500}}>{ this.state.inventary.credits }</h1><h6 className="text-center grey-text"> CRÉDITO(S)</h6>
+                                                <h1 className="text-center" style={{fontWeight: 500}}>{ this.state.userCredits }</h1><h6 className="text-center grey-text"> CRÉDITO(S)</h6>
                                                 <br />
                                                 <h5 className="text-center clickable" style={{fontWeight: 500}} onClick={ () => this.clickComprarCredito() }><Badge color="success">COMPRAR MAIS &nbsp;&nbsp;<i className="fa fa-money" aria-hidden="true" /></Badge></h5>                                                
                                             </CardBody>

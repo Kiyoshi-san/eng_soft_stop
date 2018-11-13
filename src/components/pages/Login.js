@@ -25,7 +25,8 @@ class Login extends Component {
             userPassword: "",
             modal: false,
             cadLogin:"",
-            cadSenha:""
+            cadSenha:"",
+            backEndURL: 'https://es3-stop-prod.herokuapp.com'
         };
     }
 
@@ -59,7 +60,7 @@ class Login extends Component {
     }
 
     validateLogin = (body, errorCallback) => {
-        axios.post(`https://es3-stop-prod.herokuapp.com/auth/login/${loginLevel}`, body)
+        axios.post(`${this.state.backEndURL}/auth/login/${loginLevel}`, body)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState({
@@ -83,31 +84,22 @@ class Login extends Component {
             .catch(error => errorCallback(error));
     }
 
+    /* Atualizar o inventário do jogador */
     updateInventary(){
-        return new Promise((resolve, reject) =>{
 
-            localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify({
-                credits: 40,
-                score: 650,
-                league_id: 10,
-                league_description: 'Rubi',
-                items: [{
-                    item_type: 1,
-                    item_name: 'Dica 1',
-                    quantity: 3
-                },{
-                    item_type: 1,
-                    item_name: 'Dica 2',
-                    quantity: 2
-                },{
-                    item_type: 2,
-                    item_name: 'Habilidade 1',
-                    quantity: 1
-                }]
-            }))
+        let userId = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)).userId;
 
-            resolve();
+        return new Promise((resolve) =>{
 
+            axios
+            .get(this.state.backEndURL + '/inventory/' + userId)
+            .then(res => {
+                localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify(res.data.content));
+                resolve(true);
+            })
+            .catch(res => {
+                resolve(false);
+            });
         });        
     }
 

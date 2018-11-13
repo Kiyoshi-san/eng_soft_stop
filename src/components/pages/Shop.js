@@ -41,6 +41,26 @@ class Shop extends Component {
     }
 
 
+    /* Atualizar o inventário do jogador */
+    updateInventary(){
+
+        let userId = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)).userId;
+
+        return new Promise((resolve) =>{
+
+            axios
+            .get(this.state.backEndURL + '/inventory/' + userId)
+            .then(res => {
+                localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify(res.data.content));
+                resolve(true);
+            })
+            .catch(res => {
+                resolve(false);
+            });
+        });        
+    }
+
+
     /* Abre o modal para efetuar compra */
     clickComprar(item_type, item_id, item_name, item_description, item_price){
 
@@ -91,28 +111,35 @@ class Shop extends Component {
     efetuarCompra() 
     {
         let body = {
-            id: this.state.item_id,
-            quantity: this.state.item_quantity
+            player_id: this.state.user.userId,
+            item_id: this.state.item_id,
+            quantity: this.state.item_quantity,
+            purchasePrice: (this.state.item_quantity * this.state.item_price)
         }
 
         this.props.uiActions.loading("Processando...");
             
         axios
-        .post(this.state.backEndURL + '/shop', body)
+        .post(this.state.backEndURL + '/itemPurchase', body)
         .then(res => {
 
-            this.props.uiActions.stopLoading();
-            toast.success("Compra efetuada com sucesso.");
-            this.toggleModalCompra();
+            //Atualiza inventário do jogador com os novos itens
+            this.updateInventary()
+            .then((res) =>{
 
-            this.setState({
-                item_type: 0,
-                item_id: 0,
-                item_name: '',
-                item_description: '',
-                item_price: 0,
-                item_quantity: 1
-            });
+                this.props.uiActions.stopLoading();
+                toast.success("Compra efetuada com sucesso.");
+                this.toggleModalCompra();
+
+                this.setState({
+                    item_type: 0,
+                    item_id: 0,
+                    item_name: '',
+                    item_description: '',
+                    item_price: 0,
+                    item_quantity: 1
+                });
+            }); 
         })
         .catch(res => {
             this.props.uiActions.stopLoading();
@@ -232,7 +259,7 @@ class Shop extends Component {
                                                     <tr key={i}>
                                                         <td><h5><i className="fa fa-lightbulb-o purple-text" aria-hidden="true"/>&nbsp;&nbsp; {res.item_name}</h5></td>
                                                         <td><h6>{res.item_description}</h6></td>
-                                                        <td className="text-right"><h5 style={{fontWeight: 400}}>R$ {res.item_price}</h5></td>
+                                                        <td className="text-right"><h5 style={{fontWeight: 400}}>{res.item_price} créditos</h5></td>
                                                         <td className="text-center">
                                                         {/* EM BREVE */}
                                                         { res.item_status === 0 && <Button rounded color="orange" className="disabled" title="Este item estará disponível para comprar em breve"><i className="fa fa-diamond" arria-hidden="true" /> Em breve</Button> }
@@ -288,7 +315,7 @@ class Shop extends Component {
                                                     <tr key={i}>
                                                         <td><h5><i className="fa fa-superpowers purple-text" aria-hidden="true"/>&nbsp;&nbsp; {res.item_name}</h5></td>
                                                         <td><h6>{res.item_description}</h6></td>
-                                                        <td className="text-right"><h5 style={{fontWeight: 400}}>R$ {res.item_price}</h5></td>
+                                                        <td className="text-right"><h5 style={{fontWeight: 400}}>{res.item_price} créditos</h5></td>
                                                         <td className="text-center">
                                                         {/* EM BREVE */}
                                                         { res.item_status === 0 && <Button rounded color="orange" className="disabled" title="Este item estará disponível para comprar em breve"><i className="fa fa-diamond" arria-hidden="true" /> Em breve</Button> }
@@ -350,7 +377,7 @@ class Shop extends Component {
                             <label style={{fontWeight: 500}}>TOTAL: </label>
                         </div>
                         <div className="col-md-10">
-                            R$ { this.state.item_quantity * this.state.item_price }
+                            { this.state.item_quantity * this.state.item_price } créditos
                         </div>
                     </div>
                         

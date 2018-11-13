@@ -127,6 +127,15 @@ class BackStore extends Component {
             toast.warn("Favor preencher todos os campos.");
             return;
         }
+
+        //Parses to int and check
+        body.item_price = parseInt(body.item_price);
+
+        if(!Number.isInteger(parseInt(body.item_price)))
+        {
+            toast.warn("O preço deve ser um número inteiro representando a quantidade de créditos.");
+            return;
+        }
         
         this.props.uiActions.loading("Processando...");
             
@@ -161,13 +170,22 @@ class BackStore extends Component {
             item_idx: this.state.tipIdx,
             item_name: this.state.tipNome,
             item_description: this.state.tipDescricao,
-            item_price: this.state.tipPreco.toString(),
+            item_price: this.state.tipPreco,
             item_type: this.state.tipType,
             item_status: this.state.tipStatus
         }
                 
-        if (!body.item_idx.trim() || !body.item_name.trim() || !body.item_description.trim() || !body.item_price.trim()) {
+        if (!body.item_idx.trim() || !body.item_name.trim() || !body.item_description.trim() || !body.item_price.toString().trim()) {
             toast.warn("Favor preencher todos os campos.");
+            return;
+        }
+
+        //Parses to int and check
+        body.item_price = parseInt(body.item_price);
+
+        if(!Number.isInteger(parseInt(body.item_price)))
+        {
+            toast.warn("O preço deve ser um número inteiro representando a quantidade de créditos.");
             return;
         }
         
@@ -318,6 +336,15 @@ class BackStore extends Component {
             toast.warn("Favor preencher todos os campos.");
             return;
         }
+
+        //Parses to int and check
+        body.item_price = parseInt(body.item_price);
+
+        if(!Number.isInteger(parseInt(body.item_price)))
+        {
+            toast.warn("O preço deve ser um número inteiro representando a quantidade de créditos.");
+            return;
+        }
         
         this.props.uiActions.loading("Processando...");
             
@@ -352,13 +379,22 @@ class BackStore extends Component {
             item_idx: this.state.skillIdx,
             item_name: this.state.skillNome,
             item_description: this.state.skillDescricao,
-            item_price: this.state.skillPreco.toString(),
+            item_price: this.state.skillPreco,
             item_type: this.state.skillType,
             item_status: this.state.skillStatus
         }
                 
-        if (!body.item_idx.trim() || !body.item_name.trim() || !body.item_description.trim() || !body.item_price.trim()) {
+        if (!body.item_idx.trim() || !body.item_name.trim() || !body.item_description.trim() || !body.item_price.toString().trim()) {
             toast.warn("Favor preencher todos os campos.");
+            return;
+        }
+
+        //Parses to int and check
+        body.item_price = parseInt(body.item_price);
+
+        if(!Number.isInteger(parseInt(body.item_price)))
+        {
+            toast.warn("O preço deve ser um número inteiro representando a quantidade de créditos.");
             return;
         }
         
@@ -566,7 +602,7 @@ class BackStore extends Component {
                                                 <input id="tipNome" className="form-control" value={this.state.tipNome} onChange={this.handleChange}/>
                                             </div>
                                             <div className="col-md-4 align-self-center">
-                                                <label htmlFor="tipPreco" className="grey-text">Preço (R$)</label>
+                                                <label htmlFor="tipPreco" className="grey-text">Preço (créditos)</label>
                                                 <input id="tipPreco" className="form-control" value={this.state.tipPreco} onChange={this.handleChange}/>
                                             </div>
                                         </div>
@@ -629,7 +665,7 @@ class BackStore extends Component {
                                                                     <td>{res.item_idx}</td>
                                                                     <td>{res.item_name}</td>
                                                                     <td>{res.item_description}</td>
-                                                                    <td className="text-right">R$ {res.item_price}</td>
+                                                                    <td className="text-right">{res.item_price} créditos</td>
                                                                     <td className="text-center"><Button size="sm" color="danger" onClick={ () => this.excluirDica(res.item_id) } title="Excluir dica"><i className="fa fa-times" arria-hidden="true" /></Button></td>
                                                                 </tr>
                                                             )
@@ -664,7 +700,7 @@ class BackStore extends Component {
                                                 <input id="skillNome" className="form-control" value={this.state.skillNome} onChange={this.handleChange}/>
                                             </div>
                                             <div className="col-md-4 align-self-center">
-                                                <label htmlFor="skillPreco" className="grey-text">Preço (R$)</label>
+                                                <label htmlFor="skillPreco" className="grey-text">Preço (créditos)</label>
                                                 <input id="skillPreco" className="form-control" value={this.state.skillPreco} onChange={this.handleChange}/>
                                             </div>
                                         </div>
@@ -727,7 +763,7 @@ class BackStore extends Component {
                                                                     <td>{res.item_idx}</td>
                                                                     <td>{res.item_name}</td>
                                                                     <td>{res.item_description}</td>
-                                                                    <td className="text-right">R$ {res.item_price}</td>
+                                                                    <td className="text-right">{res.item_price} créditos</td>
                                                                     <td className="text-center"><Button size="sm" color="danger" onClick={ () => this.excluirHabilidade(res.item_id) } title="Excluir habilidade"><i className="fa fa-times" arria-hidden="true" /></Button></td>
                                                                 </tr>
                                                             )
