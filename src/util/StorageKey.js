@@ -1,5 +1,6 @@
 const StorageKey = {
-    AUTENTICACAO: 'AUTENTICACAO'
+    AUTENTICACAO: 'AUTENTICACAO',
+    INVENTARIO: 'INVENTARIO'
 }
 
 export default StorageKey;
