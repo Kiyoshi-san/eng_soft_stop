@@ -5,11 +5,6 @@ const PUBLIC_LINKS = [
         icon: "login"
     },
     {
-        name: "Login",
-        link: "login",
-        icon: "login"
-    },
-    {
         name: "Backoffice",
         link: "login-back",
         icon: "gear"
@@ -47,7 +42,7 @@ const LOGED_LINKS = [
     },
     {
         name: "Backoffice",
-        link: "backoffice",
+        link: "login-back",
         icon: "gear"
     },
     {
@@ -65,7 +60,7 @@ const LOGED_LINKS_MATCH = [
     },
     {
         name: "Backoffice",
-        link: "backoffice",
+        link: "login-back",
         icon: "gear"
     },
     {

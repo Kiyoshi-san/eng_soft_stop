@@ -6,6 +6,9 @@ import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, Mo
 import axios from "axios";
 import '../../css/home.css';
 
+import Login from "./Login.js";
+import Userhome from "./Userhome.js";
+
 import StorageKey from '../../util/StorageKey';
 
 import * as uiActions from '../../actions/uiActions';
@@ -23,9 +26,23 @@ class Home extends Component {
             idMatch: 0,
             listaCategorias: [],
             salaNome: "",
-            qtdJogadores: 0,
+            qtdJogadores: 2,
             categoriasArrayEnvio: [],
+            validacaoNomeSala: "hidden",
+            validacaoQtdCategorias: "hidden",
+            validacaoQtdJogadores: "hidden",
+            itens: [],
+            redirect: 0,
+            time: {},
+            seconds: 5
         }
+        this.setActiveElement = this.setActiveElement.bind(this);
+
+        /* Timer */
+        this.timer = 0;
+        this.startTimer = this.startTimer.bind(this);
+        this.countDown = this.countDown.bind(this);
+        /* Fim Timer */
     }
 
     handleChange = (event) => {
@@ -35,9 +52,10 @@ class Home extends Component {
         });
     }
     
-    entrandoPartida() {
+    entrandoPartida(idsala) {
+        let iddasala = idsala?idsala:this.state.idMatch
         axios
-        .get('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch + "/join")
+        .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
             this.props.uiActions.loading("Entrando na partida...");
             window.location.href = '/match';
@@ -62,7 +80,7 @@ class Home extends Component {
     }
     
     jogar = (e) => {
-        if(e) {
+        /* if(e) {
             e.preventDefault();
             this.setState({
                 idMatch: e.currentTarget.value
@@ -70,7 +88,9 @@ class Home extends Component {
                 if(!this.validaLogin()) return
                 else this.entrandoPartida();
             });
-        }
+        } */
+        if(!this.validaLogin()) return
+        else this.entrandoPartida();
         return;        
     }
 
@@ -78,19 +98,24 @@ class Home extends Component {
         this.setState({
             modal: !this.state.modal
         });
-        if(e) {
+        /* if(e) {
             e.preventDefault();
             this.setState({
                 idMatch: e.currentTarget.value
             }, () => {
                 this.matchDetail();
             });
-        }
+        } */
+        this.matchDetail();
     }
 
     info() {
         let { partidasDescription } = this.state;
-
+        /* if(!partidasDescription.match_id) {
+            toast.error("Selecione uma sala para obter informações");
+            return
+        } */
+        
         /* Listando Categorias da Partida */
         let matchesCategoryList = [];
         if (partidasDescription.categories) {
@@ -105,6 +130,17 @@ class Home extends Component {
             partidasDescription.players.map(e => {
                 matchesPlayersList.push(<p>- {e.user_name}</p>)
             })
+        }
+
+        /* Status do Jogo */
+        let status;
+        
+        if(partidasDescription.status == 1) {
+                status = "Iniciado"
+        } else if(partidasDescription.status == 2) {
+                status = "Espera"
+        } else {
+            status = ""
         }
 
         return (
@@ -133,9 +169,15 @@ class Home extends Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <h5>N° de Jogadores</h5>
+                                            <h5>N° máx. de Jogadores</h5>
                                         </td>
                                         <td> { partidasDescription.players_count } </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h5>Status do jogo</h5>
+                                        </td>
+                                        <td> { status } </td>
                                     </tr>
                                 </TableBody>
                             </MDBTable>
@@ -179,6 +221,18 @@ class Home extends Component {
         });
     }
 
+    setActiveElement = (e) => {
+        if(e) {
+            e.preventDefault();
+            this.setState({
+                idMatch: e.currentTarget.dataset.id
+            }/* , () => {
+                alert(this.state.idMatch)
+            } */);
+        }
+        return;   
+    }
+
     /* Montando a tabela com as partidas */
     componentTblMount() {
         let { partidas } = this.state,
@@ -194,16 +248,15 @@ class Home extends Component {
             i = 0;
             for (i; i < qtdCols; i++) {
                 if(partidas[ctCol]) {
-                    children.push(<td key={partidas[ctCol].match_id} className="colTbl"> {partidas[ctCol].description}
-                        <div>
+                    children.push(<td key={partidas[ctCol].match_id} className={partidas[ctCol].match_id == this.state.idMatch? "colTblActive colTbl" : "colTbl"} data-id={ partidas[ctCol].match_id } onClick={this.setActiveElement}> {partidas[ctCol].description}
+                        {/* <div>
                             <button class="iconTbl iconTbl-gamepad" value={ partidas[ctCol].match_id } onClick={this.jogar}>
                                 <Fa icon="gamepad" className="ml-1"/>
                             </button>
-                            {/* <label class="iconTbl iconTbl-info" onClick={ () => {this.toggle(partidas[ctCol].match_id)} }> */}
                             <button class="iconTbl iconTbl-info" value={ partidas[ctCol].match_id } onClick={ this.toggle }>
                                 <Fa icon="info" className="ml-1"/>
                             </button>
-                        </div>
+                        </div> */}
                     </td>)
                 } else {
                     children.push(<td className="colTbl"></td>)
@@ -219,11 +272,13 @@ class Home extends Component {
     - 2 - Criar Sala
     */
     toggleGeral(nr, func) {
+        func();
+        if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
+
         let modalNumber = 'modal' + nr
         this.setState({
           [modalNumber]: !this.state[modalNumber]
         });
-        func;
     }
 
     /* Lista as categorias existentes */
@@ -281,24 +336,32 @@ class Home extends Component {
                         <section className="form-light">
                         <Row>
                             <Col md="12">
+                                {/* Nome da Sala */}
+                                <label className={this.state.validacaoNomeSala + " validacao"}>Insira um nome de sala válido</label>
                                 <Input id="salaNome" label="Nome da Sala" onChange={ this.handleChange } group type="text" validate />
-                                    <MDBTable className="tblCategory" bordered={true} striped={true}>
-                                        <TableBody>
-                                        { 
-                                            /* this.state.listaCategorias.map((res, i) => {
-                                                return (
-                                                    <tr key={i} className="clickable">
-                                                        <td><input type="checkbox" onChange={ this.handleChange } value={ i }></input><label class="label-margin">{res.name}</label></td>
-                                                    </tr>
-                                                )
-                                            })  */
-                                            this.componentTableGeral(this.state.listaCategorias)
-                                        }
-                                        </TableBody>
-                                    </MDBTable>
+
+                                {/* Selecao de Categorias */}
+                                <label className={this.state.validacaoQtdCategorias + " validacao"}>Insira ao menos 3 categorias</label>
+                                <MDBTable className="tblCategory" bordered={true} striped={true}>
+                                    <TableBody>
+                                    { 
+                                        /* this.state.listaCategorias.map((res, i) => {
+                                            return (
+                                                <tr key={i} className="clickable">
+                                                    <td><input type="checkbox" onChange={ this.handleChange } value={ i }></input><label class="label-margin">{res.name}</label></td>
+                                                </tr>
+                                            )
+                                        })  */
+                                        this.componentTableGeral(this.state.listaCategorias)
+                                    }
+                                    </TableBody>
+                                </MDBTable>
+
                                 <div>
-                                    <label>N° máx de Jogadores: { this.state.qtdJogadores ? this.state.qtdJogadores : 0 }</label>
-                                    <input id="qtdJogadores" type="range" class="slider" value={ this.state.qtdJogadores } min="0" max="10" onChange={ this.handleChange } />
+                                    {/* Qtd jogadores */}
+                                    <label className={this.state.validacaoQtdJogadores + " validacao"}>Insira ao menos 2 jogadores</label>
+                                    <label>N° máx de Jogadores: { this.state.qtdJogadores ? this.state.qtdJogadores : 2 }</label>
+                                    <input id="qtdJogadores" type="range" class="slider" value={ this.state.qtdJogadores } min="2" max="10" onChange={ this.handleChange } />
                                 </div>
                             </Col>
                         </Row>
@@ -311,7 +374,157 @@ class Home extends Component {
             </Modal>
         )
     }
+
+    itensList = () => {
+        axios
+        // .get('https://es3-stop-prod.herokuapp.com/items' + this.state.user.userId)
+        .get('https://es3-stop-prod.herokuapp.com/items')
+        .then(res => {
+            this.setState({
+                itens: res.data.content
+            })
+            return true
+        })
+        .catch(res => {
+            return false;            
+        });
+    }
+
     
+    fnHandleChangeCheckItens = () => {
+        let itensArrayEnvio = []
+
+        var els = document.getElementsByName("itensArrayEnvio");
+        els.forEach((a) => {
+            if ( a.checked ) {
+                itensArrayEnvio.push({ "category_id": a.value })
+            }
+            this.setState({
+                itensArrayEnvio
+            })            
+        })
+    }
+
+    iniciarTempoRedirect = () => {
+        // alert("a")
+        if(!this.state.redirect) {
+            this.setState({
+                redirect: 1
+            })
+        }
+    }
+
+    cancelarTempoRedirect = () => {
+        if(this.state.redirect) {
+            this.setState({
+                redirect: 0
+            })
+        }
+    }
+
+    escolherItensBtnJogar() {
+
+        if(!this.state.user) return
+
+        this.iniciarTempoRedirect();
+        console.log("a")
+
+        // this.startTimer
+        setTimeout(() => {
+            this.setState({
+                modal3: false
+            })
+            if(this.state.redirect) this.jogar()
+            else return
+        }, 10000)
+
+    }
+
+    modalEscolherItens() {
+        let { itens } = this.state;
+
+        let arrItens = [];
+        itens.map(e => {
+            arrItens.push(
+                <div>
+                    <input name="itensArrayEnvio" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
+                    
+                    <label class="label-margin">{ e.item_name }</label>
+                </div>
+            )
+        })
+
+        return (
+            <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
+                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleClass="w-100 font-weight-bold" toggle={() => this.toggleGeral(3)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Escolher Itens</h3></ModalHeader>
+                {this.state.time.s}
+                <ModalBody>
+                    <Row>
+                        <Col size="3" className="d-flex justify-content-center align-items-center">
+                            <Fa size="4x" icon="gamepad" className="ml-1" />
+                        </Col>
+                        <Col size="9">
+                            { arrItens }
+                        </Col>
+                    </Row>
+                </ModalBody>
+                <ModalFooter className="justify-content-center">
+                    <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
+                    <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect() )} }>Cancelar</Button>
+                </ModalFooter>
+            </Modal>
+        )
+    }
+
+    /* Timer */
+    secondsToTime(secs) {
+        let hours = Math.floor(secs / (60 * 60));
+
+        let divisor_for_minutes = secs % (60 * 60);
+        let minutes = Math.floor(divisor_for_minutes / 60);
+
+        let divisor_for_seconds = divisor_for_minutes % 60;
+        let seconds = Math.ceil(divisor_for_seconds);
+
+        let obj = {
+            "h": hours,
+            "m": minutes,
+            "s": seconds
+        };
+        return obj;
+    }
+
+    componentDidMount() {
+        let timeLeftVar = this.secondsToTime(this.state.seconds);
+        this.setState({ time: timeLeftVar });
+    }
+
+    startTimer() {
+        if (this.timer == 0 && this.state.seconds > 0) {
+            this.timer = setInterval(this.countDown, 1000);
+        }
+    }
+
+    countDown() {
+        // Remove one second, set state so a re-render happens.
+        let seconds = this.state.seconds - 1;
+        this.setState({
+            time: this.secondsToTime(seconds),
+            seconds: seconds,
+        });
+
+        // Check if we're at zero.
+        if (seconds == 0) {
+            clearInterval(this.timer);
+        }
+    }
+    
+    /* Fim Timer */
+    
+    validacaoNomeSala = 0
+    validacaoQtdCategorias = 0
+    validacaoQtdJogadores = 0
+
     fnHandleChangeCheck = () => {
         let categoriasArrayEnvio = []
 
@@ -331,6 +544,50 @@ class Home extends Component {
         { qtdJogadores } = this.state,
         { userId } = this.state.user,
         { categoriasArrayEnvio } = this.state
+
+        if(!salaNome) {
+            this.setState({
+                validacaoNomeSala: "show"
+            })
+            this.validacaoNomeSala = 1
+            setTimeout(
+                () => {
+                    this.setState({
+                        validacaoNomeSala: "hidden"
+                    })
+                    this.validacaoNomeSala = 0
+                }
+            , 3000);
+            return
+        } else if(categoriasArrayEnvio.length < 3) {
+            this.setState({
+                validacaoQtdCategorias: "show"
+            })
+            this.validacaoQtdCategorias = 1
+            setTimeout(
+                () => {
+                    this.setState({
+                        validacaoQtdCategorias: "hidden"
+                    })
+                    this.validacaoQtdCategorias = 0
+                }
+            , 3000);
+            return
+        } else if(qtdJogadores < 2) {
+            this.setState({
+                validacaoQtdJogadores: "show"
+            })
+            this.validacaoQtdJogadores = 1
+            setTimeout(
+                () => {
+                    this.setState({
+                        validacaoQtdJogadores: "hidden"
+                    })
+                    this.validacaoQtdJogadores = 0
+                }
+            , 3000);
+            return
+        }
         
         axios
         .post('https://es3-stop-prod.herokuapp.com/match', {
@@ -341,16 +598,36 @@ class Home extends Component {
         })
         .then(res => {
             console.log("Sala Criada")
+            this.matchesList()
         })
+        /* .then(() => {
+            let {partidas} = this.state;
+            this.entrandoPartida(partidas[partidas.length].match_id)
+        }) */
         .catch(res => {
             this.props.uiActions.stopLoading();
-            toast.error("Erro ao cadastrar a categoria. Erro: " + res.response.data.messages);
+            toast.error("Erro ao cadastrar a Partida. Erro: " + res.response.data.messages);
         });
+    }
+
+    loginComponent = () => {
+        if(!this.state.user){
+            return (
+                <Login />
+                )
+        } else {
+            return (
+                <Userhome 
+                    userData = {this.state.user}
+                />
+            )
+        }
     }
     
     componentWillMount() {
         this.matchesList();
         this.categoryList();
+        this.itensList();
     }
     
     render() {
@@ -359,25 +636,34 @@ class Home extends Component {
             <div className="home-container row">
                 { this.info() }
                 { this.criarSala() }
-                <div className="col-xs-12 col-sm-12">
-                    <MDBTable bordered={true} striped={true}>
-                        <ToastContainer 
-                            newestOnTop={true}/>
+                { this.modalEscolherItens() }
+                <div className="col-xs-8 col-sm-8 home-grid">
+                    <div class="tblGridHeader">
+                        <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
+                    </div>
+                    <div className="home-grid-match">
+                        <MDBTable bordered={true} striped={true}>
+                            <ToastContainer 
+                                newestOnTop={true}/>
 
-                        <TableHead color="deep-purple" textWhite>
-                            <tr>
-                                <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
-                            </tr>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                this.componentTblMount()
-                            }
-                        </TableBody>
-                    </MDBTable>
+                            <TableHead class="tblGridHeader" color="deep-purple" textWhite>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    this.componentTblMount()
+                                }
+                            </TableBody>
+                        </MDBTable>
+                    </div>
+                    <div className="home-grid-btn">
+                        <Button class="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
+                        <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
+                        {/* <Button class="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button> */}
+                        <Button class="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                    </div>
                 </div>
-                <div className="col-xs-12 col-sm-12">
-                    <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}>Criar Sala</Button>
+                <div className="col-xs-4 col-sm-4 home-grid-login">
+                    { this.loginComponent() }
                 </div>
             </div>
         )
