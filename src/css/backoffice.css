@@ -172,3 +172,40 @@ td {
 .content {
     margin-left: 100px;
 }
+
+
+/* LOJA */
+.shopBanner
+{
+    max-width: 100%;
+    max-height: 200px;
+    background-color: hsla(0,0%,40%,.1);
+}
+
+.shopBanner .banner
+{
+    max-width: 100%;
+    max-height: 200px;
+}
+
+.shopSectionMain {
+    text-align: center;
+}
+
+.bq-span {
+    font-size: 1rem;
+}
+
+.blockquote p.no-spacing{
+    padding: 0px !important;
+}
+
+.border-purple
+{
+    border-color: #6657b0 !important;
+}
+
+tr.current
+{
+    background-color: #ebe4fd;
+}

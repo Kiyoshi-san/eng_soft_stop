@@ -13,16 +13,6 @@ const PUBLIC_LINKS = [
 
 const SU_LINKS = [
     {
-        name: "Cadastro",
-        link: "cadastro",
-        icon: "paste"
-    },
-    {
-        name: "Perfil",
-        link: "user",
-        icon: "user"
-    },
-    {
         name: "Sair",
         link: "logout",
         icon: "logout"
@@ -31,19 +21,9 @@ const SU_LINKS = [
 
 const LOGED_LINKS = [
     {
-        name: "Jogar",
-        link: "game",
-        icon: "game"
-    },
-    {
         name: "Perfil",
-        link: "user",
+        link: "profile",
         icon: "user"
-    },
-    {
-        name: "Backoffice",
-        link: "login-back",
-        icon: "gear"
     },
     {
         name: "Sair",
@@ -55,13 +35,8 @@ const LOGED_LINKS = [
 const LOGED_LINKS_MATCH = [
     {
         name: "Perfil",
-        link: "user",
+        link: "profile",
         icon: "user"
-    },
-    {
-        name: "Backoffice",
-        link: "login-back",
-        icon: "gear"
     },
     {
         name: "Sair da Sala",
