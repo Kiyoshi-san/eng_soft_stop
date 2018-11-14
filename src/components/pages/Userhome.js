@@ -43,7 +43,7 @@ let Userhome = ({nick, userInventory}) => {
                                 <b>Nick:</b> { nick.userName }
                             </Col>
                             <Col md="12">
-                                <b>Pepitas:</b> {userInventory.score}
+                                <b>Pepitas:</b> {userInventory.score} <i className="fa fa-diamond" aria-hidden="true" />
                             </Col>
                         </div>
                     </div>
