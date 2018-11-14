@@ -272,7 +272,9 @@ class Home extends Component {
     - 2 - Criar Sala
     */
     toggleGeral(nr, func) {
+        if (func)
         func();
+
         if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
 
         let modalNumber = 'modal' + nr
@@ -282,7 +284,7 @@ class Home extends Component {
     }
 
     /* Lista as categorias existentes */
-    categoryList() {    
+    categoryList() {
         axios
         .get('https://es3-stop-prod.herokuapp.com/categories')
         .then(res => {
@@ -368,7 +370,7 @@ class Home extends Component {
                         </section>
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
-                    <Button color="secondary" className="roundedBtn" outline onClick={() => this.toggleGeral(2, this.criarPartida())}>Criar</Button>
+                    <Button color="secondary" className="roundedBtn" outline onClick={() => this.toggleGeral(2, this.criarPartida)}>Criar</Button>
                     <Button color="danger" className="roundedBtn" outline onClick={() => this.toggleGeral(2)}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
@@ -470,7 +472,7 @@ class Home extends Component {
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
                     <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
-                    <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect() )} }>Cancelar</Button>
+                    <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect )} }>Cancelar</Button>
                 </ModalFooter>
             </Modal>
         )
@@ -657,7 +659,7 @@ class Home extends Component {
                     </div>
                     <div className="home-grid-btn">
                         <Button class="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
-                        <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
+                        <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
                         {/* <Button class="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button> */}
                         <Button class="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
