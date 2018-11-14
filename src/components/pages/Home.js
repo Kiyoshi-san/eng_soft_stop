@@ -385,7 +385,7 @@ class Home extends Component {
                         </section>
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
-                    <Button color="secondary" className="roundedBtn" outline onClick={() => this.toggleGeral(2, this.criarPartida)}>Criar</Button>
+                    <Button color="secondary" className="roundedBtn" outline onClick={() => this.toggleGeral(2, this.criarPartida())}>Criar</Button>
                     <Button color="danger" className="roundedBtn" outline onClick={() => this.toggleGeral(2)}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
