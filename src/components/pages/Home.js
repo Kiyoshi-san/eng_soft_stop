@@ -22,6 +22,7 @@ class Home extends Component {
             linhasTbl: [],
             qtdCols: 4,
             user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
+            inventary: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
             logado: false,
             idMatch: 0,
             listaCategorias: [],
@@ -31,10 +32,11 @@ class Home extends Component {
             validacaoNomeSala: "hidden",
             validacaoQtdCategorias: "hidden",
             validacaoQtdJogadores: "hidden",
-            itens: [],
             redirect: 0,
             time: {},
-            seconds: 5
+            seconds: 5,
+            itens: [],
+            item_type: 0,
         }
         this.setActiveElement = this.setActiveElement.bind(this);
 
@@ -89,8 +91,21 @@ class Home extends Component {
                 else this.entrandoPartida();
             });
         } */
+
+        /* clickMeusItens(item_type){
+
+            let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
+
+            this.setState({
+                item_type: item_type,
+                listaItens: items
+            }, () => {
+            });
+            
+        } */
         if(!this.validaLogin()) return
         else this.entrandoPartida();
+        
         return;        
     }
 
@@ -446,6 +461,17 @@ class Home extends Component {
         let { itens } = this.state;
 
         let arrItens = [];
+        
+        /* 
+        CONTINUAR DAQUI
+        let { item_type } = this.state
+        let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
+
+        this.setState({
+            item_type: item_type,
+            itens: items
+        });  */
+        
         itens.map(e => {
             arrItens.push(
                 <div>
@@ -620,7 +646,8 @@ class Home extends Component {
         } else {
             return (
                 <Userhome 
-                    userData = {this.state.user}
+                    nick = {this.state.user}
+                    userInventory = {this.state.inventary}
                 />
             )
         }
