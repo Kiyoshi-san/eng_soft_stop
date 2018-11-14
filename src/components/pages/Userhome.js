@@ -14,12 +14,12 @@ import logo from '../../images/stop_logo_v2.png';
 import rightArrow from '../../images/right-arrow-icon.png';
 import * as uiActions from '../../actions/uiActions';
 
-let Userhome = ({userData}) => {
-    console.log(userData.userName)
+let Userhome = ({nick, userInventory}) => {
+    console.log(nick.userName)
 
     let perfil = () => {        
         uiActions.loading("Carregando dados...");
-        window.location.href = '/perfil';
+        window.location.href = '/profile';
     }
 
     let logout = () => {        
@@ -40,10 +40,10 @@ let Userhome = ({userData}) => {
                         </div>
                         <div className="col-sm-7">
                             <Col md="12">
-                                <b>Nick:</b> { userData.userName }
+                                <b>Nick:</b> { nick.userName }
                             </Col>
                             <Col md="12">
-                                <b>Pontos:</b> 380
+                                <b>Pepitas:</b> {userInventory.score}
                             </Col>
                         </div>
                     </div>
