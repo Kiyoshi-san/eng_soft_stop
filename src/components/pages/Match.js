@@ -15,7 +15,8 @@ class Match extends Component {
         
         this.state = {
           user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
-          loaded: false
+          loaded: false,
+          match: {}
         };
 
         this.loadedRef = firebase.database().ref().child('loaded');
@@ -49,9 +50,9 @@ class Match extends Component {
 
     listenMatch() {
         this.partidasRef
-          .on(this.state.matchId, match => {
+          .on(this.props.match.matchId, match => {
             this.setState({
-                match: match.val().filter,
+                match: match.val(),
             });
         });
     }
@@ -80,20 +81,12 @@ class Match extends Component {
 Match.propTypes = {
     uiActions: PropTypes.object,
     matchActions: PropTypes.object,
-    matchId: PropTypes.number,
-    letter: PropTypes.string,
-    userList: PropTypes.array,
-    categoryList: PropTypes.array,
-    skillList: PropTypes.array
+    match: PropTypes.object
 };
 
 function mapStateToProps(state) {
     return {
-      matchId: state.match.matchId,
-      letter: state.match.letter,
-      userList: state.match.userList,
-      categoryList: state.match.categoryList,
-      skillList: state.match.skillList
+      match: state.match.match
     };
   }
 
