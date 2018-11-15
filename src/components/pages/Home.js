@@ -37,16 +37,11 @@ class Home extends Component {
             redirect: 0,
             time: {},
             seconds: 5,
+            tempo: 10,
             itens: [],
             item_type: 0,
         }
         this.setActiveElement = this.setActiveElement.bind(this);
-
-        /* Timer */
-        this.timer = 0;
-        this.startTimer = this.startTimer.bind(this);
-        this.countDown = this.countDown.bind(this);
-        /* Fim Timer */
     }
 
     handleChange = (event) => {
@@ -530,6 +525,19 @@ class Home extends Component {
             modal3: false,
             itens: arrItens
         }, () => {
+                let tempo = 10
+                this.setState({
+                    tempo: 10
+                })
+                setInterval(() => {
+                    tempo = tempo-1;
+                    
+                    if(tempo >= 0) {
+                        this.setState({
+                            tempo: tempo
+                        })
+                    } else return
+                }, 1000);
                 setTimeout(() => {
                     if(this.state.redirect) this.jogar()
                     else return
@@ -537,6 +545,7 @@ class Home extends Component {
             }
         )        
     }
+
     
 
     /* Modal para escolher os itens antes da partida */
@@ -574,8 +583,13 @@ class Home extends Component {
                         <Col size="3" className="d-flex justify-content-center align-items-center">
                             <Fa size="4x" icon="gamepad" className="ml-1" />
                         </Col>
-                        <Col size="9">
+                        <Col size="6">
                             { arrItens }
+                        </Col>
+                        <Col size="3">
+                            <div className="crono">
+                                { this.state.tempo }
+                            </div>
                         </Col>
                     </Row>
                 </ModalBody>
@@ -611,50 +625,6 @@ class Home extends Component {
         return;
     }
 
-    /* Timer */
-    secondsToTime(secs) {
-        let hours = Math.floor(secs / (60 * 60));
-
-        let divisor_for_minutes = secs % (60 * 60);
-        let minutes = Math.floor(divisor_for_minutes / 60);
-
-        let divisor_for_seconds = divisor_for_minutes % 60;
-        let seconds = Math.ceil(divisor_for_seconds);
-
-        let obj = {
-            "h": hours,
-            "m": minutes,
-            "s": seconds
-        };
-        return obj;
-    }
-
-    componentDidMount() {
-        let timeLeftVar = this.secondsToTime(this.state.seconds);
-        this.setState({ time: timeLeftVar });
-    }
-
-    startTimer() {
-        if (this.timer == 0 && this.state.seconds > 0) {
-            this.timer = setInterval(this.countDown, 1000);
-        }
-    }
-
-    countDown() {
-        // Remove one second, set state so a re-render happens.
-        let seconds = this.state.seconds - 1;
-        this.setState({
-            time: this.secondsToTime(seconds),
-            seconds: seconds,
-        });
-
-        // Check if we're at zero.
-        if (seconds == 0) {
-            clearInterval(this.timer);
-        }
-    }
-    
-    /* Fim Timer */
     
     validacaoNomeSala = 0
     validacaoQtdCategorias = 0
