@@ -11,6 +11,7 @@ import Userhome from "./Userhome.js";
 
 import StorageKey from '../../util/StorageKey';
 
+import * as matchActions from '../../actions/matchActions';
 import * as uiActions from '../../actions/uiActions';
 
 class Home extends Component {
@@ -733,12 +734,13 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-    uiActions: PropTypes.object
+    uiActions: PropTypes.object,
+    matchActions: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {
     return {
-        uiActions: bindActionCreators(uiActions, dispatch)
+        uiActions: bindActionCreators(Object.assign({}, uiActions, matchActions), dispatch)
     };
 }
 
@@ -746,3 +748,5 @@ export default connect(
     null,
     mapDispatchToProps
 )(Home);
+
+//Exemplo de Chamada matchActions: this.props.matchActions.matchStart(match) - Passando objeto match pré definido

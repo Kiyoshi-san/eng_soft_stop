@@ -8,15 +8,15 @@ const userInterface = (state = initialState, action) => {
               loading: true,
               message: action.message
             }
-          )
+          );
         case actionTypes.LOADING_FALSE:
           return Object.assign({}, state, {
               loading: false,
               message: ""
             }
-      )
+          );
         default:
-          return state
+          return state;
     }
 }
 
