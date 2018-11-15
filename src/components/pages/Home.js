@@ -81,34 +81,6 @@ class Home extends Component {
             return true;
         }
     }
-    
-    jogar = (e) => {
-        /* if(e) {
-            e.preventDefault();
-            this.setState({
-                idMatch: e.currentTarget.value
-            }, () => {
-                if(!this.validaLogin()) return
-                else this.entrandoPartida();
-            });
-        } */
-
-        /* clickMeusItens(item_type){
-
-            let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
-
-            this.setState({
-                item_type: item_type,
-                listaItens: items
-            }, () => {
-            });
-            
-        } */
-        if(!this.validaLogin()) return
-        else this.entrandoPartida();
-        
-        return;        
-    }
 
     toggle = e => {
         this.setState({
@@ -223,7 +195,9 @@ class Home extends Component {
     }
 
     /* Lista as partidas existentes */
-    matchesList() {    
+    matchesList() {
+        this.props.uiActions.loading("Carregando...");
+
         axios
         .get('https://es3-stop-prod.herokuapp.com/matches')
         .then(res => {
@@ -231,6 +205,7 @@ class Home extends Component {
                 partidas: res.data.content
                 // linhasTbl: [...this.state.linhasTbl, res.data.content.forEach(e => {e.description})]
             })
+            this.props.uiActions.stopLoading();
         })
         .catch(res => {
             
@@ -393,21 +368,6 @@ class Home extends Component {
         )
     }
 
-    itensList = () => {
-        axios
-        // .get('https://es3-stop-prod.herokuapp.com/items' + this.state.user.userId)
-        .get('https://es3-stop-prod.herokuapp.com/items')
-        .then(res => {
-            this.setState({
-                itens: res.data.content
-            })
-            return true
-        })
-        .catch(res => {
-            return false;            
-        });
-    }
-
     
     fnHandleChangeCheckItens = () => {
         let itensArrayEnvio = []
@@ -440,43 +400,66 @@ class Home extends Component {
         }
     }
 
+    /* Carregando os Itens do usuario para iniciar Partida */
+    /* itensList = () => {
+        axios
+        // .get('https://es3-stop-prod.herokuapp.com/items' + this.state.user.userId)
+        .get('https://es3-stop-prod.herokuapp.com/items')
+        .then(res => {
+            this.setState({
+                itens: res.data.content
+            })
+            return true
+        })
+        .catch(res => {
+            return false;            
+        });
+    } */
+
+    /* Selecao de Itens do usuario para entrar na partida */
     escolherItensBtnJogar() {
 
         if(!this.state.user) return
 
         this.iniciarTempoRedirect();
-        console.log("a")
+        
+        let arrItens = [];
+        let elemItens = {}
 
+        // CONTINUAR DAQUI
+        let items = this.state.inventary.items
+        items.map(e => {
+            elemItens = {
+                "item_id":e.item_id,
+                "item_name":e.item_name
+            }
+            arrItens.push(elemItens)
+        })
+        
         // this.startTimer
-        setTimeout(() => {
-            this.setState({
-                modal3: false
-            })
-            if(this.state.redirect) this.jogar()
-            else return
-        }, 10000)
-
+        this.setState({
+            modal3: false,
+            itens: arrItens
+        }, () => {
+                setTimeout(() => {
+                    if(this.state.redirect) this.jogar()
+                    else return
+                }, 10000)
+            }
+        )        
     }
-
+        
+    /* Modal para escolher os itens antes da partida */
     modalEscolherItens() {
         let { itens } = this.state;
 
         let arrItens = [];
         
-        /* 
-        CONTINUAR DAQUI
-        let { item_type } = this.state
-        let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
-
-        this.setState({
-            item_type: item_type,
-            itens: items
-        });  */
         
         itens.map(e => {
             arrItens.push(
                 <div>
-                    <input name="itensArrayEnvio" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
+                    <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
                     
                     <label class="label-margin">{ e.item_name }</label>
                 </div>
@@ -503,6 +486,52 @@ class Home extends Component {
                 </ModalFooter>
             </Modal>
         )
+    }
+    
+    setSelectedItens = () => {
+        let arrSelectedItens = []
+
+        var els = document.getElementsByName("selectedItens");
+        els.forEach((a) => {
+            if ( a.checked ) {
+                arrSelectedItens.push({ "player_id": this.state.user.userId, "item_id": a.value })
+            }
+        })
+
+        localStorage.setItem(StorageKey.SELECTEDITEMS, JSON.stringify(arrSelectedItens));
+        console.log(JSON.parse(localStorage.getItem(StorageKey.SELECTEDITEMS)))
+    }
+    
+    /* Entrando na partida */
+    jogar = (e) => {
+        /* if(e) {
+            e.preventDefault();
+            this.setState({
+                idMatch: e.currentTarget.value
+            }, () => {
+                if(!this.validaLogin()) return
+                else this.entrandoPartida();
+            });
+        } */
+
+        /* clickMeusItens(item_type){
+
+            let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
+
+            this.setState({
+                item_type: item_type,
+                listaItens: items
+            }, () => {
+            });
+
+        } */
+
+        this.setSelectedItens();
+
+        if(!this.validaLogin()) return
+        else this.entrandoPartida();
+
+        return;
     }
 
     /* Timer */
@@ -657,7 +686,7 @@ class Home extends Component {
     componentWillMount() {
         this.matchesList();
         this.categoryList();
-        this.itensList();
+        // this.itensList();
     }
     
     render() {
@@ -698,8 +727,6 @@ class Home extends Component {
             </div>
         )
     }
-
-
     
     componentDidMount() {
         this.props.uiActions.stopLoading();
