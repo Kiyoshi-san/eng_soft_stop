@@ -22,6 +22,7 @@ class Home extends Component {
             linhasTbl: [],
             qtdCols: 4,
             user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
+            inventary: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
             logado: false,
             idMatch: 0,
             listaCategorias: [],
@@ -31,10 +32,11 @@ class Home extends Component {
             validacaoNomeSala: "hidden",
             validacaoQtdCategorias: "hidden",
             validacaoQtdJogadores: "hidden",
-            itens: [],
             redirect: 0,
             time: {},
-            seconds: 5
+            seconds: 5,
+            itens: [],
+            item_type: 0,
         }
         this.setActiveElement = this.setActiveElement.bind(this);
 
@@ -89,8 +91,21 @@ class Home extends Component {
                 else this.entrandoPartida();
             });
         } */
+
+        /* clickMeusItens(item_type){
+
+            let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
+
+            this.setState({
+                item_type: item_type,
+                listaItens: items
+            }, () => {
+            });
+            
+        } */
         if(!this.validaLogin()) return
         else this.entrandoPartida();
+        
         return;        
     }
 
@@ -272,7 +287,9 @@ class Home extends Component {
     - 2 - Criar Sala
     */
     toggleGeral(nr, func) {
+        if (func)
         func();
+
         if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
 
         let modalNumber = 'modal' + nr
@@ -282,7 +299,7 @@ class Home extends Component {
     }
 
     /* Lista as categorias existentes */
-    categoryList() {    
+    categoryList() {
         axios
         .get('https://es3-stop-prod.herokuapp.com/categories')
         .then(res => {
@@ -444,6 +461,17 @@ class Home extends Component {
         let { itens } = this.state;
 
         let arrItens = [];
+        
+        /* 
+        CONTINUAR DAQUI
+        let { item_type } = this.state
+        let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
+
+        this.setState({
+            item_type: item_type,
+            itens: items
+        });  */
+        
         itens.map(e => {
             arrItens.push(
                 <div>
@@ -470,7 +498,7 @@ class Home extends Component {
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
                     <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
-                    <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect() )} }>Cancelar</Button>
+                    <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect )} }>Cancelar</Button>
                 </ModalFooter>
             </Modal>
         )
@@ -618,7 +646,8 @@ class Home extends Component {
         } else {
             return (
                 <Userhome 
-                    userData = {this.state.user}
+                    nick = {this.state.user}
+                    userInventory = {this.state.inventary}
                 />
             )
         }
@@ -657,7 +686,7 @@ class Home extends Component {
                     </div>
                     <div className="home-grid-btn">
                         <Button class="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
-                        <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
+                        <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
                         {/* <Button class="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button> */}
                         <Button class="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>

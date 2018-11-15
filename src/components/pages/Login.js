@@ -25,7 +25,8 @@ class Login extends Component {
             userPassword: "",
             modal: false,
             cadLogin:"",
-            cadSenha:""
+            cadSenha:"",
+            backEndURL: 'https://es3-stop-prod.herokuapp.com'
         };
     }
 
@@ -67,8 +68,7 @@ class Login extends Component {
     }
 
     validateLogin = (body, errorCallback) => {
-        axios
-            .post(`https://es3-stop-prod.herokuapp.com/auth/login/${loginLevel}`, body)
+        axios.post(`${this.state.backEndURL}/auth/login/${loginLevel}`, body)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState({
@@ -79,12 +79,36 @@ class Login extends Component {
                         userId: res.data.content.user_id,
                         userName: res.data.content.user_name
                     }));
-                    window.location.href = '/home';
+
+                    this.updateInventary()
+                    .then(() =>{
+                        window.location.href = '/home';
+                    });
+                    
                 } else {
                     errorCallback("Usuário ou senha inexistente.");
                 }
             })
             .catch(error => errorCallback(error));
+    }
+
+    /* Atualizar o inventário do jogador */
+    updateInventary(){
+
+        let userId = JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)).userId;
+
+        return new Promise((resolve) =>{
+
+            axios
+            .get(this.state.backEndURL + '/inventory/' + userId)
+            .then(res => {
+                localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify(res.data.content));
+                resolve(true);
+            })
+            .catch(res => {
+                resolve(false);
+            });
+        });        
     }
 
     toggle = () => {

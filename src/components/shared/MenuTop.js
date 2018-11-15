@@ -123,7 +123,7 @@ export default class MenuTop extends Component {
                             <NavLink onClick={this.refresh} to="/"><Fa icon="home" className="ml-1"/>Home</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink onClick={this.refresh} to="/loja"><Fa icon="shopping-basket" className="ml-1"/> Loja</NavLink>
+                            <NavLink onClick={this.refresh} to="/shop"><Fa icon="shopping-basket" className="ml-1"/> Loja</NavLink>
                         </NavItem>
                         <NavItem>
                             <Dropdown>
