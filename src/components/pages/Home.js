@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, Row, Col, ToastContainer, toast, partidasDescription, Container, Card, CardBody } from 'mdbreact';
+import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, Row, Col, ToastContainer, toast, Animation, Container, Card, CardBody } from 'mdbreact';
 import axios from "axios";
 import '../../css/home.css';
+import banner from '../../images/homeBanner.png';
 
 import Login from "./Login.js";
 import Userhome from "./Userhome.js";
@@ -693,6 +694,12 @@ class Home extends Component {
         let { qtdCols } = this.state;
         return (
             <div className="home-container row">
+                {/* BANNER da Loja */}
+                <div className="homeBanner">
+                    <Animation type="rubberBand" duration="1s">
+                        <img className="d-block homeimgbanner" src={banner} alt="STOP GAME SHOP" />
+                    </Animation>
+                </div>
                 { this.info() }
                 { this.criarSala() }
                 { this.modalEscolherItens() }

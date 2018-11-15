@@ -1,5 +1,5 @@
 .home-container {
-    padding: 20px 0 20px 50px;
+    padding: 20px 50px;
 }
 
 .home-grid {
@@ -17,6 +17,21 @@
 .home-grid-login {
     padding-right: 50px;
 }
+
+
+.homeBanner
+{
+    width: 100%;
+    max-height: 345px;
+    margin-bottom: 20px;
+}
+
+.homeimgbanner
+{
+    width: 100%;
+    max-height: 345px;
+}
+
 
 .imgPerfil {
     display: block;
@@ -87,6 +102,10 @@
     font-size: 20px;
     border-radius: 20px;
     vertical-align: middle;
+}
+
+.botoesUserHome {
+    margin: auto !important;
 }
 
 .iconTbl .fa {
