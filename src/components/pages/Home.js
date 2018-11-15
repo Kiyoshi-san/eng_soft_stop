@@ -505,6 +505,9 @@ class Home extends Component {
     escolherItensBtnJogar() {
         if(!this.validaLogin())
         return
+
+        /* Colocar a validação, se nao tiver uma sala add nao abrirá a modal de escolha de itens */
+        /* if() */
         
         this.iniciarTempoRedirect();
         
