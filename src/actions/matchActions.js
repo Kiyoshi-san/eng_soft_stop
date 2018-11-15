@@ -1,12 +1,41 @@
 import * as actionTypes from './actionTypes';
 
-export function matchStart(id, letter, userList, categoryList, skillList) {
+export function matchStart(match) {
     return {
       type: actionTypes.MATCH_START,
-      matchid: id,
-      letter: letter,
-      userList: userList,
-      categoryList: categoryList,
-      skillList: skillList
+      match: match
     }
 }
+
+/*
+match object example
+{
+  "matchid": 64,
+  "letter": "P",
+  "userList": [
+    {
+      "id": 51,
+      "main": true --indicates main user of the match
+    },
+    {
+      "id": 123,
+      "main": false
+    },
+    {
+      "id": 154,
+      "main": false
+    },
+  ],
+  "categoryList": [
+    "foo",
+    "bar"
+  ],
+  "skillList": [
+    {
+      "id": 12,
+      "userId": 51
+    }
+  ]
+}
+
+*/

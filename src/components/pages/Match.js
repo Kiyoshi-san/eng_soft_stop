@@ -5,44 +5,53 @@ import PropTypes from 'prop-types';
 import firebase from 'firebase';
 
 import * as matchActions from '../../actions/matchActions';
+import * as uiActions from '../../actions/uiActions';
+
+import StorageKey from '../../util/StorageKey';
 
 class Match extends Component {
     constructor(props) {
         super(props);
         
         this.state = {
-          userId: props.userId,
-          matchId: props.matchId,
-          loaded: false,
-          match: []
+          user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
+          loaded: false
         };
 
         this.loadedRef = firebase.database().ref().child('loaded');
-        
         this.partidasRef = firebase.database().ref().child('projetojogostop');
+
+        this.setLoaded();
         this.listenMatch();
         this.listenLoaded();
     }
 
     render() {
+        const { match, loaded } = this.state;
+
         return (
             <div>
-                Match
+                {match.map((e, i) => 
+                    <div key={i} >
+                        {e}
+                    </div>
+                )}
+                <div>
+                    {loaded}
+                </div>
             </div>
         )
     }
 
-    setLoaded() {
-        if (this.state.loaded){
-            this.partidasRef.set()
-        }
+    listenUsers() {
+        
     }
 
     listenMatch() {
         this.partidasRef
           .on(this.state.matchId, match => {
             this.setState({
-                match: Object.values(match.val()),
+                match: match.val().filter,
             });
         });
     }
@@ -50,21 +59,26 @@ class Match extends Component {
     listenLoaded(){
         this.loadedRef
           .on('loaded', loaded => {
-            this.setState({
-              loaded: loaded.val(),
-            });
+            if (loaded) {
+                this.setState({ loaded: loaded.val() });
+                this.props.uiActions.stopLoading();
+            }
         });
     }
 
+    setLoaded() {
+
+    }
+
     componentDidMount() {
-        this.props.uiActions.stopLoading();
         if (this.props.mainUser) {
-            this.setLoaded();
+            this.listenUsers();
         }
     }
 }
 
 Match.propTypes = {
+    uiActions: PropTypes.object,
     matchActions: PropTypes.object,
     matchId: PropTypes.number,
     letter: PropTypes.string,
@@ -85,7 +99,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        matchActions: bindActionCreators(matchActions, dispatch)
+        matchActions: bindActionCreators(Object.assign({}, uiActions, matchActions), dispatch)
     };
 }
 
