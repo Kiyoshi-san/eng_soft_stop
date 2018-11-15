@@ -516,7 +516,6 @@ class Home extends Component {
         let arrItens = [];
         let elemItens = {}
 
-        // CONTINUAR DAQUI
         let items = this.state.inventary.items
         items.map(e => {
             elemItens = {
@@ -551,16 +550,20 @@ class Home extends Component {
 
         let arrItens = [];
         
-        
-        itens.map(e => {
-            arrItens.push(
-                <div>
-                    <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
-                    
-                    <label class="label-margin">{ e.item_name }</label>
-                </div>
-            )
-        })
+        if(itens.length) {
+            itens.map(e => {
+                arrItens.push(
+                    <div>
+                        <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
+                        
+                        <label class="label-margin">{ e.item_name }</label>
+                    </div>
+                )
+            })
+        } else {
+            arrItens = []
+            arrItens[0] = "Não há itens disponiveis"            
+        }
 
         return (
             <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
