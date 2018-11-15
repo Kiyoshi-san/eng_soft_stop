@@ -55,13 +55,103 @@ class Home extends Component {
           dirty: true
         });
     }
+
+    /* Pegando uma letra aleatoria */
+    randomLetter () {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      
+        text = possible.charAt(Math.floor(Math.random() * possible.length));
+      
+        return text;
+      }
+
+    /* Dados para enviar para a Partida */
+    colhendoDadosEntrandoPartida (idsala) {
+        axios
+        .get('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch)
+        .then(res => {
+            this.setState({
+                partidasDescription: res.data.content
+            })
+            // let { partidasDescription } = this.state;
+
+
+            let iddasala = idsala?idsala:this.state.idMatch
+            let partidasDescription = res.data.content
+            
+            
+            /* Listando Categorias da Partida */
+            let matchesCategoryList = [];
+
+            if (partidasDescription.categories) {
+                partidasDescription.categories.map(e => {
+                    matchesCategoryList.push(e.name)
+                })
+            }
+            
+            /* Listando Jogadores da Partida */
+            let matchesPlayersList = [],
+            player = {};
     
-    entrandoPartida(idsala) {
-        let iddasala = idsala?idsala:this.state.idMatch
+            if (partidasDescription.players) {
+                partidasDescription.players.map(e => {
+                    player = {"id":e.user_id, "main":e.user_id == this.state.user.userId?true:false}
+                    matchesPlayersList.push(player)
+                })
+            }
+    
+            /* Status do Jogo */
+            let status;
+            
+            if(partidasDescription.status == 1) {
+                    status = "Iniciado"
+            } else if(partidasDescription.status == 2) {
+                    status = "Espera"
+            } else {
+                status = ""
+            }
+    
+    
+            /* Pegando os itens selecionados */
+            var elements = document.getElementsByName("selectedItens");
+            let arrSelectedItens = [],
+            itens = {};
+
+            elements.forEach((a) => {
+                if ( a.checked ) {
+                    arrSelectedItens.push({ "id": a.value, "userId": this.state.user.userId })
+                }
+            })
+
+            let letter = this.randomLetter();
+    
+            let userGameData = {
+                "matchid": iddasala,
+                "letter": letter,
+                "userList": matchesPlayersList,
+                "categoryList": matchesCategoryList,
+                "skillList": arrSelectedItens
+              }
+
+              console.log(userGameData)
+              return
+
+              this.entrandoPartida(iddasala, userGameData)
+
+        })
+        .catch(res => {
+            return false;            
+        });
+        
+    }
+
+    entrandoPartida(iddasala, userGameData) {        
         axios
         .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
             this.props.uiActions.loading("Entrando na partida...");
+            matchActions.matchStart(userGameData)            
             window.location.href = '/match';
         })
         .catch(res => {
@@ -113,7 +203,7 @@ class Home extends Component {
             })
         }
         
-        /* Listando Categorias da Partida */
+        /* Listando Jogadores da Partida */
         let matchesPlayersList = [];
         if (partidasDescription.players) {
             partidasDescription.players.map(e => {
@@ -419,9 +509,9 @@ class Home extends Component {
 
     /* Selecao de Itens do usuario para entrar na partida */
     escolherItensBtnJogar() {
-
-        if(!this.state.user) return
-
+        if(!this.validaLogin())
+        return
+        
         this.iniciarTempoRedirect();
         
         let arrItens = [];
@@ -449,9 +539,15 @@ class Home extends Component {
             }
         )        
     }
-        
+    
+
     /* Modal para escolher os itens antes da partida */
     modalEscolherItens() {
+        let { user } = this.state;
+        
+        if (!user)
+        return
+        
         let { itens } = this.state;
 
         let arrItens = [];
@@ -505,32 +601,10 @@ class Home extends Component {
     
     /* Entrando na partida */
     jogar = (e) => {
-        /* if(e) {
-            e.preventDefault();
-            this.setState({
-                idMatch: e.currentTarget.value
-            }, () => {
-                if(!this.validaLogin()) return
-                else this.entrandoPartida();
-            });
-        } */
-
-        /* clickMeusItens(item_type){
-
-            let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
-
-            this.setState({
-                item_type: item_type,
-                listaItens: items
-            }, () => {
-            });
-
-        } */
-
         this.setSelectedItens();
 
         if(!this.validaLogin()) return
-        else this.entrandoPartida();
+        else this.colhendoDadosEntrandoPartida();
 
         return;
     }

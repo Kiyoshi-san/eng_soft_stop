@@ -50,7 +50,7 @@ let Userhome = ({nick, userInventory}) => {
                     
                     <div className="text-center">
 
-                        <div className="row botoesUserHome">
+                        <div className="row">
                             <div className="col-sm-5">
                                 <Button className="btn btn-deep-purple btn-login-home" onClick={perfil}><Fa icon="info iconCircle" className="ml-1"/>Perfil</Button>
                             </div>
