@@ -135,7 +135,6 @@ class Home extends Component {
               }
 
               console.log(userGameData)
-              return
 
               this.entrandoPartida(iddasala, userGameData)
 
