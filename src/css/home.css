@@ -1,5 +1,6 @@
 .home-container {
     padding: 20px 50px;
+    width: 100%;
 }
 
 .home-grid {
@@ -18,6 +19,16 @@
     padding-right: 50px;
 }
 
+.crono {
+    border: solid 4px #a620e4;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    font-size: 35px;
+    background-color: #a620e426;
+    font-weight: bold;
+}
 
 .homeBanner
 {
