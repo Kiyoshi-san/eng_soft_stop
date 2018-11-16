@@ -23,36 +23,21 @@ class Match extends Component {
           clock: 60,
           loaded: false,
           words: [],
-          backEndURL: 'https://es3-stop-prod.herokuapp.com'
+          backEndURL: 'https://es3-stop-prod.herokuapp.com',
+          match: {}
         };
 
         this.partidasRef = firebase.database().ref().child('projetojogostop');
+        this.listenMatch();
     }
 
     listenMatch() {
         this.partidasRef
           .on(this.props.match.matchId, match => {
-            let matchObj = match;
-
-            if (!matchObj.listReady) {
-                matchObj.listReady = this.props.match.userList.map(item => {return { user: item, ready: false }});
-                matchObj.ready = false;
-
-                this.partidasRef.child(this.props.match.matchId).update(matchObj);
-            }
-
-            if (!this.state.loaded) {
-                matchObj.listReady = this.state.listReady.map(item => {return {user: item, ready: item === this.state.user.userId}});
-                this.partidasRef.child(this.props.match.matchId).update(matchObj);
-            }
-
-            if (match.listReady.every(item => item.ready)) {
-                matchObj.ready = true;
-                this.partidasRef.child(this.props.match.matchId).update(matchObj);
-            }
+            this.setState({match});
 
             //Verifica Carregamento da página
-            if (match.loaded) {
+            if (match.match_started) {
                 this.props.uiActions.stopLoading();
                 setInterval(() =>  this.setState((prevState) => ({ clock: prevState - 1}), 1000));
             }
@@ -60,7 +45,11 @@ class Match extends Component {
     }
 
     componentDidMount() {
-        this.listenMatch();
+        if (this.props.match.userList.some(item => item.mainUser && item.user === this.state.user.userId)) {
+            const match = this.state.match;
+            match.match_started = true;
+            this.partidasRef.child(this.props.match.matchId).update(match);
+        }
     }
 
     handleStop = (event) => {
