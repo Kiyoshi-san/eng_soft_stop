@@ -81,7 +81,7 @@ class Home extends Component {
 
             if (partidasDescription.categories) {
                 partidasDescription.categories.map(e => {
-                    matchesCategoryList.push(e.name)
+                    matchesCategoryList.push({"id":e.category_id,"name":e.name})
                 })
             }
             
@@ -129,7 +129,9 @@ class Home extends Component {
                 "skillList": arrSelectedItens
               }
 
+              console.log("userGameData")
               console.log(userGameData)
+              console.log("userGameData")
 
               this.entrandoPartida(iddasala, userGameData)
 
