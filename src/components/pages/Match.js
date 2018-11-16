@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
+import axios from "axios";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import firebase from 'firebase';
+import { Row, Col, Input, Button } from 'mdbreact';
+import { ToastContainer, toast } from "mdbreact";
+import update from 'immutability-helper';
 
 import * as matchActions from '../../actions/matchActions';
 import * as uiActions from '../../actions/uiActions';
 
+import * as methods from '../../util/Methods';
 import StorageKey from '../../util/StorageKey';
 
 class Match extends Component {
@@ -15,85 +20,122 @@ class Match extends Component {
         
         this.state = {
           user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
-          loaded: false
+          clock: 60,
+          loaded: false,
+          words: [],
+          backEndURL: 'https://es3-stop-prod.herokuapp.com',
+          match: {}
         };
 
-        this.loadedRef = firebase.database().ref().child('loaded');
         this.partidasRef = firebase.database().ref().child('projetojogostop');
-
-        this.setLoaded();
         this.listenMatch();
-        this.listenLoaded();
-    }
-
-    render() {
-        const { match, loaded } = this.state;
-
-        return (
-            <div>
-                {match.map((e, i) => 
-                    <div key={i} >
-                        {e}
-                    </div>
-                )}
-                <div>
-                    {loaded}
-                </div>
-            </div>
-        )
-    }
-
-    listenUsers() {
-        
     }
 
     listenMatch() {
         this.partidasRef
-          .on(this.state.matchId, match => {
-            this.setState({
-                match: match.val().filter,
-            });
-        });
-    }
+          .on(this.props.match.matchId, match => {
+            this.setState({match});
 
-    listenLoaded(){
-        this.loadedRef
-          .on('loaded', loaded => {
-            if (loaded) {
-                this.setState({ loaded: loaded.val() });
+            //Verifica Carregamento da página
+            if (match.match_started) {
                 this.props.uiActions.stopLoading();
+                setInterval(() =>  this.setState((prevState) => ({ clock: prevState - 1}), 1000));
             }
         });
     }
 
-    setLoaded() {
-
+    componentDidMount() {
+        if (this.props.match.userList.some(item => item.mainUser && item.user === this.state.user.userId)) {
+            const match = this.state.match;
+            match.match_started = true;
+            this.partidasRef.child(this.props.match.matchId).update(match);
+        }
     }
 
-    componentDidMount() {
-        if (this.props.mainUser) {
-            this.listenUsers();
+    handleStop = (event) => {
+        event.preventDefault();
+
+        const body = {
+            match_id: this.props.match.matchId,
+	        letter: this.props.match.letter,
+            match: [
+                {
+                    player_id: this.state.user.userId,
+                    categories_ids: this.props.match.categoryList.map(item => item.id),
+                    answers: this.state.words
+                },
+            ]
         }
+
+        axios.post(`${this.state.backEndURL}/validation`, body)
+            .then(res => {
+                
+            })
+            .catch(() => toast.error("Erro inesperado."));
+    }
+
+    handleChange = (event) => {
+        this.setState((prevState) => ({
+            words: update(prevState.words, {[event.id]: {$set: event.value}})
+        }));
+    }
+
+    handleDica = (event) => {
+        axios.get(`${this.state.backEndURL}/hint/${this.props.match.letter}?categoria=${event.id}`)
+            .then(res => {
+                if (res.data.status_code === 200) {
+                    this.setState({
+                        sucsses: true,
+                    });
+                } else {
+                    toast.error(res.data.messages);
+                }
+            })
+            .catch(() => toast.error("Erro inesperado."));
+    }
+
+    render() {
+        const { clock } = this.state;
+
+        return (
+            <Row>
+                <ToastContainer newestOnTop={true}/>
+                <form onSubmit={this.handleStop}>
+                    <div align="center">Letra</div><div>{this.props.match.letter}</div>
+                    <div>0:{clock}</div>
+                    <Col md="12">
+                        <div className="grey-text">
+                            {this.props.match && this.props.match.categoryList.map((e, i) => 
+                                <Col key={i} md="12">
+                                    <Input id={e.id} label={methods.titleCase(e.name)} value={this.state.words[e.id]} 
+                                        group type="text" onChange={this.handleChange} />
+                                    <Button id={e.id} color="deep-purple" className="col-md-12" onClick={this.handleDica}>
+                                        Dica
+                                    </Button>
+                                </Col>
+                            )}
+                        </div>
+                    </Col>
+                    <div className="text-center">
+                        <Button color="deep-purple" className="col-md-12" type="submit">
+                            Stop
+                        </Button>
+                    </div>
+                </form>
+            </Row>
+        )
     }
 }
 
 Match.propTypes = {
     uiActions: PropTypes.object,
     matchActions: PropTypes.object,
-    matchId: PropTypes.number,
-    letter: PropTypes.string,
-    userList: PropTypes.array,
-    categoryList: PropTypes.array,
-    skillList: PropTypes.array
+    match: PropTypes.object
 };
 
 function mapStateToProps(state) {
     return {
-      matchId: state.match.matchId,
-      letter: state.match.letter,
-      userList: state.match.userList,
-      categoryList: state.match.categoryList,
-      skillList: state.match.skillList
+      match: state.match.match
     };
   }
 

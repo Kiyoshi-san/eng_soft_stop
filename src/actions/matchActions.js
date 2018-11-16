@@ -27,8 +27,14 @@ match object example
     },
   ],
   "categoryList": [
-    "foo",
-    "bar"
+    {
+      "id": 154,
+      "name": "foo"
+    },
+    {
+      "id": 451,
+      "name": "bar"
+    }
   ],
   "skillList": [
     {
