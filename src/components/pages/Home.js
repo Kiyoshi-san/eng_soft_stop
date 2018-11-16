@@ -145,7 +145,7 @@ class Home extends Component {
         .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
             this.props.uiActions.loading("Entrando na partida...");
-            matchActions.matchStart(userGameData)            
+            this.props.matchActions.matchStart(userGameData)            
             window.location.href = '/match';
         })
         .catch(res => {
@@ -804,5 +804,3 @@ export default connect(
     null,
     mapDispatchToProps
 )(Home);
-
-//Exemplo de Chamada matchActions: this.props.matchActions.matchStart(match) - Passando objeto match pré definido
