@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, Row, Col, ToastContainer, toast, partidasDescription, Container, Card, CardBody } from 'mdbreact';
+import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, Row, Col, ToastContainer, toast, Animation, Container, Card, CardBody } from 'mdbreact';
 import axios from "axios";
 import '../../css/home.css';
+import banner from '../../images/homeBanner.png';
 
 import Login from "./Login.js";
 import Userhome from "./Userhome.js";
@@ -36,16 +37,11 @@ class Home extends Component {
             redirect: 0,
             time: {},
             seconds: 5,
+            tempo: 10,
             itens: [],
             item_type: 0,
         }
         this.setActiveElement = this.setActiveElement.bind(this);
-
-        /* Timer */
-        this.timer = 0;
-        this.startTimer = this.startTimer.bind(this);
-        this.countDown = this.countDown.bind(this);
-        /* Fim Timer */
     }
 
     handleChange = (event) => {
@@ -54,13 +50,102 @@ class Home extends Component {
           dirty: true
         });
     }
+
+    /* Pegando uma letra aleatoria */
+    randomLetter () {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      
+        text = possible.charAt(Math.floor(Math.random() * possible.length));
+      
+        return text;
+      }
+
+    /* Dados para enviar para a Partida */
+    colhendoDadosEntrandoPartida (idsala) {
+        axios
+        .get('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch)
+        .then(res => {
+            this.setState({
+                partidasDescription: res.data.content
+            })
+            // let { partidasDescription } = this.state;
+
+
+            let iddasala = idsala?idsala:this.state.idMatch
+            let partidasDescription = res.data.content
+            
+            
+            /* Listando Categorias da Partida */
+            let matchesCategoryList = [];
+
+            if (partidasDescription.categories) {
+                partidasDescription.categories.map(e => {
+                    matchesCategoryList.push(e.name)
+                })
+            }
+            
+            /* Listando Jogadores da Partida */
+            let matchesPlayersList = [],
+            player = {};
     
-    entrandoPartida(idsala) {
-        let iddasala = idsala?idsala:this.state.idMatch
+            if (partidasDescription.players) {
+                partidasDescription.players.map(e => {
+                    player = {"id":e.user_id, "main":e.user_id == this.state.user.userId?true:false}
+                    matchesPlayersList.push(player)
+                })
+            }
+    
+            /* Status do Jogo */
+            let status;
+            
+            if(partidasDescription.status == 1) {
+                    status = "Iniciado"
+            } else if(partidasDescription.status == 2) {
+                    status = "Espera"
+            } else {
+                status = ""
+            }
+    
+    
+            /* Pegando os itens selecionados */
+            var elements = document.getElementsByName("selectedItens");
+            let arrSelectedItens = [],
+            itens = {};
+
+            elements.forEach((a) => {
+                if ( a.checked ) {
+                    arrSelectedItens.push({ "id": a.value, "userId": this.state.user.userId })
+                }
+            })
+
+            let letter = this.randomLetter();
+    
+            let userGameData = {
+                "matchid": iddasala,
+                "letter": letter,
+                "userList": matchesPlayersList,
+                "categoryList": matchesCategoryList,
+                "skillList": arrSelectedItens
+              }
+
+              console.log(userGameData)
+
+              this.entrandoPartida(iddasala, userGameData)
+
+        })
+        .catch(res => {
+            return false;            
+        });
+        
+    }
+
+    entrandoPartida(iddasala, userGameData) {        
         axios
         .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
             this.props.uiActions.loading("Entrando na partida...");
+            matchActions.matchStart(userGameData)            
             window.location.href = '/match';
         })
         .catch(res => {
@@ -80,34 +165,6 @@ class Home extends Component {
         } else {
             return true;
         }
-    }
-    
-    jogar = (e) => {
-        /* if(e) {
-            e.preventDefault();
-            this.setState({
-                idMatch: e.currentTarget.value
-            }, () => {
-                if(!this.validaLogin()) return
-                else this.entrandoPartida();
-            });
-        } */
-
-        /* clickMeusItens(item_type){
-
-            let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
-
-            this.setState({
-                item_type: item_type,
-                listaItens: items
-            }, () => {
-            });
-            
-        } */
-        if(!this.validaLogin()) return
-        else this.entrandoPartida();
-        
-        return;        
     }
 
     toggle = e => {
@@ -140,7 +197,7 @@ class Home extends Component {
             })
         }
         
-        /* Listando Categorias da Partida */
+        /* Listando Jogadores da Partida */
         let matchesPlayersList = [];
         if (partidasDescription.players) {
             partidasDescription.players.map(e => {
@@ -223,7 +280,9 @@ class Home extends Component {
     }
 
     /* Lista as partidas existentes */
-    matchesList() {    
+    matchesList() {
+        this.props.uiActions.loading("Carregando...");
+
         axios
         .get('https://es3-stop-prod.herokuapp.com/matches')
         .then(res => {
@@ -231,6 +290,7 @@ class Home extends Component {
                 partidas: res.data.content
                 // linhasTbl: [...this.state.linhasTbl, res.data.content.forEach(e => {e.description})]
             })
+            this.props.uiActions.stopLoading();
         })
         .catch(res => {
             
@@ -393,21 +453,6 @@ class Home extends Component {
         )
     }
 
-    itensList = () => {
-        axios
-        // .get('https://es3-stop-prod.herokuapp.com/items' + this.state.user.userId)
-        .get('https://es3-stop-prod.herokuapp.com/items')
-        .then(res => {
-            this.setState({
-                itens: res.data.content
-            })
-            return true
-        })
-        .catch(res => {
-            return false;            
-        });
-    }
-
     
     fnHandleChangeCheckItens = () => {
         let itensArrayEnvio = []
@@ -440,48 +485,97 @@ class Home extends Component {
         }
     }
 
-    escolherItensBtnJogar() {
-
-        if(!this.state.user) return
-
-        this.iniciarTempoRedirect();
-        console.log("a")
-
-        // this.startTimer
-        setTimeout(() => {
+    /* Carregando os Itens do usuario para iniciar Partida */
+    /* itensList = () => {
+        axios
+        // .get('https://es3-stop-prod.herokuapp.com/items' + this.state.user.userId)
+        .get('https://es3-stop-prod.herokuapp.com/items')
+        .then(res => {
             this.setState({
-                modal3: false
+                itens: res.data.content
             })
-            if(this.state.redirect) this.jogar()
-            else return
-        }, 10000)
+            return true
+        })
+        .catch(res => {
+            return false;            
+        });
+    } */
 
+    /* Selecao de Itens do usuario para entrar na partida */
+    escolherItensBtnJogar() {
+        if(!this.validaLogin())
+        return
+
+        /* Colocar a validação, se nao tiver uma sala add nao abrirá a modal de escolha de itens */
+        /* if() */
+        
+        this.iniciarTempoRedirect();
+        
+        let arrItens = [];
+        let elemItens = {}
+
+        let items = this.state.inventary.items
+        items.map(e => {
+            elemItens = {
+                "item_id":e.item_id,
+                "item_name":e.item_name
+            }
+            arrItens.push(elemItens)
+        })
+        
+        // this.startTimer
+        this.setState({
+            modal3: false,
+            itens: arrItens
+        }, () => {
+                let tempo = 10
+                this.setState({
+                    tempo: 10
+                })
+                setInterval(() => {
+                    tempo = tempo-1;
+                    
+                    if(tempo >= 0) {
+                        this.setState({
+                            tempo: tempo
+                        })
+                    } else return
+                }, 1000);
+                setTimeout(() => {
+                    if(this.state.redirect) this.jogar()
+                    else return
+                }, 10000)
+            }
+        )        
     }
 
+    
+
+    /* Modal para escolher os itens antes da partida */
     modalEscolherItens() {
+        let { user } = this.state;
+        
+        if (!user)
+        return
+        
         let { itens } = this.state;
 
         let arrItens = [];
         
-        /* 
-        CONTINUAR DAQUI
-        let { item_type } = this.state
-        let items = this.state.inventary.items.filter(item => item["item_type"] === item_type);
-
-        this.setState({
-            item_type: item_type,
-            itens: items
-        });  */
-        
-        itens.map(e => {
-            arrItens.push(
-                <div>
-                    <input name="itensArrayEnvio" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
-                    
-                    <label class="label-margin">{ e.item_name }</label>
-                </div>
-            )
-        })
+        if(itens.length) {
+            itens.map(e => {
+                arrItens.push(
+                    <div>
+                        <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
+                        
+                        <label class="label-margin">{ e.item_name }</label>
+                    </div>
+                )
+            })
+        } else {
+            arrItens = []
+            arrItens[0] = "Não há itens disponiveis"            
+        }
 
         return (
             <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
@@ -492,8 +586,13 @@ class Home extends Component {
                         <Col size="3" className="d-flex justify-content-center align-items-center">
                             <Fa size="4x" icon="gamepad" className="ml-1" />
                         </Col>
-                        <Col size="9">
+                        <Col size="6">
                             { arrItens }
+                        </Col>
+                        <Col size="3">
+                            <div className="crono">
+                                { this.state.tempo }
+                            </div>
                         </Col>
                     </Row>
                 </ModalBody>
@@ -504,51 +603,31 @@ class Home extends Component {
             </Modal>
         )
     }
+    
+    setSelectedItens = () => {
+        let arrSelectedItens = []
 
-    /* Timer */
-    secondsToTime(secs) {
-        let hours = Math.floor(secs / (60 * 60));
+        var els = document.getElementsByName("selectedItens");
+        els.forEach((a) => {
+            if ( a.checked ) {
+                arrSelectedItens.push({ "player_id": this.state.user.userId, "item_id": a.value })
+            }
+        })
 
-        let divisor_for_minutes = secs % (60 * 60);
-        let minutes = Math.floor(divisor_for_minutes / 60);
-
-        let divisor_for_seconds = divisor_for_minutes % 60;
-        let seconds = Math.ceil(divisor_for_seconds);
-
-        let obj = {
-            "h": hours,
-            "m": minutes,
-            "s": seconds
-        };
-        return obj;
-    }
-
-    componentDidMount() {
-        let timeLeftVar = this.secondsToTime(this.state.seconds);
-        this.setState({ time: timeLeftVar });
-    }
-
-    startTimer() {
-        if (this.timer == 0 && this.state.seconds > 0) {
-            this.timer = setInterval(this.countDown, 1000);
-        }
-    }
-
-    countDown() {
-        // Remove one second, set state so a re-render happens.
-        let seconds = this.state.seconds - 1;
-        this.setState({
-            time: this.secondsToTime(seconds),
-            seconds: seconds,
-        });
-
-        // Check if we're at zero.
-        if (seconds == 0) {
-            clearInterval(this.timer);
-        }
+        localStorage.setItem(StorageKey.SELECTEDITEMS, JSON.stringify(arrSelectedItens));
+        console.log(JSON.parse(localStorage.getItem(StorageKey.SELECTEDITEMS)))
     }
     
-    /* Fim Timer */
+    /* Entrando na partida */
+    jogar = (e) => {
+        this.setSelectedItens();
+
+        if(!this.validaLogin()) return
+        else this.colhendoDadosEntrandoPartida();
+
+        return;
+    }
+
     
     validacaoNomeSala = 0
     validacaoQtdCategorias = 0
@@ -657,13 +736,19 @@ class Home extends Component {
     componentWillMount() {
         this.matchesList();
         this.categoryList();
-        this.itensList();
+        // this.itensList();
     }
     
     render() {
         let { qtdCols } = this.state;
         return (
             <div className="home-container row">
+                {/* BANNER da Loja */}
+                <div className="homeBanner">
+                    <Animation type="rubberBand" duration="1s">
+                        <img className="d-block homeimgbanner" src={banner} alt="STOP GAME SHOP" />
+                    </Animation>
+                </div>
                 { this.info() }
                 { this.criarSala() }
                 { this.modalEscolherItens() }
@@ -698,8 +783,6 @@ class Home extends Component {
             </div>
         )
     }
-
-
     
     componentDidMount() {
         this.props.uiActions.stopLoading();
