@@ -744,13 +744,18 @@ class Home extends Component {
     render() {
         let { qtdCols } = this.state;
         return (
-            <div className="home-container row">
+            <div>
                 {/* BANNER da Loja */}
-                <div className="homeBanner">
-                    <Animation type="rubberBand" duration="1s">
-                        <img className="d-block homeimgbanner" src={banner} alt="STOP GAME SHOP" />
-                    </Animation>
-                </div>
+                <center>
+                    <div className="shopBanner">
+                        <img className="d-block banner animated fadeInDown" src={banner} alt="STOP GAME SHOP" />
+                    </div>
+                </center>
+                
+                <br />
+
+            <div className="home-container row">
+
                 { this.info() }
                 { this.criarSala() }
                 { this.modalEscolherItens() }
@@ -782,6 +787,7 @@ class Home extends Component {
                 <div className="col-xs-4 col-sm-4 home-grid-login">
                     { this.loginComponent() }
                 </div>
+            </div>
             </div>
         )
     }
