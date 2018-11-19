@@ -173,3 +173,16 @@
 .validacao {
     color: #fd3030;
 }
+
+.shopBanner
+{
+    max-width: 100%;
+    max-height: 200px;
+    background-color: hsla(0,0%,40%,.1);
+}
+
+.shopBanner .banner
+{
+    max-width: 100%;
+    max-height: 200px;
+}
