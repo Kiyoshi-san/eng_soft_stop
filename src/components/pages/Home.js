@@ -146,13 +146,11 @@ class Home extends Component {
         axios
         .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
-            alert("aa")
             this.props.uiActions.loading("Entrando na partida...");
             matchActions.matchStart(userGameData)
             window.location.href = '/match';
         })
         .catch(res => {
-            alert("bb")
             toast.error("Ocorreu um erro, tente novamente mais tarde")
             return false;            
         });
@@ -473,7 +471,6 @@ class Home extends Component {
     }
 
     iniciarTempoRedirect = () => {
-        // alert("a")
         if(!this.state.redirect) {
             this.setState({
                 redirect: 1
