@@ -142,15 +142,17 @@ class Home extends Component {
         
     }
 
-    entrandoPartida(iddasala, userGameData) {        
+    entrandoPartida(iddasala, userGameData) {
         axios
         .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
+            alert("aa")
             this.props.uiActions.loading("Entrando na partida...");
-            this.props.matchActions.matchStart(userGameData)            
+            matchActions.matchStart(userGameData)
             window.location.href = '/match';
         })
         .catch(res => {
+            alert("bb")
             toast.error("Ocorreu um erro, tente novamente mais tarde")
             return false;            
         });
