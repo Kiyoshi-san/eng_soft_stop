@@ -102,6 +102,9 @@
 
 .btn-login-home {
     height: 70px;
+    width: 100%;
+    font-size: 0.67em;
+    padding: 0;
 }
 
 .iconCircle {
@@ -113,6 +116,7 @@
     font-size: 20px;
     border-radius: 20px;
     vertical-align: middle;
+    margin-right: 10px;
 }
 
 .iconTbl .fa {

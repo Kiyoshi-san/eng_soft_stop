@@ -34,7 +34,7 @@ let Userhome = ({nick, userInventory}) => {
             <Row>
                 <form class="form-login">
                     <div className="tituloLogin" align="center">Login</div>
-                    <div className="row">
+                    <div className="row login-form-body">
                         <div className="imgPerfil col-sm-5">
                             <Fa size="4x" icon="user" className="ml-1" />
                         </div>
@@ -48,13 +48,12 @@ let Userhome = ({nick, userInventory}) => {
                         </div>
                     </div>
                     
-                    <div className="text-center">
-
-                        <div className="row">
-                            <div className="col-sm-5">
+                    <div>
+                        <div className="row text-center">
+                            <div className="col-sm-5 btn-shell">
                                 <Button className="btn btn-deep-purple btn-login-home" onClick={perfil}><Fa icon="info iconCircle" className="ml-1"/>Perfil</Button>
                             </div>
-                            <div className="col-sm-5">
+                            <div className="col-sm-5 btn-shell">
                                 <Button className="btn btn-deep-purple btn-login-home" onClick={logout}><Fa icon="sign-out iconCircle" className="ml-1"/>Deslogar</Button>
                             </div>
                         </div>
