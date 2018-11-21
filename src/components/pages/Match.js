@@ -164,17 +164,17 @@ class Match extends Component {
                             <div>0:{clock}</div>
                                 {this.state.matchInfo.categories && this.state.matchInfo.categories.map((e, i) => 
                                 <Row key={i}>
-                                    <Col md="12">
+                                    <Col md="12" className="d-inline">
                                         <Input id={e.id} label={methods.titleCase(e.name)} value={this.state.words[e.id]} 
-                                            group type="text" onChange={this.handleChange} />
-                                        <Button id={e.id} color="deep-purple" className="col-md-12" onClick={this.handleDica}
-                                            disabled={!e.enabled} rounded>
+                                            group type="text" onChange={this.handleChange} className="col-md-9"/>
+                                        <Button id={e.id} color="deep-purple" className="col-md-3 btn-rounded" onClick={this.handleDica}
+                                            disabled={!e.enabled}>
                                             Dica
                                         </Button>
                                     </Col>
                                 </Row>)}
                             <div className="text-center">
-                                <Button color="deep-purple" className="col-md-12" type="submit" rounded>
+                                <Button color="deep-purple" className="col-md-4 btn-rounded" type="submit">
                                     Stop
                                 </Button>
                             </div>
