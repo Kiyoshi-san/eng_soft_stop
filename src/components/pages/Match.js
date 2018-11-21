@@ -19,6 +19,7 @@ class Match extends Component {
         
         this.state = {
           user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
+          inventario: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
           clock: 60,
           loaded: false,
           words: [],
@@ -76,6 +77,11 @@ class Match extends Component {
         axios.get(`${this.state.backEndURL}/match/${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
+                    let content = res.data.content;
+
+                    if (this.state.inventario.items)
+                        content.categories.forEach((item) => item.enabled = true)
+
                     this.setState({matchInfo: res.data.content});
                     this.listenMatch(id);
                     this.applySkills();
@@ -156,13 +162,14 @@ class Match extends Component {
                                     <Col md="12">
                                         <Input id={e.id} label={methods.titleCase(e.name)} value={this.state.words[e.id]} 
                                             group type="text" onChange={this.handleChange} />
-                                        <Button id={e.id} color="deep-purple" className="col-md-12" onClick={this.handleDica}>
+                                        <Button id={e.id} color="deep-purple" className="col-md-12" onClick={this.handleDica}
+                                            disabled={!e.enabled} rounded>
                                             Dica
                                         </Button>
                                     </Col>
                                 </Row>)}
                             <div className="text-center">
-                                <Button color="deep-purple" className="col-md-12" type="submit">
+                                <Button color="deep-purple" className="col-md-12" type="submit" rounded>
                                     Stop
                                 </Button>
                             </div>
