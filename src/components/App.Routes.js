@@ -14,7 +14,6 @@ import BackPalavra from './pages/BackPalavra.js';
 import BackLigas from './pages/BackLigas.js';
 import BackStore from './pages/BackStore.js';
 import Home from './pages/Home';
-import Login from './shared/Login';
 import Logout from './pages/Logout';
 import LoginBack from './pages/LoginBack';
 import NotFound from './pages/NotFound';
