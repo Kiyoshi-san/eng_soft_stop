@@ -1,10 +1,5 @@
 const PUBLIC_LINKS = [
     {
-        name: "Novo Usuário",
-        link: "novo-usuario",
-        icon: "login"
-    },
-    {
         name: "Backoffice",
         link: "login-back",
         icon: "gear"

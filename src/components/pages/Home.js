@@ -7,8 +7,8 @@ import axios from "axios";
 import '../../css/home.css';
 import banner from '../../images/homeBanner.png';
 
-import Login from "./Login.js";
-import Userhome from "./Userhome.js";
+import Login from "../shared/Login.js";
+import Userhome from "../shared/Userhome.js";
 
 import StorageKey from '../../util/StorageKey';
 
@@ -218,7 +218,7 @@ class Home extends Component {
 
         return (
             <Modal isOpen={this.state.modal} toggle={this.toggle} >
-                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleClass="w-100 font-weight-bold" toggle={this.toggle}><h3 className="white-text mb-3 pt-3 font-weight-bold">Sala {partidasDescription.description}</h3>
+                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleclassName="w-100 font-weight-bold" toggle={this.toggle}><h3 className="white-text mb-3 pt-3 font-weight-bold">Sala {partidasDescription.description}</h3>
                 </ModalHeader>
                 <ModalBody>
                     <Row>
@@ -326,10 +326,10 @@ class Home extends Component {
                 if(partidas[ctCol]) {
                     children.push(<td key={partidas[ctCol].match_id} className={partidas[ctCol].match_id == this.state.idMatch? "colTblActive colTbl" : "colTbl"} data-id={ partidas[ctCol].match_id } onClick={this.setActiveElement}> {partidas[ctCol].description}
                         {/* <div>
-                            <button class="iconTbl iconTbl-gamepad" value={ partidas[ctCol].match_id } onClick={this.jogar}>
+                            <button className="iconTbl iconTbl-gamepad" value={ partidas[ctCol].match_id } onClick={this.jogar}>
                                 <Fa icon="gamepad" className="ml-1"/>
                             </button>
-                            <button class="iconTbl iconTbl-info" value={ partidas[ctCol].match_id } onClick={ this.toggle }>
+                            <button className="iconTbl iconTbl-info" value={ partidas[ctCol].match_id } onClick={ this.toggle }>
                                 <Fa icon="info" className="ml-1"/>
                             </button>
                         </div> */}
@@ -392,7 +392,7 @@ class Home extends Component {
                 if(lista[ctCol]) {
                     children.push(<td key={ lista[ctCol].category_id } className="colTbl">
                     <input id="categoriasArrayEnvio" name="categoriasArrayEnvio" type="checkbox" onChange={ this.fnHandleChangeCheck } value={ lista[ctCol].category_id }></input>
-                    <label class="label-margin">{lista[ctCol].name}</label>
+                    <label className="label-margin">{lista[ctCol].name}</label>
                     </td>)
                 } else {
                     children.push(<td className="colTbl"></td>)
@@ -409,7 +409,7 @@ class Home extends Component {
 
         return (
             <Modal isOpen={this.state.modal2} toggle={() => this.toggleGeral(2)} >
-                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleClass="w-100 font-weight-bold" toggle={() => this.toggleGeral(2)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Criar Sala</h3></ModalHeader>
+                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleclassName="w-100 font-weight-bold" toggle={() => this.toggleGeral(2)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Criar Sala</h3></ModalHeader>
                 <ModalBody>
                         <section className="form-light">
                         <Row>
@@ -426,7 +426,7 @@ class Home extends Component {
                                         /* this.state.listaCategorias.map((res, i) => {
                                             return (
                                                 <tr key={i} className="clickable">
-                                                    <td><input type="checkbox" onChange={ this.handleChange } value={ i }></input><label class="label-margin">{res.name}</label></td>
+                                                    <td><input type="checkbox" onChange={ this.handleChange } value={ i }></input><label className="label-margin">{res.name}</label></td>
                                                 </tr>
                                             )
                                         })  */
@@ -439,7 +439,7 @@ class Home extends Component {
                                     {/* Qtd jogadores */}
                                     <label className={this.state.validacaoQtdJogadores + " validacao"}>Insira ao menos 2 jogadores</label>
                                     <label>N° máx de Jogadores: { this.state.qtdJogadores ? this.state.qtdJogadores : 2 }</label>
-                                    <input id="qtdJogadores" type="range" class="slider" value={ this.state.qtdJogadores } min="2" max="10" onChange={ this.handleChange } />
+                                    <input id="qtdJogadores" type="range" className="slider" value={ this.state.qtdJogadores } min="2" max="10" onChange={ this.handleChange } />
                                 </div>
                             </Col>
                         </Row>
@@ -567,7 +567,7 @@ class Home extends Component {
                     <div>
                         <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
                         
-                        <label class="label-margin">{ e.item_name }</label>
+                        <label className="label-margin">{ e.item_name }</label>
                     </div>
                 )
             })
@@ -578,7 +578,7 @@ class Home extends Component {
 
         return (
             <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
-                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleClass="w-100 font-weight-bold" toggle={() => this.toggleGeral(3)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Escolher Itens</h3></ModalHeader>
+                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleclassName="w-100 font-weight-bold" toggle={() => this.toggleGeral(3)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Escolher Itens</h3></ModalHeader>
                 {this.state.time.s}
                 <ModalBody>
                     <Row>
@@ -757,7 +757,7 @@ class Home extends Component {
                 { this.criarSala() }
                 { this.modalEscolherItens() }
                 <div className="col-xs-8 col-sm-8 home-grid">
-                    <div class="tblGridHeader">
+                    <div className="tblGridHeader">
                         <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
                     </div>
                     <div className="home-grid-match">
@@ -765,7 +765,7 @@ class Home extends Component {
                             <ToastContainer 
                                 newestOnTop={true}/>
 
-                            <TableHead class="tblGridHeader" color="deep-purple" textWhite>
+                            <TableHead className="tblGridHeader" color="deep-purple" textWhite>
                             </TableHead>
                             <TableBody>
                                 {
@@ -775,10 +775,10 @@ class Home extends Component {
                         </MDBTable>
                     </div>
                     <div className="home-grid-btn">
-                        <Button class="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
-                        <Button class="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
-                        {/* <Button class="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button> */}
-                        <Button class="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                        <Button className="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
+                        <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
+                        {/* <Button className="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button> */}
+                        <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
                 <div className="col-xs-4 col-sm-4 home-grid-login">
