@@ -3,7 +3,7 @@ import axios from "axios";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { Row, Col, Input, Button } from 'mdbreact';
+import { Container, Row, Col, Button } from 'mdbreact';
 import { ToastContainer, toast } from "mdbreact";
 
 import * as uiActions from '../../actions/uiActions';
@@ -39,23 +39,27 @@ class Score extends Component {
 
     render() {
         return (
-            <Row>
+            <Container>
                 <ToastContainer newestOnTop={true}/>
-                    <div align="center">Resultados</div>
+                <Row>
                     <Col md="12">
-                        <div className="grey-text">
+                        <div align="center">Resultados</div>
                             {this.state.results && this.state.results.map((e, i) => 
-                                <Col key={i} md="12">
+                            <Row key={i}>
+                                <Col md="12">
+                                    {e.player_name}: {e.match_score}
                                 </Col>
-                            )}
+                            </Row>)}
+                        <div className="text-center">
+                            <a href="/home">
+                                <Button color="deep-purple" className="col-md-12">
+                                    home
+                                </Button>
+                            </a>
                         </div>
                     </Col>
-                    <div className="text-center">
-                        <Button color="deep-purple" className="col-md-12">
-                            Home
-                        </Button>
-                    </div>
-            </Row>
+                </Row>
+            </Container>
         )
     }
 }
