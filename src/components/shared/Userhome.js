@@ -1,17 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
-import axios from "axios";
-import { Container, Row, Col, Fa, Input, Button } from 'mdbreact';
-import { ToastContainer, toast } from "mdbreact";
+import React from 'react';
+import { Row, Col, Fa, Button } from 'mdbreact';
+import { ToastContainer, } from "mdbreact";
 
-import StorageKey from '../../util/StorageKey';
-import NewAccountShared from '../shared/NewAccountShared';
 
 import "../../css/login.css";
-import logo from '../../images/stop_logo_v2.png';
-import rightArrow from '../../images/right-arrow-icon.png';
 import * as uiActions from '../../actions/uiActions';
 
 let Userhome = ({nick, userInventory}) => {

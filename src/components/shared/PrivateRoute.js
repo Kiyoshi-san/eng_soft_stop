@@ -9,7 +9,7 @@ export const PrivateRoute = ({component: Component, ...rest}) => (
         if (user && [1, 2].indexOf(user.type) > -1) {
             return (<Component {...props} />);
         } else {
-            window.location.href = '/login';
+            window.location.href = '/home';
         }
     }} />
 )
