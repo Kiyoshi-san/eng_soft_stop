@@ -12,7 +12,6 @@ import Userhome from "./Userhome.js";
 
 import StorageKey from '../../util/StorageKey';
 
-import * as matchActions from '../../actions/matchActions';
 import * as uiActions from '../../actions/uiActions';
 
 class Home extends Component {
@@ -147,8 +146,7 @@ class Home extends Component {
         .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
             this.props.uiActions.loading("Entrando na partida...");
-            matchActions.matchStart(userGameData)
-            window.location.href = '/match';
+            window.location.href = `/match/${iddasala}`;
         })
         .catch(res => {
             toast.error("Ocorreu um erro, tente novamente mais tarde")
@@ -798,12 +796,11 @@ class Home extends Component {
 
 Home.propTypes = {
     uiActions: PropTypes.object,
-    matchActions: PropTypes.object
 };
 
 function mapDispatchToProps(dispatch) {
     return {
-        uiActions: bindActionCreators(Object.assign({}, uiActions, matchActions), dispatch)
+        uiActions: bindActionCreators(uiActions, dispatch)
     };
 }
 

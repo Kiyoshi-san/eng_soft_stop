@@ -8,7 +8,6 @@ import { Row, Col, Input, Button } from 'mdbreact';
 import { ToastContainer, toast } from "mdbreact";
 import update from 'immutability-helper';
 
-import * as matchActions from '../../actions/matchActions';
 import * as uiActions from '../../actions/uiActions';
 
 import * as methods from '../../util/Methods';
@@ -23,55 +22,97 @@ class Match extends Component {
           clock: 60,
           loaded: false,
           words: [],
+          matchInfo: {},
           backEndURL: 'https://es3-stop-prod.herokuapp.com',
           match: {}
         };
 
         this.partidasRef = firebase.database().ref().child('projetojogostop');
-        this.listenMatch();
     }
 
-    listenMatch() {
-        this.partidasRef
-          .on(this.props.match.matchId, match => {
-            this.setState({match});
+    listenMatch(id) {
+        // this.partidasRef
+        //   .on(id, match => {
+        //     this.setState({match});
 
-            //Verifica Carregamento da página
-            if (match.match_started) {
-                this.props.uiActions.stopLoading();
-                setInterval(() =>  this.setState((prevState) => ({ clock: prevState - 1}), 1000));
+        //     //Verifica Carregamento da página
+        //     if (match.match_started) {
+        //         this.props.uiActions.stopLoading();
+        //         setInterval(() =>  this.setState((prevState) => ({ clock: prevState - 1}), 1000));
+        //     }
+        // });
+
+        this.props.uiActions.stopLoading();
+        setInterval(() =>  {
+            this.setState((prevState) => ({ clock: prevState.clock - 1}));
+            if (this.state.clock === 0) {
+                this.stopApp();
             }
-        });
+        }, 1000);
+    }
+
+    listenValidated(id) {
+        // this.partidasRef
+        //   .on(id, match => {
+        //     this.setState({match});
+
+        //     //Verifica Carregamento da página
+        //     if (match.match_started) {
+        //         this.props.uiActions.stopLoading();
+        //         setInterval(() =>  this.setState((prevState) => ({ clock: prevState - 1}), 1000));
+        //     }
+        // });
+        window.location.href = `/score/${id}`;
     }
 
     componentDidMount() {
-        if (this.props.match.userList.some(item => item.mainUser && item.user === this.state.user.userId)) {
-            const match = this.state.match;
-            match.match_started = true;
-            this.partidasRef.child(this.props.match.matchId).update(match);
-        }
+        this.props.uiActions.loading("Preparando Partida...");
+        const { id } = this.props.match.params;
+
+        axios.get(`${this.state.backEndURL}/match/${id}`)
+            .then(res => {
+                if (res.data.status_code === 200) {
+                    this.setState({matchInfo: res.data.content});
+                    this.listenMatch(id);
+
+                    if (res.data.content.players.some(item => item.mainUser && item.user === this.state.user.userId)) {
+                        const match = this.state.match;
+                        match.match_started = true;
+                        this.partidasRef.child(id).update(match);
+                    }
+
+                } else {
+                    toast.error(res.data.messages);
+                }
+            })
+            .catch(() => toast.error("Erro inesperado."));
+
+    }
+
+    stopApp() {
+        const body = {
+            match_id: this.state.matchInfo.match_id,
+	        letter: this.state.matchInfo.letter,
+            match: [
+                {
+                    player_id: this.state.user.userId,
+                    categories_ids: this.state.matchInfo.categories.map(item => item.id),
+                    answers: this.state.words
+                },
+            ]
+        };
+
+        axios.post(`${this.state.backEndURL}/validation`, body)
+            .then(res => {
+                this.props.uiActions.loading("STOP");
+                this.listenValidated(this.state.matchInfo.match_id);
+            })
+            .catch(() => toast.error("Erro inesperado."));
     }
 
     handleStop = (event) => {
         event.preventDefault();
-
-        const body = {
-            match_id: this.props.match.matchId,
-	        letter: this.props.match.letter,
-            match: [
-                {
-                    player_id: this.state.user.userId,
-                    categories_ids: this.props.match.categoryList.map(item => item.id),
-                    answers: this.state.words
-                },
-            ]
-        }
-
-        axios.post(`${this.state.backEndURL}/validation`, body)
-            .then(res => {
-                
-            })
-            .catch(() => toast.error("Erro inesperado."));
+        this.stopApp();
     }
 
     handleChange = (event) => {
@@ -81,12 +122,12 @@ class Match extends Component {
     }
 
     handleDica = (event) => {
-        axios.get(`${this.state.backEndURL}/hint/${this.props.match.letter}?categoria=${event.id}`)
+        axios.get(`${this.state.backEndURL}/hint/${this.state.matchInfo.letter}?categoria=${event.id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
-                    this.setState({
-                        sucsses: true,
-                    });
+                    this.setState((prevState) => ({
+                        words: update(prevState.words, {[event.id]: {$set: res.data.content}})
+                    }));
                 } else {
                     toast.error(res.data.messages);
                 }
@@ -101,11 +142,11 @@ class Match extends Component {
             <Row>
                 <ToastContainer newestOnTop={true}/>
                 <form onSubmit={this.handleStop}>
-                    <div align="center">Letra</div><div>{this.props.match.letter}</div>
+                    <div align="center">Letra</div><div>{this.state.matchInfo.letter}</div>
                     <div>0:{clock}</div>
                     <Col md="12">
                         <div className="grey-text">
-                            {this.props.match && this.props.match.categoryList.map((e, i) => 
+                            {this.state.matchInfo.categories && this.state.matchInfo.categories.map((e, i) => 
                                 <Col key={i} md="12">
                                     <Input id={e.id} label={methods.titleCase(e.name)} value={this.state.words[e.id]} 
                                         group type="text" onChange={this.handleChange} />
@@ -129,23 +170,15 @@ class Match extends Component {
 
 Match.propTypes = {
     uiActions: PropTypes.object,
-    matchActions: PropTypes.object,
-    match: PropTypes.object
 };
-
-function mapStateToProps(state) {
-    return {
-      match: state.match.match
-    };
-  }
 
 function mapDispatchToProps(dispatch) {
     return {
-        matchActions: bindActionCreators(Object.assign({}, uiActions, matchActions), dispatch)
+        uiActions: bindActionCreators(uiActions, dispatch)
     };
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(Match);
