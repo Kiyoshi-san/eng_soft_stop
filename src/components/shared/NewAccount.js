@@ -9,7 +9,7 @@ import * as uiActions from '../../actions/uiActions';
 import logo from '../../images/Diamond_512.gif';
 import error from '../../images/error.png';
 
-class NewAccountShared extends Component {
+class NewAccount extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -118,7 +118,7 @@ class NewAccountShared extends Component {
     }
 }
 
-NewAccountShared.propTypes = {
+NewAccount.propTypes = {
     uiActions: PropTypes.object
 };
 
@@ -131,4 +131,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
     null,
     mapDispatchToProps
-)(NewAccountShared);
+)(NewAccount);

@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { Container, Row, Col, Input, Button } from 'mdbreact';
+import { Row, Col, Input, Button } from 'mdbreact';
 import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
-import NewAccountShared from '../shared/NewAccountShared';
+import NewAccount from '../shared/NewAccount';
 
 import "../../css/login.css";
-import logo from '../../images/stop_logo_v2.png';
 import rightArrow from '../../images/right-arrow-icon.png';
 
 const loginLevel = 2;
@@ -140,7 +139,7 @@ class Login extends Component {
                         </Col>
                         
                         <label className="sem-cadastro-login"><a onClick={this.toggle}>Ainda não possui conta?</a></label>
-                        <NewAccountShared modal={this.state.modal} toggle={this.toggle} />
+                        <NewAccount modal={this.state.modal} toggle={this.toggle} />
                         <div className="text-center">
                             <Button color="deep-purple" className="btn-login col-md-12" type="submit">
                                 Entrar
