@@ -7,8 +7,8 @@ import axios from "axios";
 import '../../css/home.css';
 import banner from '../../images/homeBanner.png';
 
-import Login from "./Login.js";
-import Userhome from "./Userhome.js";
+import Login from "../shared/Login.js";
+import Userhome from "../shared/Userhome.js";
 
 import StorageKey from '../../util/StorageKey';
 

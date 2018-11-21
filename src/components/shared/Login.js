@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
-import NewAccount from '../shared/NewAccount';
+import NewAccount from './NewAccount';
 
 import "../../css/login.css";
 import rightArrow from '../../images/right-arrow-icon.png';
