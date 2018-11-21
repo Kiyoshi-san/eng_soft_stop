@@ -53,17 +53,20 @@ class Match extends Component {
     }
 
     listenValidated(id) {
-        // this.partidasRef
-        //   .on(id, match => {
-        //     this.setState({match});
-
-        //     //Verifica Carregamento da página
-        //     if (match.match_validated) {
-        //         this.props.uiActions.stopLoading();
-        //         setInterval(() =>  this.setState((prevState) => ({ clock: prevState - 1}), 1000));
-        //     }
-        // });
-        window.location.href = `/score/${id}`;
+        setTimeout(() => {
+            // this.partidasRef
+            //   .on(id, match => {
+            //     this.setState({match});
+            
+            //     //Verifica Carregamento da página
+            //     if (match.match_validated) {
+            //         this.props.uiActions.stopLoading();
+            //         setInterval(() =>  this.setState((prevState) => ({ clock: prevState - 1}), 1000));
+            //     }
+            // });
+            window.location.href = `/score/${id}`;
+        }, 1000);
+        
     }
 
     applySkills() {
@@ -72,21 +75,23 @@ class Match extends Component {
 
     componentDidMount() {
         this.props.uiActions.loading("Preparando Partida...");
+
         const { id } = this.props.match.params;
+        const { user, inventario } = this.state;
 
         axios.get(`${this.state.backEndURL}/match/${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
                     let content = res.data.content;
 
-                    if (this.state.inventario.items)
+                    if (inventario.items)
                         content.categories.forEach((item) => item.enabled = true)
 
                     this.setState({matchInfo: res.data.content});
                     this.listenMatch(id);
                     this.applySkills();
 
-                    if (res.data.content.players.some(item => item.mainUser && item.user === this.state.user.userId)) {
+                    if (res.data.content.players.some(item => item.mainUser && item.user === user.userId)) {
                         const match = this.state.match;
                         match.match_started = true;
                         this.partidasRef.child(id).update(match);
