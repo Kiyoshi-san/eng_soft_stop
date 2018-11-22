@@ -41,7 +41,7 @@ class Match extends Component {
                 setInterval(() =>  {
                     this.setState((prevState) => ({ clock: prevState.clock - 1}));
                     if (this.state.clock === 0) {
-                        this.stopApp();
+                        this.setStop();
                     }
                 }, 1000);
             }
@@ -84,9 +84,9 @@ class Match extends Component {
     }
 
     setStarted(id) {
-        // axios.post(`${this.state.backEndURL}/match/${id}/start`)
-        //     .then(res => {})
-        //     .catch(() => toast.error("Erro inesperado."));
+        axios.post(`${this.state.backEndURL}/match/${id}/start`)
+            .then(res => {})
+            .catch(() => toast.error("Erro inesperado."));
     }
 
     stopApp() {
@@ -109,14 +109,16 @@ class Match extends Component {
             .catch(() => toast.error("Erro inesperado."));
     }
 
-    handleStop = (event) => {
-        event.preventDefault();
+    setStop() {
         const { id } = this.props.match.params;
         
         this.finishedRef = firebase.database().ref(`${id}/match_finished`);
         this.finishedRef.set(true);
+    }
 
-        this.stopApp();
+    handleStop = (event) => {
+        event.preventDefault();
+        this.setStop();
     }
 
     handleChange = (event) => {
