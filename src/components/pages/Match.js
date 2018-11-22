@@ -12,6 +12,7 @@ import * as uiActions from '../../actions/uiActions';
 
 import * as methods from '../../util/Methods';
 import StorageKey from '../../util/StorageKey';
+import '../../css/match.css';
 
 class Match extends Component {
     constructor(props) {
@@ -110,7 +111,11 @@ class Match extends Component {
 
     handleStop = (event) => {
         event.preventDefault();
+        const { id } = this.props.match.params;
+        
+        this.finishedRef = firebase.database().ref(`${id}/match_finished`);
         this.finishedRef.set(true);
+
         this.stopApp();
     }
 
@@ -166,38 +171,43 @@ class Match extends Component {
         return (
             <Container>
                 <ToastContainer newestOnTop={true}/>
-                <Row>
-                    <Col md="12">
-                        <form onSubmit={this.handleStop}>
-                            <Row>
-                                <Col md="5">
-                                    <div align="center">Letra: {match.letter && match.letter.toUpperCase()}</div>
+                <div className="match-margin">
+                    <form onSubmit={this.handleStop}>
+                        <Row className="match-margin">
+                            <Col md="5">
+                                <div align="center" className="text-style">
+                                    Letra:
+                                    <div className="circle-letter">
+                                    <div>
+                                    {match.letter && match.letter.toUpperCase()}
+                                   </div>
+                                    </div>
+                                </div>
+                            </Col>
+                            {clock && clock < 60 && clock > 0 && <Col md="7" className="text-style">
+                                <div className="circle-clock">00:{methods.secondFormat(clock)}</div>
+                            </Col>}
+                        </Row>
+                            {match.categories && match.categories.map((e, i) => 
+                            <Row key={i}>
+                                <Col md="10">
+                                    <Input id={e.id} label={methods.titleCase(e.name)} value={this.state.words[e.id]} 
+                                        group type="text" onChange={this.handleChange}/>
                                 </Col>
-                                {clock && clock < 60 && clock > 0 && <Col md="7">
-                                    <div>00:{methods.secondFormat(clock)}</div>
-                                </Col>}
-                            </Row>
-                                {match.categories && match.categories.map((e, i) => 
-                                <Row key={i}>
-                                    <Col md="10">
-                                        <Input id={e.id} label={methods.titleCase(e.name)} value={this.state.words[e.id]} 
-                                            group type="text" onChange={this.handleChange}/>
-                                    </Col>
-                                    <Col md="2">
-                                        <Button id={e.id} color="deep-purple" onClick={this.handleDica}
-                                            disabled={!e.enabled}>
-                                            Dica
-                                        </Button>
-                                    </Col>
-                                </Row>)}
-                            <div className="text-center">
-                                <Button color="deep-purple" className="col-md-4" type="submit">
-                                    Stop
-                                </Button>
-                            </div>
-                        </form>
-                    </Col>
-                </Row>
+                                <Col md="2">
+                                    <Button id={e.id} color="deep-purple btn-rounded" onClick={this.handleDica}
+                                        disabled={!e.enabled}>
+                                        Dica
+                                    </Button>
+                                </Col>
+                            </Row>)}
+                        <div className="text-center">
+                            <Button color="deep-purple" className="col-md-2 btn-rounded" type="submit">
+                                Stop
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </Container>
         )
     }
