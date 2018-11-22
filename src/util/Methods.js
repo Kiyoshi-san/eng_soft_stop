@@ -5,3 +5,11 @@ export function titleCase(str) {
     }
     return str.join(' ');
 }
+
+export function secondFormat(number) {
+  if (number < 10) {
+    return "0" + number;
+  }
+
+  return number;
+}
