@@ -70,8 +70,8 @@ class Score extends Component {
                 <ToastContainer newestOnTop={true}/>
                 <Row>
                     <Col md="12">
-                        <blockquote className="blockquote bq-purple space">                        
-                            <p className="bq-title purple-text"><i class="fa fa-list-alt" aria-hidden="true" /> Resultados</p>
+                        <blockquote className="blockquote bq-purple animated fadeInLeft space">                        
+                            <p className="bq-title purple-text"><i className="fa fa-list-alt" aria-hidden="true" /> Resultados</p>
                         </blockquote>
                         <MDBTable btn fixed>
                             <MDBTableHead columns={this.state.header}/>
