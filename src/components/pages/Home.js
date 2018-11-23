@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, Row, Col, ToastContainer, toast, Animation, Container, Card, CardBody } from 'mdbreact';
+import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, Row, Col, ToastContainer, toast } from 'mdbreact';
 import axios from "axios";
-import '../../css/home.css';
-import banner from '../../images/homeBanner.png';
 
-import Login from "../shared/Login.js";
-import Userhome from "../shared/Userhome.js";
-
+import Login from "../shared/Login";
+import Userhome from "../shared/Userhome";
+import * as uiActions from '../../actions/uiActions';
 import StorageKey from '../../util/StorageKey';
 
-import * as uiActions from '../../actions/uiActions';
+import '../../css/home.css';
+import banner from '../../images/homeBanner.png';
 
 class Home extends Component {
     constructor(props) {
@@ -40,7 +39,6 @@ class Home extends Component {
             itens: [],
             item_type: 0,
         }
-        this.setActiveElement = this.setActiveElement.bind(this);
     }
 
     handleChange = (event) => {
@@ -52,8 +50,8 @@ class Home extends Component {
 
     /* Pegando uma letra aleatoria */
     randomLetter () {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let text = "";
+        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       
         text = possible.charAt(Math.floor(Math.random() * possible.length));
       
@@ -61,27 +59,24 @@ class Home extends Component {
       }
 
     /* Dados para enviar para a Partida */
-    colhendoDadosEntrandoPartida (idsala) {
+    colhendoDadosEntrandoPartida(idsala) {
         axios
         .get('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch)
         .then(res => {
             this.setState({
                 partidasDescription: res.data.content
-            })
-            // let { partidasDescription } = this.state;
+            });
 
-
-            let iddasala = idsala?idsala:this.state.idMatch
-            let partidasDescription = res.data.content
-            
+            let iddasala = idsala?idsala:this.state.idMatch;
+            let partidasDescription = res.data.content;
             
             /* Listando Categorias da Partida */
             let matchesCategoryList = [];
 
             if (partidasDescription.categories) {
-                partidasDescription.categories.map(e => {
+                partidasDescription.categories.map(e => 
                     matchesCategoryList.push({"id":e.category_id,"name":e.name})
-                })
+                );
             }
             
             /* Listando Jogadores da Partida */
@@ -90,33 +85,20 @@ class Home extends Component {
     
             if (partidasDescription.players) {
                 partidasDescription.players.map(e => {
-                    player = {"id":e.user_id, "main":e.user_id == this.state.user.userId?true:false}
-                    matchesPlayersList.push(player)
+                    player = {"id":e.user_id, "main":e.user_id === this.state.user.userId? true : false};
+                    return matchesPlayersList.push(player);
                 })
             }
     
-            /* Status do Jogo */
-            let status;
-            
-            if(partidasDescription.status == 1) {
-                    status = "Iniciado"
-            } else if(partidasDescription.status == 2) {
-                    status = "Espera"
-            } else {
-                status = ""
-            }
-    
-    
             /* Pegando os itens selecionados */
-            var elements = document.getElementsByName("selectedItens");
-            let arrSelectedItens = [],
-            itens = {};
+            let elements = document.getElementsByName("selectedItens");
+            let arrSelectedItens = [];
 
             elements.forEach((a) => {
                 if ( a.checked ) {
                     arrSelectedItens.push({ "id": a.value, "userId": this.state.user.userId })
                 }
-            })
+            });
 
             let letter = this.randomLetter();
     
@@ -156,8 +138,6 @@ class Home extends Component {
         
         if (!user) {
             toast.warn("Por gentileza efetue o login")
-            /* this.props.uiActions.loading("Efetuando login...");
-            window.location.href = '/login'; */
             return false
         } else {
             return true;
@@ -168,46 +148,34 @@ class Home extends Component {
         this.setState({
             modal: !this.state.modal
         });
-        /* if(e) {
-            e.preventDefault();
-            this.setState({
-                idMatch: e.currentTarget.value
-            }, () => {
-                this.matchDetail();
-            });
-        } */
         this.matchDetail();
     }
 
     info() {
         let { partidasDescription } = this.state;
-        /* if(!partidasDescription.match_id) {
-            toast.error("Selecione uma sala para obter informações");
-            return
-        } */
         
         /* Listando Categorias da Partida */
         let matchesCategoryList = [];
         if (partidasDescription.categories) {
-            partidasDescription.categories.map(e => {
+            partidasDescription.categories.map(e => 
                 matchesCategoryList.push(<p>- {e.name}</p>)
-            })
+            );
         }
         
         /* Listando Jogadores da Partida */
         let matchesPlayersList = [];
         if (partidasDescription.players) {
-            partidasDescription.players.map(e => {
+            partidasDescription.players.map(e => 
                 matchesPlayersList.push(<p>- {e.user_name}</p>)
-            })
+            );
         }
 
         /* Status do Jogo */
         let status;
         
-        if(partidasDescription.status == 1) {
+        if(partidasDescription.status === 1) {
                 status = "Iniciado"
-        } else if(partidasDescription.status == 2) {
+        } else if(partidasDescription.status === 2) {
                 status = "Espera"
         } else {
             status = ""
@@ -268,7 +236,6 @@ class Home extends Component {
         .then(res => {
             this.setState({
                 partidasDescription: res.data.content
-                // linhasTbl: [...this.state.linhasTbl, res.data.content.forEach(e => {e.description})]
             }, () => { return (this.info()) })
         })
         .catch(res => {
@@ -278,20 +245,14 @@ class Home extends Component {
 
     /* Lista as partidas existentes */
     matchesList() {
-        this.props.uiActions.loading("Carregando...");
-
         axios
         .get('https://es3-stop-prod.herokuapp.com/matches')
         .then(res => {
             this.setState({
                 partidas: res.data.content
-                // linhasTbl: [...this.state.linhasTbl, res.data.content.forEach(e => {e.description})]
             })
-            this.props.uiActions.stopLoading();
         })
-        .catch(res => {
-            
-        });
+        .catch(() => toast.error("Houve um erro na listagem de partidas"));
     }
 
     setActiveElement = (e) => {
@@ -299,46 +260,37 @@ class Home extends Component {
             e.preventDefault();
             this.setState({
                 idMatch: e.currentTarget.dataset.id
-            }/* , () => {
-                alert(this.state.idMatch)
-            } */);
+            });
         }
-        return;   
     }
 
     /* Montando a tabela com as partidas */
     componentTblMount() {
-        let { partidas } = this.state,
-        ctRow = 0,
-        ctCol = 0,
-        { qtdCols } = this.state,
-        rows = Math.ceil(partidas.length/qtdCols);
-
-        let table = []
+        const { partidas, qtdCols, idMatch } = this.state;
+        let ctRow = 0, ctCol = 0, rows = Math.ceil(partidas.length/qtdCols), table = [];
 
         for (ctRow; ctRow < rows; ctRow++) {
             let children = [],
             i = 0;
             for (i; i < qtdCols; i++) {
                 if(partidas[ctCol]) {
-                    children.push(<td key={partidas[ctCol].match_id} className={partidas[ctCol].match_id == this.state.idMatch? "colTblActive colTbl" : "colTbl"} data-id={ partidas[ctCol].match_id } onClick={this.setActiveElement}> {partidas[ctCol].description}
-                        {/* <div>
-                            <button className="iconTbl iconTbl-gamepad" value={ partidas[ctCol].match_id } onClick={this.jogar}>
-                                <Fa icon="gamepad" className="ml-1"/>
-                            </button>
-                            <button className="iconTbl iconTbl-info" value={ partidas[ctCol].match_id } onClick={ this.toggle }>
-                                <Fa icon="info" className="ml-1"/>
-                            </button>
-                        </div> */}
-                    </td>)
+                    children.push(<td key={partidas[ctCol].match_id} className={partidas[ctCol].match_id === idMatch?
+                        "colTblActive colTbl" : "colTbl"} data-id={ partidas[ctCol].match_id } onClick={this.setActiveElement}>
+                            {partidas[ctCol].description}
+                        </td>);
                 } else {
-                    children.push(<td className="colTbl"></td>)
+                    children.push(<td className="colTbl"></td>);
                 }
                 ctCol++;
             }
-            table.push(<tr>{children}</tr>)
+            table.push(<tr>{children}</tr>);
         }
-        return table
+
+        if (table === 0) {
+            table = <div className="text-center"><h4>Não há partidas cadastradas</h4></div>;
+        }
+
+        return table;
     }
 
     /* Abrindo Modal
@@ -419,16 +371,7 @@ class Home extends Component {
                                 <label className={this.state.validacaoQtdCategorias + " validacao"}>Insira ao menos 3 categorias</label>
                                 <MDBTable className="tblCategory" bordered={true} striped={true}>
                                     <TableBody>
-                                    { 
-                                        /* this.state.listaCategorias.map((res, i) => {
-                                            return (
-                                                <tr key={i} className="clickable">
-                                                    <td><input type="checkbox" onChange={ this.handleChange } value={ i }></input><label className="label-margin">{res.name}</label></td>
-                                                </tr>
-                                            )
-                                        })  */
-                                        this.componentTableGeral(this.state.listaCategorias)
-                                    }
+                                    {this.componentTableGeral(this.state.listaCategorias)}
                                     </TableBody>
                                 </MDBTable>
 
@@ -454,7 +397,7 @@ class Home extends Component {
     fnHandleChangeCheckItens = () => {
         let itensArrayEnvio = []
 
-        var els = document.getElementsByName("itensArrayEnvio");
+        let els = document.getElementsByName("itensArrayEnvio");
         els.forEach((a) => {
             if ( a.checked ) {
                 itensArrayEnvio.push({ "category_id": a.value })
@@ -481,22 +424,6 @@ class Home extends Component {
         }
     }
 
-    /* Carregando os Itens do usuario para iniciar Partida */
-    /* itensList = () => {
-        axios
-        // .get('https://es3-stop-prod.herokuapp.com/items' + this.state.user.userId)
-        .get('https://es3-stop-prod.herokuapp.com/items')
-        .then(res => {
-            this.setState({
-                itens: res.data.content
-            })
-            return true
-        })
-        .catch(res => {
-            return false;            
-        });
-    } */
-
     /* Selecao de Itens do usuario para entrar na partida */
     escolherItensBtnJogar() {
         if(!this.validaLogin())
@@ -515,8 +442,8 @@ class Home extends Component {
             elemItens = {
                 "item_id":e.item_id,
                 "item_name":e.item_name
-            }
-            arrItens.push(elemItens)
+            };
+            return arrItens.push(elemItens);
         })
         
         // this.startTimer
@@ -545,65 +472,60 @@ class Home extends Component {
         )        
     }
 
-    
-
     /* Modal para escolher os itens antes da partida */
     modalEscolherItens() {
-        let { user } = this.state;
+        const { user, itens } = this.state;
         
-        if (!user)
-        return
-        
-        let { itens } = this.state;
+        if (user) {
+            let arrItens = [];
+            
+            if(itens.length) {
+                itens.map(e => 
+                    arrItens.push(
+                        <div>
+                            <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
+                            
+                            <label className="label-margin">{ e.item_name }</label>
+                        </div>
+                    )
+                );
+            } else {
+                arrItens = [];
+                arrItens[0] = "Não há itens disponiveis";           
+            }
 
-        let arrItens = [];
-        
-        if(itens.length) {
-            itens.map(e => {
-                arrItens.push(
-                    <div>
-                        <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
-                        
-                        <label className="label-margin">{ e.item_name }</label>
-                    </div>
-                )
-            })
-        } else {
-            arrItens = []
-            arrItens[0] = "Não há itens disponiveis"            
+            return (
+                <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
+                    <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleclassName="w-100 font-weight-bold" toggle={() => this.toggleGeral(3)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Escolher Itens</h3></ModalHeader>
+                    {this.state.time.s}
+                    <ModalBody>
+                        <Row>
+                            <Col size="3" className="d-flex justify-content-center align-items-center">
+                                <Fa size="4x" icon="gamepad" className="ml-1" />
+                            </Col>
+                            <Col size="6">
+                                { arrItens }
+                            </Col>
+                            <Col size="3">
+                                <div className="crono">
+                                    { this.state.tempo }
+                                </div>
+                            </Col>
+                        </Row>
+                    </ModalBody>
+                    <ModalFooter className="justify-content-center">
+                        <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
+                        <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect )} }>Cancelar</Button>
+                    </ModalFooter>
+                </Modal>
+            );
         }
-
-        return (
-            <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
-                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleclassName="w-100 font-weight-bold" toggle={() => this.toggleGeral(3)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Escolher Itens</h3></ModalHeader>
-                {this.state.time.s}
-                <ModalBody>
-                    <Row>
-                        <Col size="3" className="d-flex justify-content-center align-items-center">
-                            <Fa size="4x" icon="gamepad" className="ml-1" />
-                        </Col>
-                        <Col size="6">
-                            { arrItens }
-                        </Col>
-                        <Col size="3">
-                            <div className="crono">
-                                { this.state.tempo }
-                            </div>
-                        </Col>
-                    </Row>
-                </ModalBody>
-                <ModalFooter className="justify-content-center">
-                    <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
-                    <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect )} }>Cancelar</Button>
-                </ModalFooter>
-            </Modal>
-        )
     }
     
     setSelectedItens = () => {
         let arrSelectedItens = []
 
-        var els = document.getElementsByName("selectedItens");
+        let els = document.getElementsByName("selectedItens");
         els.forEach((a) => {
             if ( a.checked ) {
                 arrSelectedItens.push({ "player_id": this.state.user.userId, "item_id": a.value })
@@ -611,7 +533,6 @@ class Home extends Component {
         })
 
         localStorage.setItem(StorageKey.SELECTEDITEMS, JSON.stringify(arrSelectedItens));
-        console.log(JSON.parse(localStorage.getItem(StorageKey.SELECTEDITEMS)))
     }
     
     /* Entrando na partida */
@@ -623,7 +544,6 @@ class Home extends Component {
 
         return;
     }
-
     
     validacaoNomeSala = 0
     validacaoQtdCategorias = 0
@@ -632,7 +552,7 @@ class Home extends Component {
     fnHandleChangeCheck = () => {
         let categoriasArrayEnvio = []
 
-        var els = document.getElementsByName("categoriasArrayEnvio");
+        let els = document.getElementsByName("categoriasArrayEnvio");
         els.forEach((a) => {
             if ( a.checked ) {
                 categoriasArrayEnvio.push({ "category_id": a.value })
@@ -701,52 +621,30 @@ class Home extends Component {
             "categories": categoriasArrayEnvio
         })
         .then(res => {
-            console.log("Sala Criada")
             this.matchesList()
         })
-        /* .then(() => {
-            let {partidas} = this.state;
-            this.entrandoPartida(partidas[partidas.length].match_id)
-        }) */
-        .catch(res => {
+        .catch(err => {
             this.props.uiActions.stopLoading();
-            toast.error("Erro ao cadastrar a Partida. Erro: " + res.response.data.messages);
+            toast.error("Erro ao cadastrar a Partida. Erro: " + err.response.data.messages);
         });
     }
-
-    loginComponent = () => {
-        if(!this.state.user){
-            return (
-                <Login />
-                )
-        } else {
-            return (
-                <Userhome 
-                    nick = {this.state.user}
-                    userInventory = {this.state.inventary}
-                />
-            )
-        }
-    }
     
-    componentWillMount() {
+    componentDidMount() {
+        this.props.uiActions.loading("Preparando seu app...")
         this.matchesList();
         this.categoryList();
-        // this.itensList();
     }
     
     render() {
-        let { qtdCols } = this.state;
+        const { qtdCols, user, inventary } = this.state;
         return (
             <div>
-                {/* BANNER da Loja */}
+                <ToastContainer newestOnTop={true}/>
                 <center>
                     <div className="shopBanner">
                         <img className="d-block banner animated fadeInDown" src={banner} alt="STOP GAME SHOP" />
                     </div>
                 </center>
-                
-                <br />
 
             <div className="home-container row">
 
@@ -755,39 +653,30 @@ class Home extends Component {
                 { this.modalEscolherItens() }
                 <div className="col-xs-8 col-sm-8 home-grid">
                     <div className="tblGridHeader">
-                        <th className="tblTitle" align="center" colSpan={ qtdCols }>Salas</th>
+                        <th className="tblTitle" align="center" colSpan={qtdCols}>Salas</th>
                     </div>
                     <div className="home-grid-match">
                         <MDBTable bordered={true} striped={true}>
-                            <ToastContainer 
-                                newestOnTop={true}/>
 
                             <TableHead className="tblGridHeader" color="deep-purple" textWhite>
                             </TableHead>
                             <TableBody>
-                                {
-                                    this.componentTblMount()
-                                }
+                                {this.componentTblMount()}
                             </TableBody>
                         </MDBTable>
                     </div>
                     <div className="home-grid-btn">
                         <Button className="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
                         <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
-                        {/* <Button className="btn btn-deep-purple btnJogar" onClick={this.jogar}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button> */}
                         <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
                 <div className="col-xs-4 col-sm-4 home-grid-login">
-                    { this.loginComponent() }
+                    {user ? <Userhome nick={user} userInventory={inventary} /> : <Login />}
                 </div>
             </div>
             </div>
         )
-    }
-    
-    componentDidMount() {
-        this.props.uiActions.stopLoading();
     }
 }
 

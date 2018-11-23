@@ -102,7 +102,7 @@ class BackLigas extends Component {
             mensagemProblematica: ''
         };
 
-        for(var i = this.state.listaLigas.length - 1; i >= 0; i--)
+        for(let i = this.state.listaLigas.length - 1; i >= 0; i--)
         {
             let liga = this.state.listaLigas[i];
 
