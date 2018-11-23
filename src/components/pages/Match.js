@@ -21,7 +21,7 @@ class Match extends Component {
         this.state = {
           user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
           inventario: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
-          clock: 59,
+          clock: 60,
           words: [],
           match: {},
           skills: [],
@@ -158,8 +158,7 @@ class Match extends Component {
                     this.setState({match});
                     this.listenMatch(id);
                     this.applySkills();
-                    //this.setStarted(id);
-                    this.props.uiActions.stopLoading();
+                    this.setStarted(id);
                 } else {
                     toast.error(res.data.messages);
                 }
