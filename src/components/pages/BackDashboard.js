@@ -39,7 +39,7 @@ class BackDashboard extends Component {
             }, () => {
 
                 //doughnut
-                var ctxD = document.getElementById("doughnutChart").getContext('2d');
+                let ctxD = document.getElementById("doughnutChart").getContext('2d');
                 new Chart(ctxD, {
                     type: 'doughnut',
                     data: {

@@ -79,6 +79,8 @@ class Match extends Component {
                 if (e.userId !== user.userId) {
                     return e.id;
                 }
+
+                return null;
             })});
         }
     }
@@ -152,7 +154,7 @@ class Match extends Component {
                 if (res.data.status_code === 200) {
                     let match = res.data.content;
 
-                    if (inventario.items != 0)
+                    if (inventario.items !== 0)
                         match.categories.forEach((item) => item.enabled = true)
 
                     this.listenMatch(id);
@@ -204,7 +206,7 @@ class Match extends Component {
                                 </Button>
                             </Col>
                         </Row>)}
-                        <Row className="text-center" className="default-aling">
+                        <Row className="text-center default-aling">
                             <Col md="5"></Col>
                             <Col md="7">
                                 <Button color="deep-purple" className="btn-rounded" type="submit">

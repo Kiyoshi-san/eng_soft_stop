@@ -25,7 +25,7 @@ let Userhome = ({nick, userInventory}) => {
             <ToastContainer newestOnTop={true}/>
             <Row>
                 <form className="form-login">
-                    <div className="tituloLogin" align="center">Login</div>
+                    <div className="tituloLogin" align="center">Usuário</div>
                     <div className="row login-form-body">
                         <div className="imgPerfil col-sm-5">
                             <Fa size="4x" icon="user" className="ml-1" />

@@ -1,6 +1,7 @@
 .home-container {
     padding: 20px 50px;
     width: 100%;
+    height: 350px;
 }
 
 .home-grid {
@@ -10,7 +11,7 @@
 }
 
 .home-grid-match {
-    max-height: 400px;
+    height: 185px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
