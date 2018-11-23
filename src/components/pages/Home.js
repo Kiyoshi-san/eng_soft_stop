@@ -128,10 +128,6 @@ class Home extends Component {
                 "skillList": arrSelectedItens
               }
 
-              console.log("userGameData")
-              console.log(userGameData)
-              console.log("userGameData")
-
               this.entrandoPartida(iddasala, userGameData)
 
         })
@@ -142,10 +138,11 @@ class Home extends Component {
     }
 
     entrandoPartida(iddasala, userGameData) {
+        this.props.uiActions.loading("Entrando na partida...");
+
         axios
         .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
-            this.props.uiActions.loading("Entrando na partida...");
             window.location.href = `/match/${iddasala}`;
         })
         .catch(res => {

@@ -123,7 +123,7 @@ class Login extends Component {
             <Container className="container-login-backoffice"> */}
                 <ToastContainer newestOnTop={true}/>
                 <Row>
-                    <form class="form-login" onSubmit={this.handleSubmit}>
+                    <form className="form-login" onSubmit={this.handleSubmit}>
                         <div className="tituloLogin" align="center">Login</div>
                         <Col md="12">
                             <div className="grey-text">

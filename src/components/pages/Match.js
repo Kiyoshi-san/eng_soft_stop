@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import firebase from 'firebase';
-import { Container, Row, Col, Input, Button } from 'mdbreact';
+import { Row, Col, Button } from 'mdbreact';
 import { ToastContainer, toast } from "mdbreact";
 import update from 'immutability-helper';
 
@@ -36,7 +36,7 @@ class Match extends Component {
         this.staredRef
           .on('value', started => {
             if (started.val()) {
-                this.listenFinished();
+                this.listenFinished(id);
                 this.props.uiActions.stopLoading();
                 setInterval(() =>  {
                     this.setState((prevState) => ({ clock: prevState.clock - 1}));
@@ -55,7 +55,7 @@ class Match extends Component {
           .on('value', finished => {
             if (finished.val()) {
                 this.stopApp();
-                this.listenValidated();
+                this.listenValidated(id);
             }
         });
     }
@@ -152,11 +152,11 @@ class Match extends Component {
                 if (res.data.status_code === 200) {
                     let match = res.data.content;
 
-                    if (inventario.items)
+                    if (inventario.items != 0)
                         match.categories.forEach((item) => item.enabled = true)
 
-                    this.setState({match});
                     this.listenMatch(id);
+                    this.setState({match});
                     this.applySkills();
                     this.setStarted(id);
                 } else {
@@ -171,12 +171,12 @@ class Match extends Component {
         const { clock, match } = this.state;
 
         return (
-            <Container>
+            <div>
                 <ToastContainer newestOnTop={true}/>
                 <div className="match-margin">
                     <form onSubmit={this.handleStop}>
                         <Row className="match-margin">
-                            <Col md="5">
+                            <Col md="5" className="responsive-aling">
                                 <div align="center" className="text-style-label">
                                     LETRA
                                     <div className="circle-letter text-style">
@@ -191,10 +191,10 @@ class Match extends Component {
                         {match.categories && match.categories.map((e, i) => 
                         <Row key={i} className="default-aling">
                             <Col md="5" className="text-aling">
-                                <div className="custom-label">{methods.titleCase(e.name)}</div>
+                                <div className="custom-label default-margin">{methods.titleCase(e.name)}</div>
                             </Col>
                             <Col md="6">
-                                <input type="text" id={e.id} className="form-control custom-input"
+                                <input type="text" id={e.id} className="form-control custom-input default-margin"
                                  onChange={this.handleChange} value={this.state.words[e.id]}></input>
                             </Col>
                             <Col md="1">
@@ -214,7 +214,8 @@ class Match extends Component {
                         </Row>
                     </form>
                 </div>
-            </Container>
+                <div className="background"></div>
+            </div>
         )
     }
 }
