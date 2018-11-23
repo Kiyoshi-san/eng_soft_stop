@@ -637,6 +637,7 @@ class Home extends Component {
     
     render() {
         const { qtdCols, user, inventary } = this.state;
+
         return (
             <div>
                 <ToastContainer newestOnTop={true}/>

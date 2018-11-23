@@ -9,10 +9,10 @@ import { BackRoute } from './shared/BackRoute';
 import { PrivateRoute } from './shared/PrivateRoute';
 
 import Account from './pages/Account';
-import BackDashboard from './pages/BackDashboard.js';
-import BackPalavra from './pages/BackPalavra.js';
-import BackLigas from './pages/BackLigas.js';
-import BackStore from './pages/BackStore.js';
+import BackDashboard from './pages/BackDashboard';
+import BackPalavra from './pages/BackPalavra';
+import BackLigas from './pages/BackLigas';
+import BackStore from './pages/BackStore';
 import Home from './pages/Home';
 import Logout from './pages/Logout';
 import LoginBack from './pages/LoginBack';
