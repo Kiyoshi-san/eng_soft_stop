@@ -21,7 +21,7 @@ class Match extends Component {
         this.state = {
           user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
           inventario: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
-          clock: 60,
+          clock: 59,
           words: [],
           match: {},
           skills: [],
@@ -158,7 +158,8 @@ class Match extends Component {
                     this.setState({match});
                     this.listenMatch(id);
                     this.applySkills();
-                    this.setStarted(id);
+                    //this.setStarted(id);
+                    this.props.uiActions.stopLoading();
                 } else {
                     toast.error(res.data.messages);
                 }
@@ -177,37 +178,41 @@ class Match extends Component {
                     <form onSubmit={this.handleStop}>
                         <Row className="match-margin">
                             <Col md="5">
-                                <div align="center" className="text-style">
-                                    Letra:
-                                    <div className="circle-letter">
-                                    <div>
-                                    {match.letter && match.letter.toUpperCase()}
-                                   </div>
+                                <div align="center" className="text-style-label">
+                                    LETRA
+                                    <div className="circle-letter text-style">
+                                        {match.letter && match.letter.toUpperCase()}
                                     </div>
                                 </div>
                             </Col>
-                            {clock && clock < 60 && clock > 0 && <Col md="7" className="text-style">
+                            {clock && clock < 60 && clock > 0 && <Col md="7" className="text-style-clock">
                                 <div className="circle-clock">00:{methods.secondFormat(clock)}</div>
                             </Col>}
                         </Row>
-                            {match.categories && match.categories.map((e, i) => 
-                            <Row key={i}>
-                                <Col md="10">
-                                    <Input id={e.id} label={methods.titleCase(e.name)} value={this.state.words[e.id]} 
-                                        group type="text" onChange={this.handleChange}/>
-                                </Col>
-                                <Col md="2">
-                                    <Button id={e.id} color="deep-purple btn-rounded" onClick={this.handleDica}
-                                        disabled={!e.enabled}>
-                                        Dica
-                                    </Button>
-                                </Col>
-                            </Row>)}
-                        <div className="text-center">
-                            <Button color="deep-purple" className="col-md-2 btn-rounded" type="submit">
-                                Stop
-                            </Button>
-                        </div>
+                        {match.categories && match.categories.map((e, i) => 
+                        <Row key={i} className="default-aling">
+                            <Col md="5" className="text-aling">
+                                <div className="custom-label">{methods.titleCase(e.name)}</div>
+                            </Col>
+                            <Col md="6">
+                                <input type="text" id={e.id} className="form-control custom-input"
+                                 onChange={this.handleChange} value={this.state.words[e.id]}></input>
+                            </Col>
+                            <Col md="1">
+                                <Button id={e.id} color="deep-purple" onClick={this.handleDica}
+                                    disabled={!e.enabled} className="custom-button">
+                                    <i className="fa fa-question" aria-hidden="true"></i>
+                                </Button>
+                            </Col>
+                        </Row>)}
+                        <Row className="text-center" className="default-aling">
+                            <Col md="5"></Col>
+                            <Col md="7">
+                                <Button color="deep-purple" className="btn-rounded" type="submit">
+                                    Stop
+                                </Button>
+                            </Col>
+                        </Row>
                     </form>
                 </div>
             </Container>
