@@ -5,19 +5,19 @@ import PropTypes from 'prop-types';
 import { ToastContainer, toast } from "mdbreact";
 import { Input, Button, Table, TableBody, TableHead } from 'mdbreact';
 import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
-
 import axios from "axios";
 import swal from 'sweetalert';
 
 import MenuSide from '../shared/MenuSide';
 import * as uiActions from '../../actions/uiActions';
+import config from '../../util/Config';
+
 import '../../css/backoffice.css';
 
 class BackLigas extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            backEndURL: 'https://es3-stop-prod.herokuapp.com',
             salvarAlteracoes: false,
             descricaoLiga: '',
             listaLigas: [],
@@ -189,7 +189,7 @@ class BackLigas extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
         
         axios
-        .get(this.state.backEndURL + '/leagues')
+        .get(config.league.leagues)
         .then(res => {
             this.setState({ 
                 listaLigas: res.data.content,
@@ -219,7 +219,7 @@ class BackLigas extends Component {
         this.props.uiActions.loading("Processando...");
             
         axios
-        .post(this.state.backEndURL + '/league', { "description": descricao })
+        .post(config.league.league, { "description": descricao })
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -254,7 +254,7 @@ class BackLigas extends Component {
         this.props.uiActions.loading("Processando...");
                     
         axios
-        .put(this.state.backEndURL + '/leagues', ligas)
+        .put(config.league.leagues, ligas)
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -340,7 +340,7 @@ class BackLigas extends Component {
         this.props.uiActions.loading("Processando...");
                     
         axios
-        .put(this.state.backEndURL + '/league/image', liga)
+        .put(config.league.image, liga)
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -370,7 +370,7 @@ class BackLigas extends Component {
             this.props.uiActions.loading("Processando...");
 
             axios
-            .delete(this.state.backEndURL + '/league', { data: { "league_id": liga_id } })
+            .delete(config.league.league, { data: { "league_id": liga_id } })
             .then(res => {
                  this.props.uiActions.stopLoading();
                  toast.success("Liga excluída com sucesso.");

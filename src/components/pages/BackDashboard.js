@@ -8,6 +8,8 @@ import axios from "axios";
 
 import MenuSide from '../shared/MenuSide';
 import * as uiActions from '../../actions/uiActions';
+import config from '../../util/Config';
+
 import '../../css/backoffice.css';
 
 class BackDashboard extends Component {
@@ -26,7 +28,7 @@ class BackDashboard extends Component {
     popularGraficoPartidas() {
         
         axios
-        .get('https://es3-stop-prod.herokuapp.com/backoffice/info')
+        .get(config.backoffice)
         .then(res => {
 
             this.setState({ 

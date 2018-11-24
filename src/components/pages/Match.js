@@ -9,9 +9,10 @@ import { ToastContainer, toast } from "mdbreact";
 import update from 'immutability-helper';
 
 import * as uiActions from '../../actions/uiActions';
-
 import * as methods from '../../util/Methods';
 import StorageKey from '../../util/StorageKey';
+import config from '../../util/Config';
+
 import '../../css/match.css';
 
 class Match extends Component {
@@ -21,16 +22,16 @@ class Match extends Component {
         this.state = {
           user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
           inventario: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
+          letter: '',
           clock: 60,
           words: [],
           match: {},
           skills: [],
-          backEndURL: 'https://es3-stop-prod.herokuapp.com'
         };
-
     }
 
     listenMatch(id) {
+        this.props.uiActions.loading("Estamos conectando todos a partida...");
         this.staredRef = firebase.database().ref(`${id}/match_started`);
 
         this.staredRef
@@ -38,12 +39,7 @@ class Match extends Component {
             if (started.val()) {
                 this.listenFinished(id);
                 this.props.uiActions.stopLoading();
-                setInterval(() =>  {
-                    this.setState((prevState) => ({ clock: prevState.clock - 1}));
-                    if (this.state.clock === 0) {
-                        this.setStop();
-                    }
-                }, 1000);
+                this.startGame(id);
             }
         });
     }
@@ -86,9 +82,30 @@ class Match extends Component {
     }
 
     setStarted(id) {
-        axios.post(`${this.state.backEndURL}/match/${id}/start`)
+        const body = {
+            match_id: id,
+            letter: this.state.letter,
+            match_players_count: this.state.match.players_count
+        }
+
+        axios.post(`${config.match.start}`, body)
             .then(res => {})
             .catch(() => toast.error("Erro inesperado."));
+    }
+
+    startGame(id) {
+        this.startedTimeRef = firebase.database().ref(`${id}/match_started_time`);
+
+        this.startedTimeRef.once('value', time => {
+            let finalTime = new Date(time.val()).getTime() + 60000;
+
+            setInterval(() =>  {
+                this.setState({ clock: (finalTime - new Date().getTime())/1000});
+                if (finalTime === new Date().getTime()) {
+                    this.setStop();
+                }
+            }, 1000);
+        });
     }
 
     stopApp() {
@@ -106,7 +123,7 @@ class Match extends Component {
             ]
         };
 
-        axios.post(`${this.state.backEndURL}/validation`, body)
+        axios.post(`${config.answer.validation}`, body)
             .then(res => {})
             .catch(() => toast.error("Erro inesperado."));
     }
@@ -130,7 +147,7 @@ class Match extends Component {
     }
 
     handleDica = (event) => {
-        axios.get(`${this.state.backEndURL}/hint/${this.state.match.letter}?categoria=${event.id}`)
+        axios.get(`${config.hint}/${this.state.match.letter}?categoria=${event.id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState((prevState) => ({
@@ -149,7 +166,7 @@ class Match extends Component {
         const { id } = this.props.match.params;
         const { inventario } = this.state;
 
-        axios.get(`${this.state.backEndURL}/match/${id}`)
+        axios.get(`${config.match.match}/${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
                     let match = res.data.content;

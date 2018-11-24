@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "mdbreact";
 import { MDBTable, MDBTableBody, MDBTableHead  } from 'mdbreact';
 
 import * as uiActions from '../../actions/uiActions';
+import config from '../../util/Config';
 
 import '../../css/score.css';
 
@@ -16,7 +17,6 @@ class Score extends Component {
         super(props);
         
         this.state = {
-           backEndURL: 'https://es3-stop-prod.herokuapp.com',
            header: [
               {
                 label: [<i key="cell1" className="fa fa-graduation-cap mr-2 grey-text" aria-hidden="true"></i>, 'Posição'],
@@ -43,7 +43,7 @@ class Score extends Component {
         this.props.uiActions.loading("Preparando Resultado...");
         const { id } = this.props.match.params;
 
-        axios.get(`${this.state.backEndURL}/matchResult/${id}`)
+        axios.get(`${config.match.result}/${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState({

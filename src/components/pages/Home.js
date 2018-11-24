@@ -9,6 +9,7 @@ import Login from "../shared/Login";
 import Userhome from "../shared/Userhome";
 import * as uiActions from '../../actions/uiActions';
 import StorageKey from '../../util/StorageKey';
+import config from '../../util/Config';
 
 import '../../css/home.css';
 import banner from '../../images/homeBanner.png';
@@ -61,7 +62,7 @@ class Home extends Component {
     /* Dados para enviar para a Partida */
     colhendoDadosEntrandoPartida(idsala) {
         axios
-        .get('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch)
+        .get(`${config.match.match}/${this.state.idMatch}`)
         .then(res => {
             this.setState({
                 partidasDescription: res.data.content
@@ -122,8 +123,10 @@ class Home extends Component {
     entrandoPartida(iddasala, userGameData) {
         this.props.uiActions.loading("Entrando na partida...");
 
+        
+
         axios
-        .post('https://es3-stop-prod.herokuapp.com/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
+        .post('http://192.168.1.8:8085/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
         .then(res => {
             window.location.href = `/match/${iddasala}`;
         })
@@ -232,7 +235,7 @@ class Home extends Component {
 
     matchDetail() {
         axios
-        .get('https://es3-stop-prod.herokuapp.com/match/' + this.state.idMatch)
+        .get('http://192.168.1.8:8085/match/' + this.state.idMatch)
         .then(res => {
             this.setState({
                 partidasDescription: res.data.content
@@ -246,7 +249,7 @@ class Home extends Component {
     /* Lista as partidas existentes */
     matchesList() {
         axios
-        .get('https://es3-stop-prod.herokuapp.com/matches')
+        .get('http://192.168.1.8:8085/matches')
         .then(res => {
             this.setState({
                 partidas: res.data.content
@@ -286,8 +289,8 @@ class Home extends Component {
             table.push(<tr>{children}</tr>);
         }
 
-        if (table === 0) {
-            table = <div className="text-center"><h4>Não há partidas cadastradas</h4></div>;
+        if (table.length) {
+            table = [<tr className="text-center"><td>Não há partidas cadastradas</td></tr>];
         }
 
         return table;
@@ -311,7 +314,7 @@ class Home extends Component {
     /* Lista as categorias existentes */
     categoryList() {
         axios
-        .get('https://es3-stop-prod.herokuapp.com/categories')
+        .get('http://192.168.1.8:8085/categories')
         .then(res => {
             this.setState({ 
                 listaCategorias: res.data.content
@@ -614,7 +617,7 @@ class Home extends Component {
         }
         
         axios
-        .post('https://es3-stop-prod.herokuapp.com/match', {
+        .post('http://192.168.1.8:8085/match', {
             "description": salaNome,
             "players_count": qtdJogadores,
             "creator_player_id": userId,

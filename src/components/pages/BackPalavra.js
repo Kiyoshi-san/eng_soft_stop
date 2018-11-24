@@ -10,6 +10,8 @@ import swal from 'sweetalert';
 
 import MenuSide from '../shared/MenuSide';
 import * as uiActions from '../../actions/uiActions';
+import config from '../../util/Config';
+
 import '../../css/backoffice.css';
 
 class BackPalavra extends Component {
@@ -39,7 +41,7 @@ class BackPalavra extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
         
         axios
-        .get('https://es3-stop-prod.herokuapp.com/categories')
+        .get(config.catogory.catogories)
         .then(res => {
             this.setState({ 
                 listaCategorias: res.data.content
@@ -66,7 +68,7 @@ class BackPalavra extends Component {
         this.props.uiActions.loading("Processando...");
             
         axios
-        .post('https://es3-stop-prod.herokuapp.com/category', { "name": descricao })
+        .post(config.catogory.catogory, { "name": descricao })
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -110,7 +112,7 @@ class BackPalavra extends Component {
         this.props.uiActions.loading("Processando...");
             
          axios
-         .put('https://es3-stop-prod.herokuapp.com/category/' + id, { "name": descricao } )
+         .put(`${config.catogory.catogory}/${id}`, { "name": descricao } )
          .then(res => {
             this.props.uiActions.stopLoading();
             toast.success("Categoria atualizada com sucesso.");
@@ -164,7 +166,7 @@ class BackPalavra extends Component {
             this.props.uiActions.loading("Processando...");
 
             axios
-            .delete('https://es3-stop-prod.herokuapp.com/category', { data: { "category_id": categoria_id } })
+            .delete(config.catogory.catogory, { data: { "category_id": categoria_id } })
             .then(res => {
                 this.props.uiActions.stopLoading();
                 toast.success("Categoria excluída com sucesso.");
@@ -195,7 +197,7 @@ class BackPalavra extends Component {
             this.props.uiActions.loading("Preparando Visualização...");
 
             axios
-            .get('https://es3-stop-prod.herokuapp.com/answers?category=' + this.state.category_id)
+            .get(`${config.answer.answers}?category=` + this.state.category_id)
             .then(res => {
                     
                     this.props.uiActions.stopLoading();
@@ -234,7 +236,7 @@ class BackPalavra extends Component {
         this.props.uiActions.loading("Processando...");
 
         axios
-        .post('https://es3-stop-prod.herokuapp.com/answer', { "category_id": categoriaId, "description": descricao })
+        .post(config.answer.answer, { "category_id": categoriaId, "description": descricao })
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -268,7 +270,7 @@ class BackPalavra extends Component {
             this.props.uiActions.loading("Processando...");
   
             axios
-            .delete('https://es3-stop-prod.herokuapp.com/answer', { data: { "answer_id": answer_id } })
+            .delete(config.answer.answer, { data: { "answer_id": answer_id } })
             .then(res => {
                 this.props.uiActions.stopLoading();
                 this.respostasList();

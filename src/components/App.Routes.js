@@ -8,7 +8,6 @@ import { Switch, Route } from 'react-router-dom';
 import { BackRoute } from './shared/BackRoute';
 import { PrivateRoute } from './shared/PrivateRoute';
 
-import Account from './pages/Account';
 import BackDashboard from './pages/BackDashboard';
 import BackPalavra from './pages/BackPalavra';
 import BackLigas from './pages/BackLigas';
@@ -38,7 +37,6 @@ class AppRoutes extends Component {
                         <Route path='/login-back' component={LoginBack}/>
                         <PrivateRoute path='/match/:id' component={Match}/>
                         <PrivateRoute path='/score/:id' component={Score}/>
-                        <PrivateRoute path='/account' component={Account} />
                         <PrivateRoute path='/shop' component={Shop}/>
                         <PrivateRoute path='/profile' component={Profile}/>
                         <BackRoute path='/backoffice-dashboard' component={BackDashboard}/>
