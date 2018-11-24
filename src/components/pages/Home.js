@@ -123,10 +123,8 @@ class Home extends Component {
     entrandoPartida(iddasala, userGameData) {
         this.props.uiActions.loading("Entrando na partida...");
 
-        
-
         axios
-        .post('http://192.168.1.8:8085/match/' + iddasala + "/join", { "player_id": this.state.user.userId })
+        .post(`${config.match.match}/${iddasala}/join`, { "player_id": this.state.user.userId })
         .then(res => {
             window.location.href = `/match/${iddasala}`;
         })
@@ -235,7 +233,7 @@ class Home extends Component {
 
     matchDetail() {
         axios
-        .get('http://192.168.1.8:8085/match/' + this.state.idMatch)
+        .get(`${config.match.match}/${this.state.idMatch}`)
         .then(res => {
             this.setState({
                 partidasDescription: res.data.content
@@ -249,7 +247,7 @@ class Home extends Component {
     /* Lista as partidas existentes */
     matchesList() {
         axios
-        .get('http://192.168.1.8:8085/matches')
+        .get(`${config.match.match}`)
         .then(res => {
             this.setState({
                 partidas: res.data.content
@@ -314,7 +312,7 @@ class Home extends Component {
     /* Lista as categorias existentes */
     categoryList() {
         axios
-        .get('http://192.168.1.8:8085/categories')
+        .get(`${config.catogory.catogories}`)
         .then(res => {
             this.setState({ 
                 listaCategorias: res.data.content
@@ -617,7 +615,7 @@ class Home extends Component {
         }
         
         axios
-        .post('http://192.168.1.8:8085/match', {
+        .post(`${config.match.match}`, {
             "description": salaNome,
             "players_count": qtdJogadores,
             "creator_player_id": userId,

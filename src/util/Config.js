@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.1.8:8085';
+const baseUrl = 'http://es3-stop-prod.herokuapp.com';
 
 export default {
     backoffice: `${baseUrl}/backoffice/info`,
@@ -19,6 +19,7 @@ export default {
     },
     match: {
         match: `${baseUrl}/match`,
+        matchs: `${baseUrl}/matchs`,
         start: `${baseUrl}/match/start`,
         end: `${baseUrl}/match/end`,
         result: `${baseUrl}/matchResult`
