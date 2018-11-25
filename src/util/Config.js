@@ -1,10 +1,10 @@
-const baseUrl = 'http://es3-stop-prod.herokuapp.com';
+const baseUrl = 'https://es3-stop-prod.herokuapp.com';
 
 export default {
     backoffice: `${baseUrl}/backoffice/info`,
-    catogory: {
-        catogory: `${baseUrl}/catogory`,
-        catogories: `${baseUrl}/catogories`
+    category: {
+        category: `${baseUrl}/category`,
+        categories: `${baseUrl}/categories`
     },
     auth: {
         login: `${baseUrl}/auth/login`,
@@ -19,7 +19,7 @@ export default {
     },
     match: {
         match: `${baseUrl}/match`,
-        matchs: `${baseUrl}/matchs`,
+        matches: `${baseUrl}/matches`,
         start: `${baseUrl}/match/start`,
         end: `${baseUrl}/match/end`,
         result: `${baseUrl}/matchResult`

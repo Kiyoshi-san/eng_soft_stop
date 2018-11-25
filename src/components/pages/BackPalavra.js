@@ -41,7 +41,7 @@ class BackPalavra extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
         
         axios
-        .get(config.catogory.catogories)
+        .get(config.category.categories)
         .then(res => {
             this.setState({ 
                 listaCategorias: res.data.content
@@ -68,7 +68,7 @@ class BackPalavra extends Component {
         this.props.uiActions.loading("Processando...");
             
         axios
-        .post(config.catogory.catogory, { "name": descricao })
+        .post(config.category.category, { "name": descricao })
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -112,7 +112,7 @@ class BackPalavra extends Component {
         this.props.uiActions.loading("Processando...");
             
          axios
-         .put(`${config.catogory.catogory}/${id}`, { "name": descricao } )
+         .put(`${config.category.category}/${id}`, { "name": descricao } )
          .then(res => {
             this.props.uiActions.stopLoading();
             toast.success("Categoria atualizada com sucesso.");
@@ -166,7 +166,7 @@ class BackPalavra extends Component {
             this.props.uiActions.loading("Processando...");
 
             axios
-            .delete(config.catogory.catogory, { data: { "category_id": categoria_id } })
+            .delete(config.category.category, { data: { "category_id": categoria_id } })
             .then(res => {
                 this.props.uiActions.stopLoading();
                 toast.success("Categoria excluída com sucesso.");

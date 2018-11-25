@@ -247,7 +247,7 @@ class Home extends Component {
     /* Lista as partidas existentes */
     matchesList() {
         axios
-        .get(`${config.match.matchs}`)
+        .get(`${config.match.matches}`)
         .then(res => {
             this.setState({
                 partidas: res.data.content
@@ -312,7 +312,7 @@ class Home extends Component {
     /* Lista as categorias existentes */
     categoryList() {
         axios
-        .get(`${config.catogory.catogories}`)
+        .get(`${config.category.categories}`)
         .then(res => {
             this.setState({ 
                 listaCategorias: res.data.content

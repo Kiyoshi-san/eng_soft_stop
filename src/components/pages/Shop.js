@@ -157,7 +157,7 @@ class Shop extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
 
         axios
-        .get(config.items.item)
+        .get(config.item.items)
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -183,7 +183,7 @@ class Shop extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
 
         axios
-        .get(config.items.item)
+        .get(config.item.items)
         .then(res => {
 
             this.props.uiActions.stopLoading();

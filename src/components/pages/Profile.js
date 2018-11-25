@@ -98,7 +98,7 @@ class Profile extends Component {
     listarLigas() {
         
         axios
-        .get(`${config.league.league}`)
+        .get(`${config.league.leagues}`)
         .then(res => {
             this.setState({ 
                 listaLigas: res.data.content
