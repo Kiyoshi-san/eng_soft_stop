@@ -7,8 +7,6 @@ import "../../css/login.css";
 import * as uiActions from '../../actions/uiActions';
 
 let Userhome = ({nick, userInventory}) => {
-    console.log(nick.userName)
-
     let perfil = () => {        
         uiActions.loading("Carregando dados...");
         window.location.href = '/profile';

@@ -1,15 +1,40 @@
-const baseUrl = 'https://es3-stop-prod.herokuapp.com/';
+const baseUrl = 'https://es3-stop-prod.herokuapp.com';
 
 export default {
-    baseUrl: baseUrl,
-    corsUrl: 'https://cors-anywhere.herokuapp.com/',
-    backOffice: {
-        catogory: `${baseUrl}/catogory`,
-        answer: `${baseUrl}/answer`
+    backoffice: `${baseUrl}/backoffice/info`,
+    category: {
+        category: `${baseUrl}/category`,
+        categories: `${baseUrl}/categories`
     },
-    login: {
-        validate: `${baseUrl}/auth/login`
+    auth: {
+        login: `${baseUrl}/auth/login`,
+        signup: `${baseUrl}/auth/signup`
     },
+    inventory: `${baseUrl}/inventory`,
+    hint: `${baseUrl}/hint`,
+    item: {
+        item: `${baseUrl}/item`,
+        items: `${baseUrl}/items`,
+        buy: `${baseUrl}/itemPurchase`
+    },
+    match: {
+        match: `${baseUrl}/match`,
+        matches: `${baseUrl}/matches`,
+        start: `${baseUrl}/match/start`,
+        end: `${baseUrl}/match/end`,
+        result: `${baseUrl}/matchResult`
+    },
+    answer: {
+        answer: `${baseUrl}/answer`,
+        answers: `${baseUrl}/answers`,
+        validation: `${baseUrl}/validation`
+    },
+    league: {
+        league: `${baseUrl}/league`,
+        leagues: `${baseUrl}/leagues`,
+        image: `${baseUrl}/league/image`
+    },
+    cash: `${baseUrl}/cash`,
     firebase: {
         type: "service_account",
         databaseURL: "https://projetojogostop.firebaseio.com/",

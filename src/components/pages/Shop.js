@@ -9,6 +9,7 @@ import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact'
 import axios from "axios";
 import StorageKey from '../../util/StorageKey';
 import banner from '../../images/shopBanner.png';
+import config from '../../util/Config';
 
 import * as uiActions from '../../actions/uiActions';
 import '../../css/backoffice.css';
@@ -18,7 +19,6 @@ class Shop extends Component {
         super(props);
         this.state = {
             user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
-            backEndURL: 'https://es3-stop-prod.herokuapp.com',
             listaDicas: [],
             listaHabilidades: [],
             modalCompra: false,
@@ -49,7 +49,7 @@ class Shop extends Component {
         return new Promise((resolve) =>{
 
             axios
-            .get(this.state.backEndURL + '/inventory/' + userId)
+            .get(`${config.inventory}/${userId}`)
             .then(res => {
                 localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify(res.data.content));
                 resolve(true);
@@ -120,7 +120,7 @@ class Shop extends Component {
         this.props.uiActions.loading("Processando...");
             
         axios
-        .post(this.state.backEndURL + '/itemPurchase', body)
+        .post(config.items.buy, body)
         .then(res => {
 
             //Atualiza inventário do jogador com os novos itens
@@ -157,7 +157,7 @@ class Shop extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
 
         axios
-        .get(this.state.backEndURL + '/items')
+        .get(config.item.items)
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -174,21 +174,16 @@ class Shop extends Component {
             toast.error("Erro ao listar as dicas. Erro: " + res.response.data.messages);
         });
     }
-
-
     // *********************** FIM - DICAS **************************
 
-
     // *********************** INÍCIO - HABILIDADES ***********************
-
-
     /* Lista as Dicas existentes */
     listarHabilidades() {
         
         this.props.uiActions.loading("Preparando Visualização...");
 
         axios
-        .get(this.state.backEndURL + '/items')
+        .get(config.item.items)
         .then(res => {
 
             this.props.uiActions.stopLoading();

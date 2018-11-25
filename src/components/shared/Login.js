@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
+import config from '../../util/Config';
 import NewAccount from './NewAccount';
 
 import "../../css/login.css";
@@ -24,8 +25,7 @@ class Login extends Component {
             userPassword: "",
             modal: false,
             cadLogin:"",
-            cadSenha:"",
-            backEndURL: 'https://es3-stop-prod.herokuapp.com'
+            cadSenha:""
         };
     }
 
@@ -39,35 +39,33 @@ class Login extends Component {
         event.preventDefault();
 
         if(!this.state.userName) {
-            toast.error("Insira um nome válido")
-            return
+            toast.error("Insira um nome válido");
         } else if(!this.state.userPassword) {
-            toast.error("Insira uma senha válida")
-            return
-        }
+            toast.error("Insira uma senha válida");
+        } else {
+            this.props.uiActions.loading("Efetuando login...");
 
-        this.props.uiActions.loading("Efetuando login...");
+            const body = {
+                user_name: this.state.userName,
+                user_password: this.state.userPassword
+            };
 
-        const body = {
-            user_name: this.state.userName,
-            user_password: this.state.userPassword
-        }
+            this.validateLogin(body, (error) => {
+                this.setState({
+                    sucsses: false,
+                    userName: "",
+                    userPassword: "",
+                    modal: false
+                });
 
-        this.validateLogin(body, (error) => {
-            this.setState({
-                sucsses: false,
-                userName: "",
-                userPassword: "",
-                modal: false
+                toast.error(`${error.response ? error.response.data.messages[0] : error}`);
+                this.props.uiActions.stopLoading();
             });
-
-            toast.error(`${error.response ? error.response.data.messages[0] : error}`);
-            this.props.uiActions.stopLoading();
-        });
+        }
     }
 
     validateLogin = (body, errorCallback) => {
-        axios.post(`${this.state.backEndURL}/auth/login/${loginLevel}`, body)
+        axios.post(`${config.auth.login}/${loginLevel}`, body)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState({
@@ -99,7 +97,7 @@ class Login extends Component {
         return new Promise((resolve) =>{
 
             axios
-            .get(this.state.backEndURL + '/inventory/' + userId)
+            .get(`${config.inventory}/${userId}`)
             .then(res => {
                 localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify(res.data.content));
                 resolve(true);

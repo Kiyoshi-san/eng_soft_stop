@@ -8,6 +8,7 @@ import { Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, ToastContain
 import * as uiActions from '../../actions/uiActions';
 import logo from '../../images/Diamond_512.gif';
 import error from '../../images/error.png';
+import config from '../../util/Config';
 
 class NewAccount extends Component {
     constructor(props) {
@@ -48,9 +49,8 @@ class NewAccount extends Component {
             loading: true,
             messages: "Enviando usuário..."
         });
-        
 
-        axios.post('https://es3-stop-prod.herokuapp.com/auth/signup', { "user_name": this.state.cadLogin, "user_password": this.state.cadSenha })
+        axios.post(config.auth.signup, { "user_name": this.state.cadLogin, "user_password": this.state.cadSenha })
             .then(() => {
                 this.setState({
                     loading: false,

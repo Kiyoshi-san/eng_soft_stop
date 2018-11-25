@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from "axios";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -7,17 +8,16 @@ import { Button, Table, TableBody, TableHead } from 'mdbreact';
 import { Container, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
 import swal from 'sweetalert';
 
-import axios from "axios";
-
 import MenuSide from '../shared/MenuSide';
 import * as uiActions from '../../actions/uiActions';
+import config from '../../util/Config';
+
 import '../../css/backoffice.css';
 
 class BackStore extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            backEndURL: 'https://es3-stop-prod.herokuapp.com',
             listaDicas: [],
             listaHabilidades: [],
             modalDicas: false,
@@ -76,7 +76,7 @@ class BackStore extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
 
         axios
-        .get(this.state.backEndURL + '/items')
+        .get(config.item.items)
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -140,7 +140,7 @@ class BackStore extends Component {
         this.props.uiActions.loading("Processando...");
             
         axios
-        .post(this.state.backEndURL + '/item', body)
+        .post(config.item.item, body)
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -192,7 +192,7 @@ class BackStore extends Component {
         this.props.uiActions.loading("Processando...");
             
          axios
-         .put(this.state.backEndURL + '/item', body)
+         .put(config.item.item, body)
          .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -224,7 +224,7 @@ class BackStore extends Component {
             this.props.uiActions.loading("Processando...");
   
             axios
-            .delete(this.state.backEndURL + '/item', { data: { "item_id": item_id } })
+            .delete(config.item.item, { data: { "item_id": item_id } })
             .then(res => {
                 this.props.uiActions.stopLoading();
 
@@ -286,7 +286,7 @@ class BackStore extends Component {
         this.props.uiActions.loading("Preparando Visualização...");
 
         axios
-        .get(this.state.backEndURL + '/items')
+        .get(config.item.items)
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -349,7 +349,7 @@ class BackStore extends Component {
         this.props.uiActions.loading("Processando...");
             
         axios
-        .post(this.state.backEndURL + '/item', body)
+        .post(config.item.item, body)
         .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -401,7 +401,7 @@ class BackStore extends Component {
         this.props.uiActions.loading("Processando...");
             
          axios
-         .put(this.state.backEndURL + '/item', body)
+         .put(config.item.item, body)
          .then(res => {
 
             this.props.uiActions.stopLoading();
@@ -433,7 +433,7 @@ class BackStore extends Component {
             this.props.uiActions.loading("Processando...");
   
             axios
-            .delete(this.state.backEndURL + '/item', { data: { "item_id": item_id } })
+            .delete(config.item.item, { data: { "item_id": item_id } })
             .then(res => {
                 this.props.uiActions.stopLoading();
 

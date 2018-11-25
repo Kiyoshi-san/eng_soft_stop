@@ -8,9 +8,10 @@ import { ToastContainer, toast } from "mdbreact";
 
 import StorageKey from '../../util/StorageKey';
 import * as uiActions from '../../actions/uiActions';
+import config from '../../util/Config';
+
 import "../../css/login.css";
 import "../../css/login-back.css";
-
 import logo from '../../images/stop_logo_v2.png';
 import rightArrow from '../../images/right-arrow-icon.png';
 
@@ -57,7 +58,7 @@ class LoginBack extends Component {
     }
 
     validateLogin = (body, errorCallback) => {
-        axios.post(`https://es3-stop-prod.herokuapp.com/auth/login/${loginLevel}`, body)
+        axios.post(`${config.auth.login}/${loginLevel}`, body)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState({

@@ -10,8 +10,9 @@ import { Table, TableBody, TableHead } from 'mdbreact';
 
 import axios from "axios";
 import StorageKey from '../../util/StorageKey';
-
+import config from '../../util/Config';
 import * as uiActions from '../../actions/uiActions';
+
 import '../../css/backoffice.css';
 
 class Profile extends Component {
@@ -20,7 +21,6 @@ class Profile extends Component {
         this.state = {
             user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
             inventary: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
-            backEndURL: 'https://es3-stop-prod.herokuapp.com',
             listaLigas: [],
             listaItens: [],
             tipsAmount: 0,
@@ -59,7 +59,7 @@ class Profile extends Component {
         return new Promise((resolve) =>{
 
             axios
-            .get(this.state.backEndURL + '/inventory/' + userId)
+            .get(`${config.inventory}/${userId}`)
             .then(res => {
                 localStorage.setItem(StorageKey.INVENTARIO, JSON.stringify(res.data.content));
                 resolve(true);
@@ -98,7 +98,7 @@ class Profile extends Component {
     listarLigas() {
         
         axios
-        .get(this.state.backEndURL + '/leagues')
+        .get(`${config.league.leagues}`)
         .then(res => {
             this.setState({ 
                 listaLigas: res.data.content
@@ -191,7 +191,7 @@ class Profile extends Component {
                 this.props.uiActions.loading("Efetuando compra...");
 
                 axios
-                .post(this.state.backEndURL + '/cash', body)
+                .post(`${config.cash}`, body)
                 .then(res => {
 
                     //Atualiza inventário do jogador com a nova quantidade de créditos
