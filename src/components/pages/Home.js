@@ -247,7 +247,7 @@ class Home extends Component {
     /* Lista as partidas existentes */
     matchesList() {
         axios
-        .get(`${config.match.match}`)
+        .get(`${config.match.matchs}`)
         .then(res => {
             this.setState({
                 partidas: res.data.content
