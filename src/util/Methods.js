@@ -1,3 +1,4 @@
+/* Formata texto como Título */
 export function titleCase(str) {
     str = str.toLowerCase().split(' ');
     for (let i = 0; i < str.length; i++) {
@@ -6,10 +7,21 @@ export function titleCase(str) {
     return str.join(' ');
 }
 
+/* Formata segundos com dois dígitos */
 export function secondFormat(number) {
   if (number < 10) {
     return "0" + number;
   }
 
   return number;
+}
+
+/* Pegando uma letra aleatoria */
+export function randomLetter() {
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    
+  text = possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
 }

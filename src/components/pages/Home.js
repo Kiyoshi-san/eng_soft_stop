@@ -44,20 +44,9 @@ class Home extends Component {
 
     handleChange = (event) => {
         this.setState({
-          [event.target.id]: event.target.value,
-          dirty: true
+          [event.target.id]: event.target.value
         });
     }
-
-    /* Pegando uma letra aleatoria */
-    randomLetter () {
-        let text = "";
-        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      
-        text = possible.charAt(Math.floor(Math.random() * possible.length));
-      
-        return text;
-      }
 
     /* Dados para enviar para a Partida */
     colhendoDadosEntrandoPartida(idsala) {
@@ -97,34 +86,20 @@ class Home extends Component {
 
             elements.forEach((a) => {
                 if ( a.checked ) {
-                    arrSelectedItens.push({ "id": a.value, "userId": this.state.user.userId })
+                    arrSelectedItens.push(a.value)
                 }
             });
 
-            let letter = this.randomLetter();
-    
-            let userGameData = {
-                "matchid": iddasala,
-                "letter": letter,
-                "userList": matchesPlayersList,
-                "categoryList": matchesCategoryList,
-                "skillList": arrSelectedItens
-              }
-
-              this.entrandoPartida(iddasala, userGameData)
-
+            this.entrandoPartida(iddasala, arrSelectedItens)
         })
-        .catch(res => {
-            return false;            
-        });
-        
+        .catch(res => false);
     }
 
-    entrandoPartida(iddasala, userGameData) {
+    entrandoPartida(iddasala, arrSelectedItens) {
         this.props.uiActions.loading("Entrando na partida...");
 
         axios
-        .post(`${config.match.match}/${iddasala}/join`, { "player_id": this.state.user.userId })
+        .post(`${config.match.match}/${iddasala}/join`, { player_id: this.state.user.userId, items: arrSelectedItens })
         .then(res => {
             window.location.href = `/match/${iddasala}`;
         })
@@ -538,12 +513,10 @@ class Home extends Component {
     
     /* Entrando na partida */
     jogar = (e) => {
-        this.setSelectedItens();
-
-        if(!this.validaLogin()) return
-        else this.colhendoDadosEntrandoPartida();
-
-        return;
+        if(this.validaLogin()) {
+            this.setSelectedItens();
+            this.colhendoDadosEntrandoPartida();
+        }
     }
     
     validacaoNomeSala = 0
