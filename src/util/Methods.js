@@ -25,3 +25,11 @@ export function randomLetter() {
 
   return text;
 }
+
+/* A partir do number define um array de arrays */ 
+export function arrayOfArrays(number, array) {
+  if (array) {
+  }
+
+  return [];
+}
