@@ -27,12 +27,25 @@ export function randomLetter() {
 }
 
 /* A partir do number define um array de arrays */ 
-export function arrayOfArrays(number, array) {
+export function arrayToDataTable(number, array) {
   let retorno = [];
 
   if (array && array.length) {
-    for(let index = 0; index < number; index++) {
-      retorno.push(array.filter((e, i) => i % number === index));
+    let linhas = Math.ceil(array.length / number);
+    let inicioIndex = 0;
+    let fimIndex = number;
+    
+    for(let linha = 0; linha < linhas; linha++) {
+      let obj = {};
+      
+      array.slice(inicioIndex, fimIndex).forEach((e, i) => {
+        obj[i >= number ? i - number * linha : i] = e;
+      });
+
+      inicioIndex  += number + 1;
+      fimIndex += number + 1;
+
+      retorno.push(obj);
     }
   }
 
