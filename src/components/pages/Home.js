@@ -9,6 +9,7 @@ import Login from "../shared/Login";
 import Userhome from "../shared/Userhome";
 import * as uiActions from '../../actions/uiActions';
 import StorageKey from '../../util/StorageKey';
+import methods from '../../util/Methods';
 import config from '../../util/Config';
 
 import '../../css/home.css';
@@ -249,7 +250,7 @@ class Home extends Component {
             i = 0;
             for (i; i < qtdCols; i++) {
                 if(partidas[ctCol]) {
-                    children.push(<td key={partidas[ctCol].match_id} className={partidas[ctCol].match_id === idMatch?
+                    children.push(<td key={partidas[ctCol].match_id} className={partidas[ctCol].match_id === parseInt(idMatch)?
                         "colTblActive colTbl" : "colTbl"} data-id={ partidas[ctCol].match_id } onClick={this.setActiveElement}>
                             {partidas[ctCol].description}
                         </td>);
@@ -636,15 +637,15 @@ class Home extends Component {
 
                             <TableHead className="tblGridHeader" color="deep-purple" textWhite>
                             </TableHead>
-                            <TableBody>
+                            <TableBody >
                                 {this.componentTblMount()}
                             </TableBody>
                         </MDBTable>
                     </div>
                     <div className="home-grid-btn">
                         <Button className="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
-                        <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
-                        <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar)}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                        <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
+                        <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
                 <div className="col-xs-4 col-sm-4 home-grid-login">

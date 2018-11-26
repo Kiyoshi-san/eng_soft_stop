@@ -28,8 +28,13 @@ export function randomLetter() {
 
 /* A partir do number define um array de arrays */ 
 export function arrayOfArrays(number, array) {
-  if (array) {
+  let retorno = [];
+
+  if (array && array.length) {
+    for(let index = 0; index < number; index++) {
+      retorno.push(array.filter((e, i) => i % number === index));
+    }
   }
 
-  return [];
+  return retorno;
 }
