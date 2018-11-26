@@ -20,11 +20,9 @@ class Home extends Component {
         this.state = {
             partidas: [],
             partidasDescription: [],
-            linhasTbl: [],
             qtdCols: 4,
             user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
             inventary: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
-            logado: false,
             idMatch: 0,
             listaCategorias: [],
             salaNome: "",
@@ -35,10 +33,9 @@ class Home extends Component {
             validacaoQtdJogadores: "hidden",
             redirect: 0,
             time: {},
-            seconds: 5,
             tempo: 10,
             itens: [],
-            item_type: 0,
+            fetched: {}
         }
     }
 
@@ -224,9 +221,11 @@ class Home extends Component {
         axios
         .get(`${config.match.matches}`)
         .then(res => {
-            this.setState({
-                partidas: res.data.content
-            })
+            this.setState(prevState => ({
+                partidas: res.data.content.filter(e => !e.finished_time)
+                // ...prevState.fetched,
+                // matches: true,
+            }));
         })
         .catch(() => toast.error("Houve um erro na listagem de partidas"));
     }
@@ -262,7 +261,7 @@ class Home extends Component {
             table.push(<tr>{children}</tr>);
         }
 
-        if (table.length) {
+        if (!table.length) {
             table = [<tr className="text-center"><td>Não há partidas cadastradas</td></tr>];
         }
 
@@ -289,9 +288,11 @@ class Home extends Component {
         axios
         .get(`${config.category.categories}`)
         .then(res => {
-            this.setState({ 
-                listaCategorias: res.data.content
-            })
+            this.setState(prevState => ({ 
+                listaCategorias: res.data.content,
+                ...prevState.fetched,
+                categories: true
+            }));
             this.props.uiActions.stopLoading();
         })
         .catch(res => {
@@ -362,7 +363,7 @@ class Home extends Component {
                         </section>
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
-                    <Button color="secondary" className="roundedBtn" outline onClick={() => this.toggleGeral(2, this.criarPartida())}>Criar</Button>
+                    <Button color="secondary" className="roundedBtn" outline onClick={() => this.toggleGeral(2, this.criarPartida)}>Criar</Button>
                     <Button color="danger" className="roundedBtn" outline onClick={() => this.toggleGeral(2)}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
@@ -643,7 +644,7 @@ class Home extends Component {
                     <div className="home-grid-btn">
                         <Button className="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
                         <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
-                        <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                        <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar)}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
                 <div className="col-xs-4 col-sm-4 home-grid-login">
