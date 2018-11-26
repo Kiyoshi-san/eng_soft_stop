@@ -32,20 +32,27 @@ export function arrayToDataTable(number, array) {
 
   if (array && array.length) {
     let linhas = Math.ceil(array.length / number);
+    let tamanho = (100/number);
     let inicioIndex = 0;
     let fimIndex = number;
     
     for(let linha = 0; linha < linhas; linha++) {
-      let obj = {};
+      let listaCell = [];
       
-      array.slice(inicioIndex, fimIndex).forEach((e, i) => {
-        obj[i >= number ? i - number * linha : i] = e;
+      array.slice(inicioIndex, fimIndex).forEach(e => {
+        let element = e;
+        element.width = tamanho + "%";
+        listaCell.push(element);
       });
 
       inicioIndex  += number + 1;
       fimIndex += number + 1;
 
-      retorno.push(obj);
+      if (listaCell.length < number) {
+        let element = {tamanho: (tamanho * (number - listaCell.length)) + "%"}; 
+        listaCell.push(element);
+      }
+      retorno.push(listaCell);
     }
   }
 

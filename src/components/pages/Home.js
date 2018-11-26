@@ -14,11 +14,13 @@ import config from '../../util/Config';
 
 import '../../css/home.css';
 import banner from '../../images/homeBanner.png';
+import logo from '../../images/Diamond_512.gif';
 
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            arrayItens: [],
             partidas: [],
             partidasDescription: [],
             qtdCols: 4,
@@ -36,7 +38,7 @@ class Home extends Component {
             time: {},
             tempo: 10,
             itens: [],
-            fetched: {}
+            matches: false
         }
     }
 
@@ -107,7 +109,7 @@ class Home extends Component {
         });
     }
     
-    validaLogin = () => {
+    validaLogin() {
         let { user } = this.state;
         
         if (!user) {
@@ -222,11 +224,12 @@ class Home extends Component {
         axios
         .get(`${config.match.matches}`)
         .then(res => {
+            let partidas = res.data.content.filter(e => !e.finished_time)
+            let arrayItens = methods.arrayToDataTable(4, partidas);
             this.setState(prevState => ({
-                // partidas: methods.arrayToDataTable(4, res.data.content.filter(e => !e.finished_time))
-                partidas: res.data.content.filter(e => !e.finished_time)
-                // ...prevState.fetched,
-                // matches: true,
+                partidas: partidas,
+                arrayItens: arrayItens,
+                matches: true,
             }));
         })
         .catch(() => toast.error("Houve um erro na listagem de partidas"));
@@ -243,25 +246,19 @@ class Home extends Component {
 
     /* Montando a tabela com as partidas */
     componentTblMount() {
-        const { partidas, qtdCols, idMatch } = this.state;
-        let ctRow = 0, ctCol = 0, rows = Math.ceil(partidas.length/qtdCols), table = [];
+        const { idMatch, arrayItens } = this.state;
+        let table = [];
 
-        for (ctRow; ctRow < rows; ctRow++) {
-            let children = [],
-            i = 0;
-            for (i; i < qtdCols; i++) {
-                if(partidas[ctCol]) {
-                    children.push(<td key={partidas[ctCol].match_id} className={partidas[ctCol].match_id === parseInt(idMatch)?
-                        "colTblActive colTbl" : "colTbl"} data-id={ partidas[ctCol].match_id } onClick={this.setActiveElement}>
-                            {partidas[ctCol].description}
-                        </td>);
-                } else {
-                    children.push(<td className="colTbl"></td>);
-                }
-                ctCol++;
-            }
-            table.push(<tr>{children}</tr>);
-        }
+        arrayItens.forEach(item => {
+            let children = [];
+            item.forEach(childItem => {
+                children.push(<td key={childItem.match_id} className={childItem.match_id === parseInt(idMatch)? "colTblActive colTbl" : "colTbl"}
+                    width={childItem.width} data-id={ childItem.match_id } onClick={this.setActiveElement}>
+                        {childItem.description}
+                </td>);
+            });
+            table.push(<tr>{children}</tr>)
+        });
 
         if (!table.length) {
             table = [<tr className="text-center"><td>Não há partidas cadastradas</td></tr>];
@@ -274,8 +271,12 @@ class Home extends Component {
     - 2 - Criar Sala
     */
     toggleGeral(nr, func) {
+        if (!this.validaLogin()) {
+            return;
+        }
+
         if (func)
-        func();
+            func();
 
         if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
 
@@ -613,7 +614,7 @@ class Home extends Component {
     }
     
     render() {
-        const { qtdCols, user, inventary, partidas } = this.state;
+        const { qtdCols, user, inventary, matches } = this.state;
 
         return (
             <div>
@@ -634,6 +635,7 @@ class Home extends Component {
                         <th className="tblTitle" align="center" colSpan={qtdCols}>Salas</th>
                     </div>
                     <div className="home-grid-match">
+                        {matches ?
                         <MDBTable bordered={true} striped={true}>
 
                             <TableHead className="tblGridHeader" color="deep-purple" textWhite>
@@ -642,10 +644,18 @@ class Home extends Component {
                                 {this.componentTblMount()}
                             </TableBody>
                         </MDBTable>
+                        :
+                        <div className="justify-content-center">
+                            <img src={logo} className="logo-stop-loading" alt="loading" />
+                            <div className="d-flex justify-content-center">
+                                Carregando...
+                            </div>
+                        </div>
+                        }
                     </div>
                     <div className="home-grid-btn">
                         <Button className="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
-                        <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2, this.validaLogin())}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
+                        <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
                         <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
