@@ -9,7 +9,6 @@ import Login from "../shared/Login";
 import Userhome from "../shared/Userhome";
 import * as uiActions from '../../actions/uiActions';
 import StorageKey from '../../util/StorageKey';
-import methods from '../../util/Methods';
 import config from '../../util/Config';
 
 import '../../css/home.css';
