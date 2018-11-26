@@ -9,6 +9,7 @@ import Login from "../shared/Login";
 import Userhome from "../shared/Userhome";
 import * as uiActions from '../../actions/uiActions';
 import StorageKey from '../../util/StorageKey';
+import * as methods from '../../util/Methods';
 import config from '../../util/Config';
 
 import '../../css/home.css';
@@ -222,6 +223,7 @@ class Home extends Component {
         .get(`${config.match.matches}`)
         .then(res => {
             this.setState(prevState => ({
+                // partidas: methods.arrayToDataTable(4, res.data.content.filter(e => !e.finished_time))
                 partidas: res.data.content.filter(e => !e.finished_time)
                 // ...prevState.fetched,
                 // matches: true,
@@ -611,7 +613,7 @@ class Home extends Component {
     }
     
     render() {
-        const { qtdCols, user, inventary } = this.state;
+        const { qtdCols, user, inventary, partidas } = this.state;
 
         return (
             <div>
@@ -636,7 +638,7 @@ class Home extends Component {
 
                             <TableHead className="tblGridHeader" color="deep-purple" textWhite>
                             </TableHead>
-                            <TableBody >
+                            <TableBody>
                                 {this.componentTblMount()}
                             </TableBody>
                         </MDBTable>
