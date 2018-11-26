@@ -512,7 +512,7 @@ class BackStore extends Component {
                                     <div className="row">
 
                                         {/* <!-- Grid column --> */}
-                                        <div className="col-md-3 animated jackInTheBox">
+                                        <div className="col-md-6 animated jackInTheBox">
 
                                             {/* <!-- Card --> */}
                                             <div className="card clickable rgba-grey-slight view overlay" onClick={() => { this.clickDicas() } }>
@@ -546,7 +546,7 @@ class BackStore extends Component {
                                         {/* <!-- Grid column --> */}
 
                                         {/* <!-- Grid column --> */}
-                                        <div className="col-md-3 animated jackInTheBox">
+                                        <div className="col-md-6 animated jackInTheBox">
 
                                             {/* <!-- Card --> */}
                                             <div className="card clickable rgba-grey-slight view overlay" onClick={() => { this.clickHabilidades() } }>

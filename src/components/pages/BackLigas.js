@@ -432,9 +432,9 @@ class BackLigas extends Component {
                                             <caption>{this.state.listaLigas.length === 0 ? 'Nenhuma liga encontrada' : this.state.listaLigas.length + ' ligas encontradas'} </caption>
                                             <TableHead color="purple-color">
                                                 <tr>
-                                                    <th width="40%" className="text-right">DESCRIÇÃO</th>
-                                                    <th width="10%" className="text-center">PONTUAÇÃO MÍNIMA</th>
-                                                    <th width="10%" className="text-center">PONTUAÇÃO MÁXIMA</th>
+                                                    <th width="20%" className="text-right">DESCRIÇÃO</th>
+                                                    <th width="20%" className="text-center">PONTUAÇÃO MÍNIMA</th>
+                                                    <th width="20%" className="text-center">PONTUAÇÃO MÁXIMA</th>
                                                     <th width="30%" className="text-center">IMAGEM DE FUNDO</th>
                                                     <th width="5%" className="text-center"></th>
                                                     <th width="5%" className="text-center"></th>
@@ -447,7 +447,7 @@ class BackLigas extends Component {
                                                             <td className="text-right"><input type="text" className="form-control text-right" value={res.description} onChange={this.handleChangeLigas} model="description" index={i} /></td>
                                                             <td className="text-center" title="Quantidade mínima de pepitas necessárias para alcançar esta liga"><input type="number" className="inputNumber" readOnly={i === this.state.listaLigas.length - 1} value={res.range_min} onChange={this.handleChangeLigas} model="range_min" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
                                                             <td className="text-center" title="Quantidade máxima de pepitas antes de avançar para a próxima liga"><input type="number" className="inputNumber" readOnly={i === 0} value={res.range_max} onChange={this.handleChangeLigas} model="range_max" index={i} /> &nbsp;&nbsp;<i className="fa fa-diamond purple-text" aria-hidden="true"/></td>
-                                                            <td className="text-center"><a href={res.background_image} target="_blank" rel="noopener noreferrer"><img src={res.background_image} alt={`Liga ${res.description}`} width={70} height={70} className="img-thumbnail" /></a>{/*<input type="text" className="form-control text-right" value={res.background_image} onChange={this.handleChangeLigas} model="background_image" index={i} />*/}</td>
+                                                            <td className="text-center"><a href={res.background_image} target="_blank" rel="noopener noreferrer"><img src={res.background_image} alt={`Liga ${res.description}`} width={150} height={150} className="img-thumbnail" /></a>{/*<input type="text" className="form-control text-right" value={res.background_image} onChange={this.handleChangeLigas} model="background_image" index={i} />*/}</td>
                                                             <td className="text-center"><Button size="sm" color="indigo" onClick={ () => this.clickUploadImage(res.league_id, i, res.description) }  title="Upload de imagem de fundo da liga"><i className="fa fa-picture-o" arria-hidden="true" /> Alterar Imagem</Button></td>
                                                             <td className="text-center"><Button size="sm" color="danger" className={ i === this.state.listaLigas.length - 1 ? "disabled" : "" } onClick={ () => this.excluirLiga(res.league_id) } title="Excluir liga"><i className="fa fa-times" arria-hidden="true" /> Excluir</Button></td>
                                                         </tr>
