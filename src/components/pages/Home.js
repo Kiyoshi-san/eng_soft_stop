@@ -94,6 +94,7 @@ class Home extends Component {
     }
 
     entrandoPartida(iddasala) {
+        debugger;
         if (this.validaLogin()) {
             this.setState({
                 idMatch: iddasala ? iddasala : this.state.idMatch,
@@ -112,7 +113,7 @@ class Home extends Component {
             .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
             
             axios
-            .post(`${config.match.match}/${iddasala}/join`, { player_id: this.state.user.userId})
+            .post(`${config.match.match}/${this.state.idMatch}/join`, { player_id: this.state.user.userId})
             .then(res => {})
             .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
         }
