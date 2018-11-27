@@ -112,13 +112,16 @@ class Match extends Component {
     }
 
     setConnected(id) {
-        let countValue = 0;
         this.countRef = firebase.database().ref(`${id}/match_players_count`);
-
         this.countRef
           .on('value', count => {
-            countValue = count + 1;
+            this.setConnectedValue(id, count.val() + 1);
         });
+    }
+
+    setConnectedValue(id, countValue) {
+        this.countRef = firebase.database().ref(`${id}/match_players_count`);
+        this.countRef.set(countValue);
     }
 
     startGame(id) {
