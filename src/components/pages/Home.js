@@ -94,7 +94,6 @@ class Home extends Component {
     }
 
     entrandoPartida(iddasala) {
-        debugger;
         if (this.validaLogin()) {
             this.setState({
                 idMatch: iddasala ? iddasala : this.state.idMatch,
@@ -108,7 +107,7 @@ class Home extends Component {
             .get(`${config.match.match}/${this.state.idMatch}`)
             .then(res => {
                 this.setState({qtdJogadores: res.data.content.players_count});
-                this.listenCount(iddasala);
+                this.listenCount(this.state.idMatch);
             })
             .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
             
@@ -133,7 +132,6 @@ class Home extends Component {
     listenCount(iddasala) {
         const { qtdJogadores } = this.state;
         this.countRef = firebase.database().ref(`${iddasala}/match_players_count`);
-
         this.countRef
           .on('value', count => {
             if (count.val() === qtdJogadores) {
@@ -318,6 +316,7 @@ class Home extends Component {
 
         if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
 
+        debugger;
         if (nr === 3 && userConnected) {
             this.saindoPartida(idMatch);
         }
