@@ -79,10 +79,14 @@ class Home extends Component {
     }
 
     iniciandoPartida(iddasala, arrSelectedItens) {
-        axios
-        .post(`${config.item.item}/${iddasala}`, { player_id: this.state.user.userId, items: arrSelectedItens})
-        .then(res => { window.location.href = `/match/${iddasala}` })
-        .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
+        if (arrSelectedItens && arrSelectedItens.length) {
+            axios
+            .post(`${config.item.item}/${iddasala}`, { player_id: this.state.user.userId, items: arrSelectedItens})
+            .then(res =>  window.location.href = `/match/${iddasala}`)
+            .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
+        } else {
+            window.location.href = `/match/${iddasala}`;
+        }
     }
 
     entrandoEvent = e => {
@@ -475,7 +479,7 @@ class Home extends Component {
         const { inventary, matchConnected } = this.state;
         let arrItens = [];
         
-        if(inventary.itens && inventary.itens.length) {
+        if(inventary && inventary.itens && inventary.itens.length) {
             inventary.itens.map(e => 
                 arrItens.push(
                     <div>
