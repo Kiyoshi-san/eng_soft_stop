@@ -62,11 +62,12 @@ class Shop extends Component {
 
 
     /* Abre o modal para efetuar compra */
-    clickComprar(item_type, item_id, item_name, item_description, item_price){
+    clickComprar(item_type, item_id, item_idx, item_name, item_description, item_price){
 
         this.setState({
             item_type: item_type,
             item_id: item_id,
+            item_idx: item_idx,
             item_name: item_name,
             item_description: item_description,
             item_price: item_price,
@@ -113,6 +114,7 @@ class Shop extends Component {
         let body = {
             player_id: this.state.user.userId,
             item_id: this.state.item_id,
+            item_idx: this.state.item_idx,
             quantity: this.state.item_quantity,
             purchasePrice: (this.state.item_quantity * this.state.item_price)
         }
@@ -120,7 +122,7 @@ class Shop extends Component {
         this.props.uiActions.loading("Processando...");
             
         axios
-        .post(config.items.buy, body)
+        .post(config.item.buy, body)
         .then(res => {
 
             //Atualiza inventário do jogador com os novos itens
@@ -259,7 +261,7 @@ class Shop extends Component {
                                                         {/* EM BREVE */}
                                                         { res.item_status === 0 && <Button rounded color="orange" className="disabled btn-md" title="Este item estará disponível para comprar em breve"><i className="fa fa-diamond" arria-hidden="true" /> Em breve</Button> }
                                                         {/* Botão COMPRAR */}
-                                                        { res.item_status === 1 && <Button rounded color="success" className="btn-md" title="Comprar Dica" onClick={ () => this.clickComprar(this.state.tipType, res.item_id, res.item_name, res.item_description, res.item_price) }><i className="fa fa-diamond" arria-hidden="true" /> Comprar</Button>}
+                                                        { res.item_status === 1 && <Button rounded color="success" className="btn-md" title="Comprar Dica" onClick={ () => this.clickComprar(this.state.tipType, res.item_id, res.item_idx, res.item_name, res.item_description, res.item_price) }><i className="fa fa-diamond" arria-hidden="true" /> Comprar</Button>}
                                                         {/* INDISPONÍVEL */}
                                                         { res.item_status === 2 && <Button rounded color="red" className="disabled btn-md" title="Este item não está mais disponível para compra"><i className="fa fa-diamond" arria-hidden="true" /> Indisponível</Button> }
                                                         </td>
@@ -315,7 +317,7 @@ class Shop extends Component {
                                                         {/* EM BREVE */}
                                                         { res.item_status === 0 && <Button rounded color="orange" className="disabled btn-md" title="Este item estará disponível para comprar em breve"><i className="fa fa-diamond" arria-hidden="true" /> Em breve</Button> }
                                                         {/* Botão COMPRAR */}
-                                                        { res.item_status === 1 && <Button rounded color="success" className="btn-md" title="Comprar Habilidade" onClick={ () => this.clickComprar(this.state.skillType, res.item_id, res.item_name, res.item_description, res.item_price) }><i className="fa fa-diamond" arria-hidden="true" /> Comprar</Button>}
+                                                        { res.item_status === 1 && <Button rounded color="success" className="btn-md" title="Comprar Habilidade" onClick={ () => this.clickComprar(this.state.skillType, res.item_id, res.item_idx, res.item_name, res.item_description, res.item_price) }><i className="fa fa-diamond" arria-hidden="true" /> Comprar</Button>}
                                                         {/* INDISPONÍVEL */}
                                                         { res.item_status === 2 && <Button rounded color="red" className="disabled btn-md" title="Este item não está mais disponível para compra"><i className="fa fa-diamond" arria-hidden="true" /> Indisponível</Button> }
                                                         </td>
