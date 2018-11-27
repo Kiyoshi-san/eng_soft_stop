@@ -184,12 +184,12 @@ class Match extends Component {
         }));
     }
 
-    handleDica = (event) => {
-        axios.get(`${config.hint}/${this.state.match.letter}?categoria=${event.id}`)
+    handleDica = (id) => {
+        axios.get(`${config.hint}/${this.state.match.letter}?categoria=${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState((prevState) => ({
-                        words: update(prevState.words, {[event.id]: {$set: res.data.content}})
+                        words: update(prevState.words, {[id]: {$set: res.data.content}})
                     }));
                 } else {
                     toast.error(res.data.messages);
@@ -251,8 +251,9 @@ class Match extends Component {
                                  onChange={this.handleChange} value={this.state.words[e.id]}></input>
                             </Col>
                             <Col md="1">
-                                <Button id={e.id} color="deep-purple" onClick={this.handleDica}
-                                    disabled={!e.enabled} className="custom-button">
+                                    <Button id={e.id} color="deep-purple" onClick={() => this.handleDica(e.category_id)}
+                                        // disabled={!e.enabled} className="custom-button">
+                                        disabled={this.state.inventario.items.length ? false : true} className="custom-button">
                                     <i className="fa fa-question" aria-hidden="true"></i>
                                 </Button>
                             </Col>
