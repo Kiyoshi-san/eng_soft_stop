@@ -22,7 +22,7 @@ class Match extends Component {
         this.state = {
           user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
           inventario: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
-          letter: methods.randomLetter(),
+          letter: "",
           clock: 60,
           words: [],
           match: {},
@@ -80,18 +80,26 @@ class Match extends Component {
     }
 
     setStarted(id) {
-        const { user, match, letter } = this.state;
+        const { user, match } = this.state;
 
         if (match.creator_player_id === user.userId) {
-            const body = {
-                match_id: id,
-                letter: letter,
-                match_players_count: match.players_count
-            }
+            this.countRef = firebase.database().ref(`${id}/match_players_count`);
 
-            axios.post(`${config.match.start}`, body)
-                .then(res => {})
-                .catch(() => toast.error("Erro inesperado."));
+            this.countRef
+                .on('value', count => {
+                    if (count.val() === match.players_count) {
+                        const body = {
+                            match_id: id,
+                            letter: methods.randomLetter(),
+                            match_players_count: match.players_count
+                        }
+
+                        this.setState({letter: body.letter});
+                        axios.post(`${config.match.start}`, body)
+                            .then(res => {})
+                            .catch(() => toast.error("Erro inesperado."));
+                    }
+                });
         }
     }
 
@@ -105,7 +113,7 @@ class Match extends Component {
 
             setInterval(() =>  {
                 this.setState({ clock: (finalTime - new Date().getTime())/1000});
-                if (finalTime === new Date().getTime() && match.creator_player_id ===user.userId) {
+                if (finalTime === new Date().getTime() && match.creator_player_id === user.userId) {
                     this.setStop();
                 }
             }, 1000);
