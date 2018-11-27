@@ -144,13 +144,11 @@ class Match extends Component {
         const body = {
             match_id: this.state.match.match_id,
 	        letter: this.state.match.letter,
-            match: [
-                {
-                    player_id: this.state.user.userId,
-                    categories_ids: this.state.match.categories.map(item => item.category_id),
-                    answers: this.state.words.map(item => item ? item : "")
-                },
-            ]
+            match: {
+                player_id: this.state.user.userId,
+                categories_ids: this.state.match.categories.map(item => item.category_id),
+                answers: this.state.words.map(item => item ? item : "")
+            }
         };
 
         axios.post(`${config.answer.validation}`, body)
