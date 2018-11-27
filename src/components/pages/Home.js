@@ -115,7 +115,8 @@ class Home extends Component {
                 .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
             })
             .catch(res => {
-                if (res.data.status_code === 400) {
+                this.setState({ modal3: false });
+                if (res.response.status === 400) {
                     toast.warn("Partida atingiu número máximo de participantes.");
                 } else {
                     toast.error("Ocorreu um erro, tente novamente mais tarde");
@@ -671,7 +672,7 @@ class Home extends Component {
                     <div className="home-grid-btn">
                         <Button className="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
                         <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
-                        <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.entrandoPartida())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                        <Button className="btn btn-deep-purple btnJogar" onClick={this.entrandoEvent}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
                 <div className="col-xs-4 col-sm-4 home-grid-login">
