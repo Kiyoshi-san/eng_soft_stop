@@ -45,7 +45,7 @@ class Match extends Component {
                     if (inventario.items !== 0)
                         match.categories.forEach((item) => item.enabled = true);
 
-                    this.setStarted({match: match, letter: res.data.content.letter});
+                    this.setState({match: match, letter: res.data.content.letter});
                     this.listenFinished(id);
                     this.props.uiActions.stopLoading();
                     this.startGame(id);
@@ -90,25 +90,23 @@ class Match extends Component {
     }
 
     setStarted(id) {
-        const { user, match } = this.state;
+        const { match } = this.state;
 
-        if (match.creator_player_id === user.userId) {
-            this.countRef = firebase.database().ref(`${id}/match_players_count`);
-            this.countRef
-              .on('value', count => {
-                if (count.val() === match.players_count) {
-                    const body = {
-                        match_id: id,
-                        letter: methods.randomLetter(),
-                        match_players_count: match.players_count
-                    };
-
-                    axios.post(`${config.match.start}`, body)
-                        .then(res => {})
-                        .catch(() => toast.error("Erro inesperado."));
-                }
-            });
-        }
+        this.countRef = firebase.database().ref(`${id}/match_players_count`);
+        this.countRef
+          .on('value', count => {
+            if (count.val() === match.players_count) {
+                const body = {
+                    match_id: id,
+                    letter: methods.randomLetter(),
+                    match_players_count: match.players_count
+                };
+        
+                axios.post(`${config.match.start}`, body)
+                    .then(res => {})
+                    .catch(() => toast.error("Erro inesperado."));
+            }
+        });
     }
 
     setConnected(id) {
@@ -125,8 +123,6 @@ class Match extends Component {
     }
 
     startGame(id) {
-        const { match, user } = this.state;
-
         this.startedTimeRef = firebase.database().ref(`${id}/match_started_time`);
 
         this.startedTimeRef.once('value', time => {
@@ -134,7 +130,7 @@ class Match extends Component {
 
             setInterval(() =>  {
                 this.setState({ clock: (finalTime - new Date().getTime())/1000});
-                if (finalTime === new Date().getTime() && match.creator_player_id === user.userId) {
+                if (finalTime === new Date().getTime()) {
                     this.setStop();
                 }
             }, 1000);
