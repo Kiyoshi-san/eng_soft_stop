@@ -2,7 +2,6 @@ import React from 'react';
 import { Row, Col, Fa, Button } from 'mdbreact';
 import { ToastContainer, } from "mdbreact";
 
-
 import "../../css/login.css";
 import * as uiActions from '../../actions/uiActions';
 
