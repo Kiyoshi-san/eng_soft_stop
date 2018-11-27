@@ -114,7 +114,7 @@ class Match extends Component {
     setConnected(id) {
         this.countRef = firebase.database().ref(`${id}/match_players_count`);
         this.countRef
-          .on('value', count => {
+          .once('value', count => {
             this.setConnectedValue(id, count.val() + 1);
         });
     }
