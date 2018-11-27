@@ -113,7 +113,6 @@ class Match extends Component {
 
     setConnected(id) {
         let countValue = 0;
-        debugger;
         this.countRef = firebase.database().ref(`${id}/match_players_count`);
 
         this.countRef

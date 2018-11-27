@@ -131,7 +131,6 @@ class Home extends Component {
 
         this.countRef
           .on('value', count => {
-              
             if (count.val() === qtdJogadores) {
                 this.setState({matchConnected: true});
                 this.escolherItensBtnJogar();
