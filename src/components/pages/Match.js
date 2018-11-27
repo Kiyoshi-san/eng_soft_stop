@@ -139,6 +139,7 @@ class Match extends Component {
 
     stopApp() {
         this.props.uiActions.loading("STOP");
+        debugger;
 
         const body = {
             match_id: this.state.match.match_id,
@@ -146,8 +147,8 @@ class Match extends Component {
             match: [
                 {
                     player_id: this.state.user.userId,
-                    categories_ids: this.state.match.categories.map(item => item.id),
-                    answers: this.state.words
+                    categories_ids: this.state.match.categories.map(item => item.category_id),
+                    answers: this.state.words.map(item => item ? item : "")
                 },
             ]
         };
