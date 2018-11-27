@@ -38,7 +38,7 @@ class Match extends Component {
 
         this.staredRef
           .on('value', started => {
-            // if (started.val()) {
+            if (started.val()) {
                 axios.get(`${config.match.match}/${id}`)
                 .then(res => {
                     let match = res.data.content;
@@ -50,7 +50,7 @@ class Match extends Component {
                     this.props.uiActions.stopLoading();
                     this.startGame(id);
                 }).catch(() => toast.error("Erro inesperado"));
-            // }
+            }
         });
     }
 
@@ -185,7 +185,6 @@ class Match extends Component {
     }
 
     handleDica = (id) => {
-        console.log(id)
         axios.get(`${config.hint}/${this.state.match.letter}?categoria=${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
