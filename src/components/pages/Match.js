@@ -194,7 +194,7 @@ class Match extends Component {
     }
 
     render() {
-        const { clock, match } = this.state;
+        const { clock, match, skills } = this.state;
 
         return (
             <div>
@@ -211,7 +211,9 @@ class Match extends Component {
                                 </div>
                             </Col>
                             {clock && clock < 60 && clock > 0 && <Col md="7" className="text-style-clock">
-                                <div className="circle-clock">00:{methods.secondFormat(clock)}</div>
+                                <div className={skills[1] === 1 ? "circle-clock hide" : "circle-clock"}>
+                                    00:{methods.secondFormat(clock)}
+                                </div>
                             </Col>}
                         </Row>
                         {match.categories && match.categories.map((e, i) => 

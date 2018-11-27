@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import firebase from 'firebase';
 import PropTypes from 'prop-types';
 import { MDBTable, TableBody, TableHead, Fa, Input, Button, Modal, ModalBody, ModalHeader, ModalFooter, Row, Col, ToastContainer, toast } from 'mdbreact';
 import axios from "axios";
@@ -37,8 +38,9 @@ class Home extends Component {
             redirect: 0,
             time: {},
             tempo: 10,
-            itens: [],
-            matches: false
+            matches: false,
+            matchConnected: false,
+            userConnected: false,
         }
     }
 
@@ -49,7 +51,9 @@ class Home extends Component {
     }
 
     /* Dados para enviar para a Partida */
-    colhendoDadosEntrandoPartida(idsala) {
+    colhendoDadosEIniciandoPartida(idsala) {
+        this.props.uiActions.loading("Entrando na partida...");
+
         axios
         .get(`${config.match.match}/${this.state.idMatch}`)
         .then(res => {
@@ -58,28 +62,7 @@ class Home extends Component {
             });
 
             let iddasala = idsala?idsala:this.state.idMatch;
-            let partidasDescription = res.data.content;
-            
-            /* Listando Categorias da Partida */
-            let matchesCategoryList = [];
 
-            if (partidasDescription.categories) {
-                partidasDescription.categories.map(e => 
-                    matchesCategoryList.push({"id":e.category_id,"name":e.name})
-                );
-            }
-            
-            /* Listando Jogadores da Partida */
-            let matchesPlayersList = [],
-            player = {};
-    
-            if (partidasDescription.players) {
-                partidasDescription.players.map(e => {
-                    player = {"id":e.user_id, "main":e.user_id === this.state.user.userId? true : false};
-                    return matchesPlayersList.push(player);
-                })
-            }
-    
             /* Pegando os itens selecionados */
             let elements = document.getElementsByName("selectedItens");
             let arrSelectedItens = [];
@@ -90,22 +73,69 @@ class Home extends Component {
                 }
             });
 
-            this.entrandoPartida(iddasala, arrSelectedItens)
+            this.iniciandoPartida(iddasala, arrSelectedItens)
         })
         .catch(res => false);
     }
 
-    entrandoPartida(iddasala, arrSelectedItens) {
-        this.props.uiActions.loading("Entrando na partida...");
-
+    iniciandoPartida(iddasala, arrSelectedItens) {
         axios
-        .post(`${config.match.match}/${iddasala}/join`, { player_id: this.state.user.userId, items: arrSelectedItens })
+        .post(`${config.match.match}/${iddasala}/join`, { item: arrSelectedItens})
+        .then(res => { window.location.href = `/match/${iddasala}` })
+        .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
+    }
+
+    entrandoEvent = e => {
+        this.entrandoPartida(this.state.idMatch);
+    }
+
+    entrandoPartida(iddasala) {
+        if (this.validaLogin()) {
+            this.setState({
+                idMatch: iddasala ? iddasala : this.state.idMatch,
+                modal: false,
+                modal2: false,
+                modal3: true,
+                connected: true
+            });
+
+            axios
+            .get(`${config.match.match}/${this.state.idMatch}`)
+            .then(res => {
+                this.setState({qtdJogadores: res.data.content.players_count});
+                this.listenCount(iddasala);
+            })
+            .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
+            
+            axios
+            .post(`${config.match.match}/${iddasala}/join`, { player_id: this.state.user.userId})
+            .then(res => {})
+            .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
+        }
+    }
+
+    saindoPartida(iddasala) {
+        axios
+        .post(`${config.match.match}/${iddasala}/leave`, { player_id: this.state.user.userId })
         .then(res => {
-            window.location.href = `/match/${iddasala}`;
-        })
-        .catch(res => {
-            toast.error("Ocorreu um erro, tente novamente mais tarde")
-            return false;            
+            this.cancelarTempoRedirect();
+            toast.warn("Abandonando partida...");
+            setTimeout(() => window.location.reload(), 1000);
+         })
+        .catch(res => toast.error("Ocorreu um erro ao sair da partida"));
+    }
+
+    listenCount(iddasala) {
+        const { qtdJogadores } = this.state;
+        this.countRef = firebase.database().ref(`${iddasala}/match_players_count`);
+
+        this.countRef
+          .on('value', count => {
+            debugger;
+            if (count.val() === qtdJogadores) {
+                this.setState({matchConnected: true});
+                this.escolherItensBtnJogar();
+            }
         });
     }
     
@@ -199,7 +229,7 @@ class Home extends Component {
                     </Row>
                 </ModalBody>
                 <ModalFooter className="justify-content-center">
-                    <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
+                    <Button color="secondary" className="roundedBtn" outline onClick={this.entrandoEvent}>Jogar</Button>
                     <Button color="danger" className="roundedBtn" outline onClick={this.toggle}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
@@ -221,16 +251,18 @@ class Home extends Component {
 
     /* Lista as partidas existentes */
     matchesList() {
+        const { qtdCols } = this.state;
+
         axios
         .get(`${config.match.matches}`)
         .then(res => {
-            let partidas = res.data.content.filter(e => !e.finished_time)
-            let arrayItens = methods.arrayToDataTable(4, partidas);
-            this.setState(prevState => ({
+            let partidas = res.data.content.filter(e => e.status === 1);
+            let arrayItens = methods.arrayToDataTable(qtdCols, partidas);
+            this.setState({
                 partidas: partidas,
                 arrayItens: arrayItens,
                 matches: true,
-            }));
+            });
         })
         .catch(() => toast.error("Houve um erro na listagem de partidas"));
     }
@@ -271,6 +303,8 @@ class Home extends Component {
     - 2 - Criar Sala
     */
     toggleGeral(nr, func) {
+        const { userConnected, idMatch } = this.state;
+
         if (!this.validaLogin()) {
             return;
         }
@@ -279,6 +313,10 @@ class Home extends Component {
             func();
 
         if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
+
+        if (nr === 3 && userConnected) {
+            this.saindoPartida(idMatch);
+        }
 
         let modalNumber = 'modal' + nr
         this.setState({
@@ -292,9 +330,7 @@ class Home extends Component {
         .get(`${config.category.categories}`)
         .then(res => {
             this.setState(prevState => ({ 
-                listaCategorias: res.data.content,
-                ...prevState.fetched,
-                categories: true
+                listaCategorias: res.data.content
             }));
             this.props.uiActions.stopLoading();
         })
@@ -372,7 +408,6 @@ class Home extends Component {
             </Modal>
         )
     }
-
     
     fnHandleChangeCheckItens = () => {
         let itensArrayEnvio = []
@@ -407,29 +442,13 @@ class Home extends Component {
     /* Selecao de Itens do usuario para entrar na partida */
     escolherItensBtnJogar() {
         if(!this.validaLogin())
-        return
+            return
 
-        /* Colocar a validação, se nao tiver uma sala add nao abrirá a modal de escolha de itens */
-        /* if() */
-        
         this.iniciarTempoRedirect();
-        
-        let arrItens = [];
-        let elemItens = {}
-
-        let items = this.state.inventary.items
-        items.map(e => {
-            elemItens = {
-                "item_id":e.item_id,
-                "item_name":e.item_name
-            };
-            return arrItens.push(elemItens);
-        })
         
         // this.startTimer
         this.setState({
-            modal3: false,
-            itens: arrItens
+            modal3: false
         }, () => {
                 let tempo = 10
                 this.setState({
@@ -454,72 +473,62 @@ class Home extends Component {
 
     /* Modal para escolher os itens antes da partida */
     modalEscolherItens() {
-        const { user, itens } = this.state;
+        const { inventary, matchConnected } = this.state;
+        let arrItens = [];
         
-        if (user) {
-            let arrItens = [];
-            
-            if(itens.length) {
-                itens.map(e => 
-                    arrItens.push(
-                        <div>
-                            <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
-                            
-                            <label className="label-margin">{ e.item_name }</label>
-                        </div>
-                    )
-                );
-            } else {
-                arrItens = [];
-                arrItens[0] = "Não há itens disponiveis";           
-            }
-
-            return (
-                <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
-                    <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleclassName="w-100 font-weight-bold" toggle={() => this.toggleGeral(3)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Escolher Itens</h3></ModalHeader>
-                    {this.state.time.s}
-                    <ModalBody>
-                        <Row>
-                            <Col size="3" className="d-flex justify-content-center align-items-center">
-                                <Fa size="4x" icon="gamepad" className="ml-1" />
-                            </Col>
-                            <Col size="6">
-                                { arrItens }
-                            </Col>
-                            <Col size="3">
-                                <div className="crono">
-                                    { this.state.tempo }
-                                </div>
-                            </Col>
-                        </Row>
-                    </ModalBody>
-                    <ModalFooter className="justify-content-center">
-                        <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
-                        <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect )} }>Cancelar</Button>
-                    </ModalFooter>
-                </Modal>
+        if(inventary.itens && inventary.itens.length) {
+            inventary.itens.map(e => 
+                arrItens.push(
+                    <div>
+                        <input name="selectedItens" type="checkbox" onChange={ this.fnHandleChangeCheckItens } value={ e.item_id }></input>
+                        
+                        <label className="label-margin">{ e.item_name }</label>
+                    </div>
+                )
             );
-        }
-    }
-    
-    setSelectedItens = () => {
-        let arrSelectedItens = []
-
-        let els = document.getElementsByName("selectedItens");
-        els.forEach((a) => {
-            if ( a.checked ) {
-                arrSelectedItens.push({ "player_id": this.state.user.userId, "item_id": a.value })
-            }
-        })
-
-        localStorage.setItem(StorageKey.SELECTEDITEMS, JSON.stringify(arrSelectedItens));
+        } else {
+            arrItens = [];
+            arrItens[0] = "Não há itens disponiveis";     
+        }      
+        
+        return (
+            <Modal isOpen={this.state.modal3} toggle={() => this.toggleGeral(3)} >
+                <ModalHeader className="text-center pt-3 deep-purple lighten-2" titleclassName="w-100 font-weight-bold" toggle={() => this.toggleGeral(3)}><h3 className="white-text mb-3 pt-3 font-weight-bold">Escolher Itens</h3></ModalHeader>
+                {this.state.time.s}
+                <ModalBody>
+                    {matchConnected ? <Row>
+                        <Col size="3" className="d-flex justify-content-center align-items-center">
+                            <Fa size="4x" icon="gamepad" className="ml-1" />
+                        </Col>
+                        <Col size="6">
+                            { arrItens }
+                        </Col>
+                        <Col size="3">
+                            <div className="crono">
+                                { this.state.tempo }
+                            </div>
+                        </Col>
+                    </Row>
+                    :
+                    <div className="justify-content-center">
+                        <img src={logo} className="logo-stop-loading" alt="loading" />
+                        <div className="d-flex justify-content-center">
+                            Aguardando outros jogadores...
+                        </div>
+                    </div>}
+                </ModalBody>
+                <ModalFooter className="justify-content-center">
+                    <Button color="secondary" className="roundedBtn" outline onClick={this.jogar}>Jogar</Button>
+                    <Button color="danger" className="roundedBtn" outline onClick={() => {this.toggleGeral(3, this.cancelarTempoRedirect )} }>Cancelar</Button>
+                </ModalFooter>
+            </Modal>
+        );
     }
     
     /* Entrando na partida */
     jogar = (e) => {
         if(this.validaLogin()) {
-            this.setSelectedItens();
-            this.colhendoDadosEntrandoPartida();
+            this.colhendoDadosEIniciandoPartida();
         }
     }
     
@@ -542,10 +551,7 @@ class Home extends Component {
     }
 
     criarPartida() {
-        let { salaNome } = this.state,
-        { qtdJogadores } = this.state,
-        { userId } = this.state.user,
-        { categoriasArrayEnvio } = this.state
+        const { salaNome, qtdJogadores, user, categoriasArrayEnvio } = this.state;
 
         if(!salaNome) {
             this.setState({
@@ -595,11 +601,11 @@ class Home extends Component {
         .post(`${config.match.match}`, {
             "description": salaNome,
             "players_count": qtdJogadores,
-            "creator_player_id": userId,
+            "creator_player_id": user.userId,
             "categories": categoriasArrayEnvio
         })
         .then(res => {
-            this.matchesList()
+            this.entrandoPartida(res.data.content.match_id);
         })
         .catch(err => {
             this.props.uiActions.stopLoading();
@@ -656,7 +662,7 @@ class Home extends Component {
                     <div className="home-grid-btn">
                         <Button className="btn btn-deep-purple" onClick={this.toggle}><Fa icon="info iconCircle" className="ml-1"/> Info</Button>
                         <Button className="btn btn-deep-purple" onClick={() => this.toggleGeral(2)}><Fa icon="plus iconCircle" className="ml-1"/> Criar Sala</Button>
-                        <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.escolherItensBtnJogar())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
+                        <Button className="btn btn-deep-purple btnJogar" onClick={() => this.toggleGeral(3, this.entrandoPartida())}><Fa icon="gamepad iconCircle" className="ml-1"/> Jogar</Button>
                     </div>
                 </div>
                 <div className="col-xs-4 col-sm-4 home-grid-login">

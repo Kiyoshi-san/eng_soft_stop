@@ -37,6 +37,10 @@
     padding: 5px 15px;
 }
 
+.circle-clock.hide {
+    background-color: #a2a2a3;
+}
+
 .text-style {
     font-size: 40px;
     text-align: center;
