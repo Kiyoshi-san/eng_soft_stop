@@ -11,7 +11,6 @@ import * as uiActions from '../../actions/uiActions';
 import config from '../../util/Config';
 
 import "../../css/login.css";
-import "../../css/login-back.css";
 import logo from '../../images/stop_logo_v2.png';
 import rightArrow from '../../images/right-arrow-icon.png';
 

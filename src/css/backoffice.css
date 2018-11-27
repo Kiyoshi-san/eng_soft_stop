@@ -135,7 +135,7 @@ td {
     margin: 10% auto;
 }
 
-@media(max-width: 400px){
+@media(max-width: 768px){
     .container-login-backoffice {
         margin-top: 80px;
         width: 90%;

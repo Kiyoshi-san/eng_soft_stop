@@ -117,8 +117,6 @@ class Login extends Component {
     render() {
         return (
             <div className="col-xs-12 col-sm-12">
-            {/* <div className="div-container-login-backoffice">
-            <Container className="container-login-backoffice"> */}
                 <ToastContainer newestOnTop={true}/>
                 <Row>
                     <form className="form-login" onSubmit={this.handleSubmit}>

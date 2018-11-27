@@ -22,7 +22,7 @@ class Match extends Component {
         this.state = {
           user: JSON.parse(localStorage.getItem(StorageKey.AUTENTICACAO)),
           inventario: JSON.parse(localStorage.getItem(StorageKey.INVENTARIO)),
-          letter: methods.randomLetter(),
+          letter: "",
           clock: 60,
           words: [],
           match: {},
@@ -31,16 +31,26 @@ class Match extends Component {
     }
 
     listenMatch(id) {
+        const { inventario } = this.state;
+
         this.props.uiActions.loading("Estamos conectando todos a partida...");
         this.staredRef = firebase.database().ref(`${id}/match_started`);
 
         this.staredRef
           .on('value', started => {
-            if (started.val()) {
-                this.listenFinished(id);
-                this.props.uiActions.stopLoading();
-                this.startGame(id);
-            }
+            // if (started.val()) {
+                axios.get(`${config.match.match}/${id}`)
+                .then(res => {
+                    let match = res.data.content;
+                    if (inventario.items !== 0)
+                        match.categories.forEach((item) => item.enabled = true);
+
+                    this.setStarted({match: match, letter: res.data.content.letter});
+                    this.listenFinished(id);
+                    this.props.uiActions.stopLoading();
+                    this.startGame(id);
+                }).catch(() => toast.error("Erro inesperado"));
+            // }
         });
     }
 
@@ -80,19 +90,38 @@ class Match extends Component {
     }
 
     setStarted(id) {
-        const { user, match, letter } = this.state;
+        const { user, match } = this.state;
 
         if (match.creator_player_id === user.userId) {
-            const body = {
-                match_id: id,
-                letter: letter,
-                match_players_count: match.players_count
-            }
+            this.countRef = firebase.database().ref(`${id}/match_players_count`);
+            this.countRef
+              .on('value', count => {
+                if (count.val() === match.players_count) {
+                    const body = {
+                        match_id: id,
+                        letter: methods.randomLetter(),
+                        match_players_count: match.players_count
+                    };
 
-            axios.post(`${config.match.start}`, body)
-                .then(res => {})
-                .catch(() => toast.error("Erro inesperado."));
+                    axios.post(`${config.match.start}`, body)
+                        .then(res => {})
+                        .catch(() => toast.error("Erro inesperado."));
+                }
+            });
         }
+    }
+
+    setConnected(id) {
+        this.countRef = firebase.database().ref(`${id}/match_players_count`);
+        this.countRef
+          .once('value', count => {
+            this.setConnectedValue(id, count.val() + 1);
+        });
+    }
+
+    setConnectedValue(id, countValue) {
+        this.countRef = firebase.database().ref(`${id}/match_players_count`);
+        this.countRef.set(countValue);
     }
 
     startGame(id) {
@@ -105,7 +134,7 @@ class Match extends Component {
 
             setInterval(() =>  {
                 this.setState({ clock: (finalTime - new Date().getTime())/1000});
-                if (finalTime === new Date().getTime() && match.creator_player_id ===user.userId) {
+                if (finalTime === new Date().getTime() && match.creator_player_id === user.userId) {
                     this.setStop();
                 }
             }, 1000);
@@ -155,12 +184,13 @@ class Match extends Component {
         }));
     }
 
-    handleDica = (event) => {
-        axios.get(`${config.hint}/${this.state.match.letter}?categoria=${event.id}`)
+    handleDica = (id) => {
+        console.log(id)
+        axios.get(`${config.hint}/${this.state.match.letter}?categoria=${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
                     this.setState((prevState) => ({
-                        words: update(prevState.words, {[event.id]: {$set: res.data.content}})
+                        words: update(prevState.words, {[id]: {$set: res.data.content}})
                     }));
                 } else {
                     toast.error(res.data.messages);
@@ -173,24 +203,15 @@ class Match extends Component {
         this.props.uiActions.loading("Preparando Partida...");
 
         const { id } = this.props.match.params;
-        const { inventario } = this.state;
 
         axios.get(`${config.match.match}/${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
-                    let match = res.data.content;
-
-                    if (inventario.items !== 0)
-                        match.categories.forEach((item) => item.enabled = true)
-
                     this.listenMatch(id);
-                    this.setState({match});
+                    this.setState({match: res.data.content});
                     this.recuvueSkills();
+                    this.setConnected(id);
                     this.setStarted(id);
-                    /* this.setState({
-                        letter: match.letter
-                    })
-                    alert(match.letter) */
                 } else {
                     toast.error(res.data.messages);
                 }
@@ -199,7 +220,7 @@ class Match extends Component {
     }
 
     render() {
-        const { clock, match } = this.state;
+        const { clock, match, skills } = this.state;
 
         return (
             <div>
@@ -216,7 +237,9 @@ class Match extends Component {
                                 </div>
                             </Col>
                             {clock && clock < 60 && clock > 0 && <Col md="7" className="text-style-clock">
-                                <div className="circle-clock">00:{methods.secondFormat(clock)}</div>
+                                <div className={skills[1] === 1 ? "circle-clock hide" : "circle-clock"}>
+                                    00:{methods.secondFormat(clock)}
+                                </div>
                             </Col>}
                         </Row>
                         {match.categories && match.categories.map((e, i) => 
@@ -229,8 +252,9 @@ class Match extends Component {
                                  onChange={this.handleChange} value={this.state.words[e.id]}></input>
                             </Col>
                             <Col md="1">
-                                <Button id={e.id} color="deep-purple" onClick={this.handleDica}
-                                    disabled={!e.enabled} className="custom-button">
+                                    <Button id={e.id} color="deep-purple" onClick={() => this.handleDica(e.category_id)}
+                                        // disabled={!e.enabled} className="custom-button">
+                                        disabled={this.state.inventario.items.length ? false : true} className="custom-button">
                                     <i className="fa fa-question" aria-hidden="true"></i>
                                 </Button>
                             </Col>
