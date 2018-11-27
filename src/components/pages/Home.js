@@ -80,7 +80,7 @@ class Home extends Component {
 
     iniciandoPartida(iddasala, arrSelectedItens) {
         axios
-        .post(`${config.match.match}/${iddasala}/join`, { item: arrSelectedItens})
+        .post(`${config.item.item}/${iddasala}`, { player_id: this.state.user.userId, items: arrSelectedItens})
         .then(res => { window.location.href = `/match/${iddasala}` })
         .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
     }
@@ -131,7 +131,6 @@ class Home extends Component {
 
         this.countRef
           .on('value', count => {
-            debugger;
             if (count.val() === qtdJogadores) {
                 this.setState({matchConnected: true});
                 this.escolherItensBtnJogar();
