@@ -317,7 +317,6 @@ class Home extends Component {
 
         if(this.validacaoNomeSala || this.validacaoQtdCategorias || this.validacaoQtdJogadores) return
 
-        debugger;
         if (nr === 3 && userConnected) {
             this.saindoPartida(idMatch);
         }
