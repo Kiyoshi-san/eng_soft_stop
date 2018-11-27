@@ -146,7 +146,7 @@ class Home extends Component {
         this.countRef = firebase.database().ref(`${iddasala}/match_players_count`);
         this.countRef
           .on('value', count => {
-            if (count.val() === qtdJogadores) {
+            if (count.val() > qtdJogadores) {
                 this.setState({matchConnected: true});
                 this.escolherItensBtnJogar();
             }

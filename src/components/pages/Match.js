@@ -95,7 +95,7 @@ class Match extends Component {
         this.countRef = firebase.database().ref(`${id}/match_players_count`);
         this.countRef
           .on('value', count => {
-            if (count.val() === match.players_count) {
+            if (count.val() > match.players_count) {
                 const body = {
                     match_id: id,
                     letter: methods.randomLetter(),
@@ -126,11 +126,10 @@ class Match extends Component {
         this.startedTimeRef = firebase.database().ref(`${id}/match_started_time`);
 
         this.startedTimeRef.once('value', time => {
-            debugger;
-            let finalTime = new Date(time.val()).getTime() - 3600000;
+            let finalTime = new Date(time.val()).getTime() - 7140000;
 
             setInterval(() =>  {
-                this.setState({ clock: (finalTime - new Date().getTime())/1000});
+                this.setState({ clock: Math.floor((finalTime - new Date().getTime())/1000)});
                 if (finalTime === new Date().getTime()) {
                     this.setStop();
                 }
