@@ -126,7 +126,8 @@ class Match extends Component {
         this.startedTimeRef = firebase.database().ref(`${id}/match_started_time`);
 
         this.startedTimeRef.once('value', time => {
-            let finalTime = new Date(time.val()).getTime() + 60000;
+            debugger;
+            let finalTime = new Date(time.val()).getTime() - 3600000;
 
             setInterval(() =>  {
                 this.setState({ clock: (finalTime - new Date().getTime())/1000});
