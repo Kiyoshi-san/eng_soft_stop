@@ -100,7 +100,7 @@ class Home extends Component {
                 modal: false,
                 modal2: false,
                 modal3: true,
-                connected: true
+                userConnected: true
             });
 
             axios
@@ -122,6 +122,7 @@ class Home extends Component {
         axios
         .post(`${config.match.match}/${iddasala}/leave`, { player_id: this.state.user.userId })
         .then(res => {
+            this.setState({userConnected: false});
             this.cancelarTempoRedirect();
             toast.warn("Abandonando partida...");
             setTimeout(() => window.location.reload(), 1000);
