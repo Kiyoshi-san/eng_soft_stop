@@ -549,7 +549,7 @@ class Home extends Component {
         })
     }
 
-    criarPartida() {
+    criarPartida = () => {
         const { salaNome, qtdJogadores, user, categoriasArrayEnvio } = this.state;
 
         if(!salaNome) {
