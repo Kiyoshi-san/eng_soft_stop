@@ -95,26 +95,32 @@ class Home extends Component {
 
     entrandoPartida(iddasala) {
         if (this.validaLogin()) {
-            this.setState({
-                idMatch: iddasala ? iddasala : this.state.idMatch,
-                modal: false,
-                modal2: false,
-                modal3: true,
-                userConnected: true
-            });
-
-            axios
-            .get(`${config.match.match}/${this.state.idMatch}`)
-            .then(res => {
-                this.setState({qtdJogadores: res.data.content.players_count});
-                this.listenCount(this.state.idMatch);
-            })
-            .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
-            
             axios
             .post(`${config.match.match}/${this.state.idMatch}/join`, { player_id: this.state.user.userId})
-            .then(res => {})
-            .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
+            .then(res => {
+                this.setState({
+                    idMatch: iddasala ? iddasala : this.state.idMatch,
+                    modal: false,
+                    modal2: false,
+                    modal3: true,
+                    userConnected: true
+                });
+
+                axios
+                .get(`${config.match.match}/${this.state.idMatch}`)
+                .then(res => {
+                    this.setState({qtdJogadores: res.data.content.players_count});
+                    this.listenCount(this.state.idMatch);
+                })
+                .catch(res => toast.error("Ocorreu um erro, tente novamente mais tarde"));
+            })
+            .catch(res => {
+                if (res.data.status_code === 400) {
+                    toast.warn("Partida atingiu número máximo de participantes.");
+                } else {
+                    toast.error("Ocorreu um erro, tente novamente mais tarde");
+                }
+            });
         }
     }
 
