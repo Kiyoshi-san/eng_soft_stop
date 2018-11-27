@@ -31,15 +31,25 @@ class Match extends Component {
     }
 
     listenMatch(id) {
+        const { inventario } = this.state;
+
         this.props.uiActions.loading("Estamos conectando todos a partida...");
         this.staredRef = firebase.database().ref(`${id}/match_started`);
 
         this.staredRef
           .on('value', started => {
             if (started.val()) {
-                this.listenFinished(id);
-                this.props.uiActions.stopLoading();
-                this.startGame(id);
+                axios.get(`${config.match.match}/${id}`)
+                .then(res => {
+                    let match = res.data.content;
+                    if (inventario.items !== 0)
+                        match.categories.forEach((item) => item.enabled = true);
+
+                    this.setStarted({match: match, letter: res.data.content.letter});
+                    this.listenFinished(id);
+                    this.props.uiActions.stopLoading();
+                    this.startGame(id);
+                }).catch(() => toast.error("Erro inesperado"));
             }
         });
     }
@@ -93,7 +103,6 @@ class Match extends Component {
                         match_players_count: match.players_count
                     };
 
-                    this.setState({letter: body.letter});
                     axios.post(`${config.match.start}`, body)
                         .then(res => {})
                         .catch(() => toast.error("Erro inesperado."));
@@ -191,18 +200,12 @@ class Match extends Component {
         this.props.uiActions.loading("Preparando Partida...");
 
         const { id } = this.props.match.params;
-        const { inventario } = this.state;
 
         axios.get(`${config.match.match}/${id}`)
             .then(res => {
                 if (res.data.status_code === 200) {
-                    let match = res.data.content;
-
-                    if (inventario.items !== 0)
-                        match.categories.forEach((item) => item.enabled = true)
-
                     this.listenMatch(id);
-                    this.setState({match});
+                    this.setState({match: res.data.content});
                     this.recuvueSkills();
                     this.setConnected(id);
                     this.setStarted(id);
