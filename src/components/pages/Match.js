@@ -133,7 +133,8 @@ class Match extends Component {
     }
 
     setStop() {
-        const { id, user, clock } = this.props.match.params;
+        const { id, clock } = this.props.match.params;
+        const { user } = this.state;
         
         this.finishedRef = firebase.database().ref(`${id}/match_finished`);
         this.finishedRef.set(true);
@@ -186,6 +187,10 @@ class Match extends Component {
                     this.setState({match});
                     this.recuvueSkills();
                     this.setStarted(id);
+                    /* this.setState({
+                        letter: match.letter
+                    })
+                    alert(match.letter) */
                 } else {
                     toast.error(res.data.messages);
                 }
