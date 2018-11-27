@@ -84,23 +84,33 @@ class Match extends Component {
 
         if (match.creator_player_id === user.userId) {
             this.countRef = firebase.database().ref(`${id}/match_players_count`);
-
             this.countRef
-                .on('value', count => {
-                    if (count.val() === match.players_count) {
-                        const body = {
-                            match_id: id,
-                            letter: methods.randomLetter(),
-                            match_players_count: match.players_count
-                        }
+              .on('value', count => {
+                if (count.val() === match.players_count) {
+                    const body = {
+                        match_id: id,
+                        letter: methods.randomLetter(),
+                        match_players_count: match.players_count
+                    };
 
-                        this.setState({letter: body.letter});
-                        axios.post(`${config.match.start}`, body)
-                            .then(res => {})
-                            .catch(() => toast.error("Erro inesperado."));
-                    }
-                });
+                    this.setState({letter: body.letter});
+                    axios.post(`${config.match.start}`, body)
+                        .then(res => {})
+                        .catch(() => toast.error("Erro inesperado."));
+                }
+            });
         }
+    }
+
+    setConnected(id) {
+        let countValue = 0;
+        debugger;
+        this.countRef = firebase.database().ref(`${id}/match_players_count`);
+
+        this.countRef
+          .on('value', count => {
+            countValue = count + 1;
+        });
     }
 
     startGame(id) {
@@ -194,11 +204,8 @@ class Match extends Component {
                     this.listenMatch(id);
                     this.setState({match});
                     this.recuvueSkills();
+                    this.setConnected(id);
                     this.setStarted(id);
-                    /* this.setState({
-                        letter: match.letter
-                    })
-                    alert(match.letter) */
                 } else {
                     toast.error(res.data.messages);
                 }
